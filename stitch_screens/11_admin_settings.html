@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-container": "#ff9655",
+                    "on-secondary-fixed-variant": "#004f9e",
+                    "inverse-on-surface": "#9b9d9e",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-container": "#532200",
+                    "inverse-surface": "#0c0f10",
+                    "tertiary": "#964300",
+                    "surface-tint": "#6d5a00",
+                    "surface-dim": "#d1d5d7",
+                    "primary": "#6d5a00",
+                    "primary-dim": "#5f4e00",
+                    "surface-container-high": "#e0e3e4",
+                    "primary-fixed": "#fad538",
+                    "secondary-container": "#bcd2ff",
+                    "surface-container-low": "#eff1f2",
+                    "on-tertiary-fixed-variant": "#612900",
+                    "on-tertiary-fixed": "#2d0f00",
+                    "on-error-container": "#520c00",
+                    "on-primary-container": "#5a4a00",
+                    "surface-bright": "#f5f6f7",
+                    "secondary-dim": "#004e9d",
+                    "secondary-fixed": "#bcd2ff",
+                    "tertiary-dim": "#843a00",
+                    "primary-container": "#fad538",
+                    "inverse-primary": "#fad538",
+                    "outline-variant": "#abadae",
+                    "surface-container": "#e6e8ea",
+                    "outline": "#757778",
+                    "on-error": "#ffefec",
+                    "secondary": "#005ab2",
+                    "error-container": "#f95630",
+                    "on-secondary-fixed": "#00336b",
+                    "on-primary-fixed-variant": "#655300",
+                    "on-primary-fixed": "#443700",
+                    "surface-variant": "#dadddf",
+                    "tertiary-fixed": "#ff9655",
+                    "primary-fixed-dim": "#ebc729",
+                    "tertiary-fixed-dim": "#f6853b",
+                    "surface-container-highest": "#dadddf",
+                    "on-surface-variant": "#595c5d",
+                    "surface": "#f5f6f7",
+                    "on-background": "#2c2f30",
+                    "on-secondary-container": "#00468e",
+                    "secondary-fixed-dim": "#a5c5ff",
+                    "on-surface": "#2c2f30",
+                    "on-tertiary": "#fff0e9",
+                    "on-secondary": "#eff2ff",
+                    "error-dim": "#b92902",
+                    "error": "#b02500",
+                    "on-primary": "#fff2ce",
+                    "background": "#f5f6f7"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Plus Jakarta Sans"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .plusJakartaSans { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<aside class="h-screen w-64 fixed left-0 top-0 rounded-r-[3rem] bg-neutral-50 dark:bg-neutral-950 flex flex-col py-8 z-40">
+<div class="px-8 mb-10">
+<h1 class="text-xl font-extrabold text-yellow-600 mb-1">The Toybox</h1>
+<p class="text-xs font-medium text-neutral-400 tracking-wider uppercase">Toybox Management</p>
+</div>
+<div class="flex-1 space-y-1">
+<a class="flex items-center text-neutral-500 px-6 py-3 hover:bg-neutral-200 transition-all duration-200 group" href="#">
+<span class="material-symbols-outlined mr-3 text-xl" data-icon="package_2">package_2</span>
+<span class="font-label">Orders</span>
+</a>
+<a class="flex items-center text-neutral-500 px-6 py-3 hover:bg-neutral-200 transition-all duration-200 group" href="#">
+<span class="material-symbols-outlined mr-3 text-xl" data-icon="smart_toy">smart_toy</span>
+<span class="font-label">AI Assistant</span>
+</a>
+<a class="flex items-center text-neutral-500 px-6 py-3 hover:bg-neutral-200 transition-all duration-200 group" href="#">
+<span class="material-symbols-outlined mr-3 text-xl" data-icon="contact_support">contact_support</span>
+<span class="font-label">Support</span>
+</a>
+<a class="bg-yellow-100 text-yellow-800 rounded-full mx-2 font-bold flex items-center px-6 py-3 transition-all duration-200 scale(1.02)" href="#">
+<span class="material-symbols-outlined mr-3 text-xl" data-icon="settings">settings</span>
+<span class="font-label">Settings</span>
+</a>
+<a class="flex items-center text-neutral-500 px-6 py-3 hover:bg-neutral-200 transition-all duration-200 group" href="#">
+<span class="material-symbols-outlined mr-3 text-xl" data-icon="storefront">storefront</span>
+<span class="font-label">Catalog</span>
+</a>
+</div>
+<div class="px-4 mt-auto">
+<button class="w-full bg-primary-container text-on-primary-container py-4 rounded-full font-bold flex items-center justify-center gap-2 shadow-[0_10px_20px_rgba(109,90,0,0.1)] hover:scale-105 transition-transform duration-200">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+                Add New Toy
+            </button>
+<div class="mt-8 px-4 flex items-center gap-3">
+<img alt="Admin Profile" class="w-10 h-10 rounded-full bg-surface-container-high" data-alt="close-up portrait of a friendly professional woman with glasses in a bright modern studio setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxAZPqYpNxPyZZvO99IV-xk1Eh963WR5uTZemXppr1au30uO7b1Vn86GqFg_ehI12kDN-GaASP89bjJQRARHxg73lBXyg_DqnwmLgWqWTjwW1qGtmf0jgsidtf_zjsJubgBvdcMc2Fjgm0_ZzOrUiwYMRQJe9P3arkWK1PSUvyp2dY55ZbQ_oYDhDg7xybs-iQdMzGZvHZM00clWdFxEaFSNjZOL0bamc9IhkWYQjV_yMhI8jTwJFIGtIvhk-rndIYmiUniFO1IWtH"/>
+<div class="overflow-hidden">
+<p class="text-sm font-bold truncate">Admin Profile</p>
+<p class="text-[10px] text-neutral-500 uppercase font-semibold">Super Admin</p>
+</div>
+</div>
+</div>
+</aside>
+<main class="ml-64 p-12 min-h-screen">
+<header class="mb-12">
+<h2 class="text-4xl font-black text-on-surface tracking-tight mb-2">Settings</h2>
+<p class="text-on-surface-variant font-medium">Manage your toy store configuration and administrative preferences.</p>
+</header>
+<div class="grid grid-cols-12 gap-8">
+<section class="col-span-12 lg:col-span-8 space-y-8">
+<div class="bg-surface-container-lowest rounded-xl p-8 shadow-[0_40px_40px_rgba(109,90,0,0.04)]">
+<div class="flex items-center gap-4 mb-8">
+<div class="bg-primary-container/20 p-3 rounded-2xl">
+<span class="material-symbols-outlined text-primary" data-icon="store">store</span>
+</div>
+<h3 class="text-xl font-bold">Store Configuration</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="text-sm font-bold text-on-surface-variant ml-2">Store Name</label>
+<input class="w-full bg-surface-container-low border-none rounded-md py-3 px-4 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all" type="text" value="The Toybox Official"/>
+</div>
+<div class="space-y-2">
+<label class="text-sm font-bold text-on-surface-variant ml-2">Support Email</label>
+<input class="w-full bg-surface-container-low border-none rounded-md py-3 px-4 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all" type="email" value="hello@thetoybox.curated"/>
+</div>
+<div class="space-y-2 md:col-span-2">
+<label class="text-sm font-bold text-on-surface-variant ml-2">Store Bio</label>
+<textarea class="w-full bg-surface-container-low border-none rounded-md py-3 px-4 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all" rows="3">A premium gallery of curated tactile wooden toys designed to inspire wonder and play.</textarea>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-8 shadow-[0_40px_40px_rgba(109,90,0,0.04)]">
+<div class="flex items-center gap-4 mb-8">
+<div class="bg-secondary-container/20 p-3 rounded-2xl">
+<span class="material-symbols-outlined text-secondary" data-icon="notifications_active">notifications_active</span>
+</div>
+<h3 class="text-xl font-bold">Notification Preferences</h3>
+</div>
+<div class="space-y-6">
+<div class="flex items-center justify-between p-4 bg-surface-container-low rounded-2xl">
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="shopping_bag">shopping_bag</span>
+<div>
+<p class="font-bold">New Order Alerts</p>
+<p class="text-sm text-on-surface-variant">Get notified immediately when a toy is purchased.</p>
+</div>
+</div>
+<div class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 bg-surface-container-low rounded-2xl">
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="inventory_2">inventory_2</span>
+<div>
+<p class="font-bold">Low Stock Reminders</p>
+<p class="text-sm text-on-surface-variant">Alerts when inventory for a toy falls below 5 units.</p>
+</div>
+</div>
+<div class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 bg-surface-container-low rounded-2xl">
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="mail">mail</span>
+<div>
+<p class="font-bold">Weekly Performance Report</p>
+<p class="text-sm text-on-surface-variant">Receive a curated digest of your store's growth.</p>
+</div>
+</div>
+<div class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<aside class="col-span-12 lg:col-span-4 space-y-8">
+<div class="bg-tertiary-container text-on-tertiary-container rounded-xl p-8 relative overflow-hidden group">
+<div class="relative z-10">
+<h3 class="text-2xl font-black mb-4">Toybox Gold</h3>
+<p class="text-sm font-medium mb-6 opacity-90">You have 14 days left of your premium management trial. Unlock global shipping automations.</p>
+<button class="bg-on-tertiary-container text-tertiary-container px-6 py-3 rounded-full font-bold text-sm hover:scale-105 transition-transform">Upgrade Now</button>
+</div>
+<span class="material-symbols-outlined absolute -bottom-4 -right-4 text-9xl opacity-10 rotate-12" data-icon="star">star</span>
+</div>
+<div class="bg-surface-container-low rounded-xl p-6 border-2 border-dashed border-outline-variant/30 flex flex-col items-center text-center">
+<div class="w-24 h-24 rounded-full overflow-hidden mb-4 border-4 border-surface-container-lowest">
+<img alt="Admin Profile" class="w-full h-full object-cover" data-alt="smiling face of a professional woman in her 30s against a soft beige background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5fNz5duDvmDIvQN3YY4wnhoG99kknDYSVOxSwa-YHcQAhRLYiuOe1WIHVO9x-pacWVLNX_c1YISj0nMoclLyOZMDGgPirQ2b-CsUcCcY6yXHlyX-emaQYtPKaP02VqMvvb61MwCVHaCQbimOi_qhSJAdAn9RYANfZFIntp1StZvpRs0b6czPzLfdRXGjkdUq5GDQ0cApr6vdZDYM-PReUb2xmut0oWs_dPD50ktitXJ3oGQPnWWlS2dbI-glsqnhjn3uVGbdZfjti"/>
+</div>
+<h4 class="font-bold text-lg">Change Profile Photo</h4>
+<p class="text-xs text-on-surface-variant mb-4">JPG, GIF or PNG. Max size of 800K</p>
+<button class="bg-surface-container-lowest px-4 py-2 rounded-full text-sm font-bold shadow-sm hover:bg-white transition-colors">Upload New</button>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-8 shadow-[0_40px_40px_rgba(109,90,0,0.04)]">
+<h3 class="font-bold mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" data-icon="security">security</span>
+                        Security Status
+                    </h3>
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-success"></div>
+<span class="text-sm">Two-Factor Auth Enabled</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-success"></div>
+<span class="text-sm">Password updated 30 days ago</span>
+</div>
+<button class="text-secondary text-sm font-bold mt-4 block">Reset Admin Password</button>
+</div>
+</div>
+</aside>
+</div>
+<footer class="mt-20 w-full flex flex-col md:flex-row justify-between items-center py-10 px-0 border-t border-surface-container-high/50 text-sm text-neutral-500">
+<p>© 2024 The Curated Toybox. Designed for play.</p>
+<div class="flex gap-8 mt-4 md:mt-0">
+<a class="hover:text-yellow-600 underline underline-offset-4" href="#">Privacy Policy</a>
+<a class="hover:text-yellow-600 underline underline-offset-4" href="#">Shipping Info</a>
+<a class="hover:text-yellow-600 underline underline-offset-4" href="#">Wholesale</a>
+</div>
+</footer>
+</main>
+<div class="fixed bottom-8 right-8 z-50">
+<button class="bg-primary-container text-on-primary-container p-4 rounded-full shadow-2xl hover:scale-110 transition-transform group">
+<span class="material-symbols-outlined text-3xl" data-icon="help">help</span>
+</button>
+</div>
+</body></html>

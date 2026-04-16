@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-container": "#ff9655",
+                    "on-secondary-fixed-variant": "#004f9e",
+                    "inverse-on-surface": "#9b9d9e",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-container": "#532200",
+                    "inverse-surface": "#0c0f10",
+                    "tertiary": "#964300",
+                    "surface-tint": "#6d5a00",
+                    "surface-dim": "#d1d5d7",
+                    "primary": "#6d5a00",
+                    "primary-dim": "#5f4e00",
+                    "surface-container-high": "#e0e3e4",
+                    "primary-fixed": "#fad538",
+                    "secondary-container": "#bcd2ff",
+                    "surface-container-low": "#eff1f2",
+                    "on-tertiary-fixed-variant": "#612900",
+                    "on-tertiary-fixed": "#2d0f00",
+                    "on-error-container": "#520c00",
+                    "on-primary-container": "#5a4a00",
+                    "surface-bright": "#f5f6f7",
+                    "secondary-dim": "#004e9d",
+                    "secondary-fixed": "#bcd2ff",
+                    "tertiary-dim": "#843a00",
+                    "primary-container": "#fad538",
+                    "inverse-primary": "#fad538",
+                    "outline-variant": "#abadae",
+                    "surface-container": "#e6e8ea",
+                    "outline": "#757778",
+                    "on-error": "#ffefec",
+                    "secondary": "#005ab2",
+                    "error-container": "#f95630",
+                    "on-secondary-fixed": "#00336b",
+                    "on-primary-fixed-variant": "#655300",
+                    "on-primary-fixed": "#443700",
+                    "surface-variant": "#dadddf",
+                    "tertiary-fixed": "#ff9655",
+                    "primary-fixed-dim": "#ebc729",
+                    "tertiary-fixed-dim": "#f6853b",
+                    "surface-container-highest": "#dadddf",
+                    "on-surface-variant": "#595c5d",
+                    "surface": "#f5f6f7",
+                    "on-background": "#2c2f30",
+                    "on-secondary-container": "#00468e",
+                    "secondary-fixed-dim": "#a5c5ff",
+                    "on-surface": "#2c2f30",
+                    "on-tertiary": "#fff0e9",
+                    "on-secondary": "#eff2ff",
+                    "error-dim": "#b92902",
+                    "error": "#b02500",
+                    "on-primary": "#fff2ce",
+                    "background": "#f5f6f7"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "2xl": "3rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Plus Jakarta Sans"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .plusJakartaSans { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .inter { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopNavBar -->
+<header class="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl docked full-width top-0 sticky z-50 shadow-[0_40px_40px_rgba(109,90,0,0.06)]">
+<div class="flex justify-between items-center px-8 py-4 w-full max-w-screen-2xl mx-auto">
+<div class="text-2xl font-black text-yellow-600 dark:text-yellow-400 plusJakartaSans tracking-tight">The Toybox</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-yellow-700 dark:text-yellow-400 border-b-4 border-yellow-400 pb-1 plusJakartaSans font-bold tracking-tight hover:scale-105 transition-transform duration-200" href="#">New Arrivals</a>
+<a class="text-neutral-600 dark:text-neutral-400 plusJakartaSans font-bold tracking-tight hover:scale-105 transition-transform duration-200" href="#">Best Sellers</a>
+</nav>
+<div class="flex items-center gap-6">
+<div class="hidden lg:flex items-center bg-surface-container-low px-4 py-2 rounded-full">
+<span class="material-symbols-outlined text-outline" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-48 inter" placeholder="Find joy..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<button class="hover:scale-105 transition-transform duration-200 text-neutral-600">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+<button class="bg-primary-container text-on-primary-container px-6 py-2.5 rounded-full font-bold plusJakartaSans flex items-center gap-2 hover:scale-105 transition-transform duration-200 shadow-sm">
+<span class="material-symbols-outlined" data-icon="shopping_basket">shopping_basket</span>
+<span>Cart</span>
+</button>
+</div>
+</div>
+</div>
+</header>
+<main class="max-w-screen-2xl mx-auto px-8 pt-12">
+<!-- Hero Header -->
+<section class="relative mb-16 rounded-xl overflow-hidden min-h-[340px] flex items-center px-12 bg-primary-container/10">
+<div class="absolute inset-0 z-0">
+<img class="w-full h-full object-cover opacity-20 mix-blend-overlay" data-alt="Soft-focus background of high-quality wooden educational toys and colorful building blocks on a minimalist shelf" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDH-wo34_1zv_X4YaBEK2_4Bf7b9P0HhNe50YN7AHVczK2uiqIy7pCn-GSHPVOLNkHnbK1xu4KDbLy6KFRHx4z9EhXkf0aLDZdcHHkehMwz9zXOmN6WtjQ_QvhbgCKRGoTdDxYz-KjK6H4S23ix6djJQ_2IVDHLTGl-jeOkm7OCuofM437LF5JyQMYemGBMhInfl3Dm6IXevTEYc_2lEJriN6eAygHnhx9XFX_IZLwEhWdjQeJYGHUXignmsbM_sCvckvS4oOeAAvz5"/>
+</div>
+<div class="relative z-10 max-w-2xl">
+<h1 class="text-6xl font-black plusJakartaSans text-on-surface leading-tight tracking-tighter mb-4">
+                    The Next Wave <br/><span class="text-primary">of Play</span>
+</h1>
+<p class="text-lg inter text-on-surface-variant max-w-md mb-8">
+                    Hand-picked, sustainable, and designed to inspire. Explore our freshest additions for the curious mind.
+                </p>
+<div class="flex gap-4">
+<span class="bg-white/80 backdrop-blur px-4 py-2 rounded-full border border-primary/10 text-xs font-bold uppercase tracking-widest text-primary flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                        12 New Brands Just Added
+                    </span>
+</div>
+</div>
+</section>
+<div class="flex flex-col lg:flex-row gap-12">
+<!-- Sidebar Navigation / Filters -->
+<aside class="w-full lg:w-64 flex-shrink-0">
+<div class="sticky top-32 space-y-10">
+<div>
+<h3 class="plusJakartaSans font-extrabold text-xl mb-6 text-on-surface">Categories</h3>
+<div class="flex flex-col gap-2">
+<button class="bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-200 rounded-full py-3 px-6 text-left font-bold plusJakartaSans flex items-center gap-3 hover:scale-[1.02] transition-transform">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+                                Catalog
+                            </button>
+<button class="text-neutral-500 px-6 py-3 text-left inter font-medium hover:bg-neutral-200 rounded-full transition-colors flex items-center gap-3">
+<span class="material-symbols-outlined" data-icon="package_2">package_2</span>
+                                Orders
+                            </button>
+<button class="text-neutral-500 px-6 py-3 text-left inter font-medium hover:bg-neutral-200 rounded-full transition-colors flex items-center gap-3">
+<span class="material-symbols-outlined" data-icon="smart_toy">smart_toy</span>
+                                AI Assistant
+                            </button>
+<button class="text-neutral-500 px-6 py-3 text-left inter font-medium hover:bg-neutral-200 rounded-full transition-colors flex items-center gap-3">
+<span class="material-symbols-outlined" data-icon="contact_support">contact_support</span>
+                                Support
+                            </button>
+<button class="text-neutral-500 px-6 py-3 text-left inter font-medium hover:bg-neutral-200 rounded-full transition-colors flex items-center gap-3">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+                                Settings
+                            </button>
+</div>
+</div>
+<div>
+<h3 class="plusJakartaSans font-extrabold text-lg mb-4 text-on-surface">Age Range</h3>
+<div class="flex flex-wrap gap-2">
+<span class="bg-secondary-container text-on-secondary-container px-4 py-1.5 rounded-full text-sm font-semibold inter cursor-pointer">0-2 years</span>
+<span class="bg-surface-container-high text-on-surface-variant px-4 py-1.5 rounded-full text-sm font-semibold inter cursor-pointer hover:bg-secondary-container transition-colors">3-5 years</span>
+<span class="bg-surface-container-high text-on-surface-variant px-4 py-1.5 rounded-full text-sm font-semibold inter cursor-pointer hover:bg-secondary-container transition-colors">6-9 years</span>
+</div>
+</div>
+<div class="bg-tertiary-container/10 p-6 rounded-2xl border border-tertiary-container/20">
+<span class="material-symbols-outlined text-tertiary mb-3" data-icon="auto_awesome">auto_awesome</span>
+<p class="plusJakartaSans font-bold text-tertiary text-sm leading-tight">Need a gift idea?</p>
+<p class="inter text-xs text-on-tertiary-container mt-1 mb-4">Let our AI Toy Expert help you choose.</p>
+<button class="w-full bg-tertiary text-white py-2 rounded-xl text-sm font-bold plusJakartaSans hover:opacity-90 transition-opacity">Ask Assistant</button>
+</div>
+</div>
+</aside>
+<!-- Product Grid -->
+<div class="flex-1">
+<div class="flex justify-between items-end mb-10">
+<div>
+<h2 class="text-3xl font-black plusJakartaSans text-on-surface">New Arrivals</h2>
+<p class="inter text-on-surface-variant">Showing 24 of 86 latest toys</p>
+</div>
+<div class="flex items-center gap-4">
+<span class="inter text-sm text-outline">Sort by:</span>
+<button class="bg-surface-container-low px-6 py-2 rounded-full text-sm font-bold plusJakartaSans flex items-center gap-2">
+                            Latest First
+                            <span class="material-symbols-outlined text-xs" data-icon="expand_more">expand_more</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+<!-- Product Card 1 -->
+<div class="group relative flex flex-col bg-surface-container-lowest rounded-2xl p-6 shadow-[0_40px_40px_rgba(109,90,0,0.04)] hover:scale-[1.02] transition-transform duration-300">
+<div class="relative w-full aspect-square bg-surface-container-high rounded-xl overflow-hidden mb-6">
+<span class="absolute top-4 left-4 z-10 bg-primary text-on-primary text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full">New Arrival</span>
+<button class="absolute top-4 right-4 z-10 bg-white/60 backdrop-blur-sm w-10 h-10 rounded-full flex items-center justify-center text-on-surface hover:bg-white transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="favorite">favorite</span>
+</button>
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Handcrafted minimalist wooden train set with pastel colored blocks on a clean white background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQU3xwAd55zURoMYfEBQoVzI1A5RP1iswK7m9AyOFV-ZwFc4Jhj3pdY6IzlbJRdImDLN8Dy4mCI4ueKtGJcZtaTkhutnfe5p-AdV8g1UBKPnQSqp4Y5T4T-NAr5npJ7Ba_iRi6WCs7tH1LXwGGkN62e_qvdofuRMYq5khgijRmAuPhNMDGMhAEYQUIvGu8L6TJOiRG9DuuyAPeKcWkFTG54vU7fUJswdehLPC5vGfLkOKnd_IGLYKlORtNVvad5nzperKn1Z3oZkuw"/>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-xs font-bold text-secondary tracking-wide uppercase inter">Eco-Wooden Series</span>
+<h3 class="plusJakartaSans font-extrabold text-xl text-on-surface">Archipelago Train Set</h3>
+<div class="flex justify-between items-center mt-4">
+<span class="text-2xl font-black plusJakartaSans text-primary">$48.00</span>
+<button class="bg-secondary-container text-on-secondary-container w-12 h-12 rounded-full flex items-center justify-center hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="add_shopping_cart">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="group relative flex flex-col bg-surface-container-lowest rounded-2xl p-6 shadow-[0_40px_40px_rgba(109,90,0,0.04)] hover:scale-[1.02] transition-transform duration-300">
+<div class="relative w-full aspect-square bg-surface-container-high rounded-xl overflow-hidden mb-6">
+<span class="absolute top-4 left-4 z-10 bg-tertiary text-on-tertiary text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full">Trending</span>
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Brightly colored geometric puzzle blocks arranged in an artistic, playful composition on a light grey surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB96a4yxtTi8NoPcukHaOUmF2am-_17BmRZPDmuldHFiSYu5L8pBV5PX39HLoHGd86vzSDGvpdqZQrgtkAwSsb_Dq5mGNUa4ruoikr9UxCRme-eGE0lhhtTpuKZHETCymQHoMnmh4aWJw5s_5ekoe5CZv1b3bhU99X0XoX5J32h1MoSN9PKt0qpTi4UiBWh_Hv_5Q5Xcpep2HvW0XwfhCdZ23QcDwYx0QCR6Q6IvgeWZoUVMjwpox0nl6PcfTqdiCUN43RkWrY5_bcr"/>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-xs font-bold text-secondary tracking-wide uppercase inter">Logic &amp; Play</span>
+<h3 class="plusJakartaSans font-extrabold text-xl text-on-surface">Prism Logic Cube</h3>
+<div class="flex justify-between items-center mt-4">
+<span class="text-2xl font-black plusJakartaSans text-primary">$32.50</span>
+<button class="bg-secondary-container text-on-secondary-container w-12 h-12 rounded-full flex items-center justify-center hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="add_shopping_cart">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="group relative flex flex-col bg-surface-container-lowest rounded-2xl p-6 shadow-[0_40px_40px_rgba(109,90,0,0.04)] hover:scale-[1.02] transition-transform duration-300">
+<div class="relative w-full aspect-square bg-surface-container-high rounded-xl overflow-hidden mb-6">
+<span class="absolute top-4 left-4 z-10 bg-primary text-on-primary text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full">New Arrival</span>
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Plush organic cotton companion doll with a friendly face and striped outfit, sitting in a modern nursery setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKh2v6jV0RKQa0mvCm-Hcxiu0ol7FTCMDF4UgyCa0BYkS1roalMYhUPI8nxovo4itQpJicaUfyGx5-KqvfgJmtzR0jypewOwRa5dwpg8ikJHv1F-k6lCcUsNrmQib8R569_cpbSRSHUgyDoKSk_lhk8F7IPXNlwW0SISAHAtW7UuOaWleI7QA7ay5GjlnY6wmsMBA9tVr8mpV0t0y2R-WMXVSAGOSGd_yY3FOv6R4o2VqoGysqIqqcm5JO9_1fbfMeIj6DfksRHRP0"/>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-xs font-bold text-secondary tracking-wide uppercase inter">Soft Buddies</span>
+<h3 class="plusJakartaSans font-extrabold text-xl text-on-surface">Milo the Explorer</h3>
+<div class="flex justify-between items-center mt-4">
+<span class="text-2xl font-black plusJakartaSans text-primary">$24.00</span>
+<button class="bg-secondary-container text-on-secondary-container w-12 h-12 rounded-full flex items-center justify-center hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="add_shopping_cart">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 4 -->
+<div class="group relative flex flex-col bg-surface-container-lowest rounded-2xl p-6 shadow-[0_40px_40px_rgba(109,90,0,0.04)] hover:scale-[1.02] transition-transform duration-300">
+<div class="relative w-full aspect-square bg-surface-container-high rounded-xl overflow-hidden mb-6">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Creative art kit for children including non-toxic watercolor paints and wooden brushes on a paper-textured background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAY5LB7zPqwWRF85Q0-KGvJGHRvu_F8oA25_KLFufWWd0JrbEHhd3da4zWtuLNG-ywNE0iF2C_8xtD0DlP8-BQUjAUUcCMdg6RJj_7AWPhsjb-781FTvf6iheqcLbq2eWuqFfh_ba7ESIPzwu5VZV_8LA9dnLS3-eVwKac5pQj7ww5oaN6TCksS9By7X0D5Yjyq7dqHSQoNtfaeOJ-WHOkSRLTKJcAYOFiVjktBMxol3VIBPkEFsv-cU-ov8NPu5Ckb5Ldx0CpBl4Ch"/>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-xs font-bold text-secondary tracking-wide uppercase inter">Creative Studio</span>
+<h3 class="plusJakartaSans font-extrabold text-xl text-on-surface">Artisan Paint Kit</h3>
+<div class="flex justify-between items-center mt-4">
+<span class="text-2xl font-black plusJakartaSans text-primary">$19.99</span>
+<button class="bg-secondary-container text-on-secondary-container w-12 h-12 rounded-full flex items-center justify-center hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="add_shopping_cart">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 5 -->
+<div class="group relative flex flex-col bg-surface-container-lowest rounded-2xl p-6 shadow-[0_40px_40px_rgba(109,90,0,0.04)] hover:scale-[1.02] transition-transform duration-300">
+<div class="relative w-full aspect-square bg-surface-container-high rounded-xl overflow-hidden mb-6">
+<span class="absolute top-4 left-4 z-10 bg-primary text-on-primary text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full">New Arrival</span>
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Premium wooden dollhouse with open sides and minimalist furniture, styled in a bright and airy sunroom" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4lTR2YIDfmXlDkyYe01iZnD86tBz975hJQ1zZjmapE9E_Zt2TI6IgglCO_I9w92JNFZmreZmhihgC0gqwU7kGZ5hDUtkity-3u4eBKyVCbttGIUPW1V9A3Tuv4P4EzB15clYQX6UW73zPqN1_Jo7syMjRfwNiZHMOcggn7J2cz7MFNT0zejLMWmf2tPMbNEURr9rKXMAppL9HGHUjuqljI1SQsobYsIx1r0vblTTksh1dApWDCBTvlGKTus5Yts8ilq-PNm-P25-8"/>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-xs font-bold text-secondary tracking-wide uppercase inter">Home &amp; Play</span>
+<h3 class="plusJakartaSans font-extrabold text-xl text-on-surface">Modernist Dollhouse</h3>
+<div class="flex justify-between items-center mt-4">
+<span class="text-2xl font-black plusJakartaSans text-primary">$120.00</span>
+<button class="bg-secondary-container text-on-secondary-container w-12 h-12 rounded-full flex items-center justify-center hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="add_shopping_cart">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 6 -->
+<div class="group relative flex flex-col bg-surface-container-lowest rounded-2xl p-6 shadow-[0_40px_40px_rgba(109,90,0,0.04)] hover:scale-[1.02] transition-transform duration-300">
+<div class="relative w-full aspect-square bg-surface-container-high rounded-xl overflow-hidden mb-6">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Retro-style pedal car in a sleek cream color with chrome accents, sitting on a polished studio floor" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQ-0DRhiyIt_ox9JFC-kpl4peHUSY7JhAqcNhqQaLMaYM8kbkB-aj2UxDteAq1OaDm8Yt9VQhUP0VZ0G8xXhPtz3GCTejp32Waw8mkOvNtDTqHVjfIqwzhajPWRv4F2aRabz4AycdW8HQb-Jmt36RxAEVplcztzeHIFGvsJiA53dmZXB8l4MGCHI1Ht-WjGtFO0UBw5BdOECElCLYjlb_rpb6hcURfqkrmCdvrfH3YHRQtiiQfzbRNN0Tsq3OVBgJ1VQxtsmCPVQt_"/>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-xs font-bold text-secondary tracking-wide uppercase inter">Active Adventurer</span>
+<h3 class="plusJakartaSans font-extrabold text-xl text-on-surface">Classic Speedster</h3>
+<div class="flex justify-between items-center mt-4">
+<span class="text-2xl font-black plusJakartaSans text-primary">$215.00</span>
+<button class="bg-secondary-container text-on-secondary-container w-12 h-12 rounded-full flex items-center justify-center hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="add_shopping_cart">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Load More -->
+<div class="mt-20 flex flex-col items-center gap-6">
+<p class="inter text-sm text-outline">You've viewed 6 of 86 products</p>
+<div class="w-64 h-1 bg-surface-container rounded-full overflow-hidden">
+<div class="w-[7%] h-full bg-primary"></div>
+</div>
+<button class="bg-surface-container-lowest text-on-surface px-12 py-4 rounded-full font-bold plusJakartaSans border border-outline-variant/30 hover:bg-primary hover:text-on-primary transition-all duration-300">
+                        Show More Products
+                    </button>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-neutral-100 dark:bg-neutral-900 full-width rounded-t-[3rem] mt-20">
+<div class="flex flex-col md:flex-row justify-between items-center px-12 py-10 w-full max-w-screen-2xl mx-auto">
+<div class="flex flex-col items-center md:items-start gap-4">
+<div class="text-xl font-extrabold text-yellow-600 plusJakartaSans">The Toybox</div>
+<p class="inter text-sm tracking-wide text-neutral-500">© 2024 The Curated Toybox. Designed for play.</p>
+</div>
+<div class="flex gap-10 mt-8 md:mt-0">
+<a class="inter text-sm tracking-wide text-neutral-500 hover:text-yellow-600 underline underline-offset-4" href="#">Privacy Policy</a>
+<a class="inter text-sm tracking-wide text-neutral-500 hover:text-yellow-600 underline underline-offset-4" href="#">Shipping Info</a>
+<a class="inter text-sm tracking-wide text-neutral-500 hover:text-yellow-600 underline underline-offset-4" href="#">Wholesale</a>
+</div>
+<div class="flex gap-4 mt-8 md:mt-0">
+<button class="bg-[#25D366] text-white p-3 rounded-full flex items-center gap-2 hover:scale-105 transition-transform">
+<span class="material-symbols-outlined" data-icon="chat">chat</span>
+<span class="text-sm font-bold inter">WhatsApp Us</span>
+</button>
+</div>
+</div>
+</footer>
+<!-- FAB for AI Assistant -->
+<button class="fixed bottom-8 right-8 bg-primary text-on-primary w-16 h-16 rounded-full shadow-xl flex items-center justify-center hover:scale-110 transition-transform z-50">
+<span class="material-symbols-outlined text-3xl" data-icon="smart_toy">smart_toy</span>
+</button>
+</body></html>

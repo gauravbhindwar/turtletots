@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>The Toybox Admin - Support Center</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-container": "#ff9655",
+                    "on-secondary-fixed-variant": "#004f9e",
+                    "inverse-on-surface": "#9b9d9e",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-container": "#532200",
+                    "inverse-surface": "#0c0f10",
+                    "tertiary": "#964300",
+                    "surface-tint": "#6d5a00",
+                    "surface-dim": "#d1d5d7",
+                    "primary": "#6d5a00",
+                    "primary-dim": "#5f4e00",
+                    "surface-container-high": "#e0e3e4",
+                    "primary-fixed": "#fad538",
+                    "secondary-container": "#bcd2ff",
+                    "surface-container-low": "#eff1f2",
+                    "on-tertiary-fixed-variant": "#612900",
+                    "on-tertiary-fixed": "#2d0f00",
+                    "on-error-container": "#520c00",
+                    "on-primary-container": "#5a4a00",
+                    "surface-bright": "#f5f6f7",
+                    "secondary-dim": "#004e9d",
+                    "secondary-fixed": "#bcd2ff",
+                    "tertiary-dim": "#843a00",
+                    "primary-container": "#fad538",
+                    "inverse-primary": "#fad538",
+                    "outline-variant": "#abadae",
+                    "surface-container": "#e6e8ea",
+                    "outline": "#757778",
+                    "on-error": "#ffefec",
+                    "secondary": "#005ab2",
+                    "error-container": "#f95630",
+                    "on-secondary-fixed": "#00336b",
+                    "on-primary-fixed-variant": "#655300",
+                    "on-primary-fixed": "#443700",
+                    "surface-variant": "#dadddf",
+                    "tertiary-fixed": "#ff9655",
+                    "primary-fixed-dim": "#ebc729",
+                    "tertiary-fixed-dim": "#f6853b",
+                    "surface-container-highest": "#dadddf",
+                    "on-surface-variant": "#595c5d",
+                    "surface": "#f5f6f7",
+                    "on-background": "#2c2f30",
+                    "on-secondary-container": "#00468e",
+                    "secondary-fixed-dim": "#a5c5ff",
+                    "on-surface": "#2c2f30",
+                    "on-tertiary": "#fff0e9",
+                    "on-secondary": "#eff2ff",
+                    "error-dim": "#b92902",
+                    "error": "#b02500",
+                    "on-primary": "#fff2ce",
+                    "background": "#f5f6f7"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Plus Jakarta Sans"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .plusJakartaSans { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface selection:bg-primary-container">
+<!-- SideNavBar (Authority: JSON & Design System) -->
+<aside class="h-screen w-64 fixed left-0 top-0 rounded-r-xl bg-neutral-50 dark:bg-neutral-950 flex flex-col py-8 z-50 overflow-y-auto border-r border-outline-variant/10">
+<div class="px-8 mb-10">
+<h1 class="text-xl font-extrabold text-yellow-600 plusJakartaSans">The Toybox</h1>
+<p class="text-[10px] uppercase tracking-widest text-neutral-400 font-bold mt-1">Admin Dashboard</p>
+</div>
+<nav class="flex-1 space-y-1">
+<!-- Active State: Support (Intent Priority) -->
+<a class="px-6 py-3 text-neutral-500 hover:bg-neutral-200 transition-all flex items-center gap-3 group mx-2 rounded-full" href="#">
+<span class="material-symbols-outlined" data-icon="package_2">package_2</span>
+<span class="font-medium">Orders</span>
+</a>
+<a class="px-6 py-3 text-neutral-500 hover:bg-neutral-200 transition-all flex items-center gap-3 group mx-2 rounded-full" href="#">
+<span class="material-symbols-outlined" data-icon="smart_toy">smart_toy</span>
+<span class="font-medium">AI Assistant</span>
+</a>
+<!-- ACTIVE -->
+<a class="bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-200 rounded-full mx-2 font-bold px-6 py-3 flex items-center gap-3 scale-[1.02]" href="#">
+<span class="material-symbols-outlined" data-icon="contact_support" style="font-variation-settings: 'FILL' 1;">contact_support</span>
+<span>Support</span>
+</a>
+<a class="px-6 py-3 text-neutral-500 hover:bg-neutral-200 transition-all flex items-center gap-3 group mx-2 rounded-full" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-medium">Settings</span>
+</a>
+<a class="px-6 py-3 text-neutral-500 hover:bg-neutral-200 transition-all flex items-center gap-3 group mx-2 rounded-full" href="#">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+<span class="font-medium">Catalog</span>
+</a>
+</nav>
+<div class="px-6 mt-auto">
+<div class="bg-surface-container-low p-4 rounded-2xl flex items-center gap-3 mb-6">
+<img alt="Admin Profile" class="w-10 h-10 rounded-full object-cover" data-alt="Close up portrait of a smiling professional man in a business casual environment with warm natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXCYhvqVqMapJ0Vldb1wkfk0M0_U2hS2xFMhDpZqYVv7jvsZU_KHQ2CvyNvRZIZI5g9RyoW0niE3P5lV34cMqGR6uwlieXeTfCCztRZtH8FWoNt0YoMCg2tFEbTKXWBfU3iAmfEdNCR6DgNRejmjSucZxWc-exQlhY4-oKVmOnqcMC7XYvbPGF24mfWLVquwjuqNqXQcKf2BZiljpRc7Ugt_H3V6oSBV9rVU58oPcM1o5cZGlLpKOs_-Zso4LdTXl9cE1iCPfFYf3B"/>
+<div>
+<p class="text-xs font-bold text-on-surface">Admin Profile</p>
+<p class="text-[10px] text-on-surface-variant">Toybox Management</p>
+</div>
+</div>
+<button class="w-full bg-primary-container text-on-primary-container font-bold py-3 px-4 rounded-full flex items-center justify-center gap-2 hover:scale-105 transition-transform shadow-lg shadow-primary/10">
+<span class="material-symbols-outlined text-lg">add</span>
+<span>Add New Toy</span>
+</button>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="ml-64 min-h-screen p-8 lg:p-12">
+<!-- Header & Stats Bento -->
+<header class="mb-12">
+<h2 class="text-4xl font-black text-on-surface plusJakartaSans tracking-tight mb-2">Support Center</h2>
+<p class="text-on-surface-variant max-w-2xl">Manage your play-community. Resolve inquiries, update the knowledge base, and monitor customer satisfaction in real-time.</p>
+</header>
+<!-- Stats Grid (Bento Style) -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+<div class="md:col-span-2 bg-secondary-container text-on-secondary-container p-8 rounded-xl flex flex-col justify-between relative overflow-hidden group">
+<div class="relative z-10">
+<p class="text-sm font-bold uppercase tracking-widest opacity-70">Active Tickets</p>
+<h3 class="text-6xl font-black mt-2">124</h3>
+<p class="mt-4 flex items-center gap-1 font-semibold text-sm">
+<span class="material-symbols-outlined">trending_up</span>
+                        +12% from yesterday
+                    </p>
+</div>
+<span class="material-symbols-outlined absolute -right-4 -bottom-4 text-9xl opacity-10 group-hover:scale-110 transition-transform">confirmation_number</span>
+</div>
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-[0_40px_40px_rgba(109,90,0,0.04)] border border-outline-variant/10">
+<p class="text-sm font-bold text-on-surface-variant uppercase tracking-widest">Avg. Response</p>
+<h3 class="text-4xl font-black text-on-surface mt-2">14<span class="text-xl">min</span></h3>
+<div class="mt-4 h-1.5 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary w-3/4"></div>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-[0_40px_40px_rgba(109,90,0,0.04)] border border-outline-variant/10">
+<p class="text-sm font-bold text-on-surface-variant uppercase tracking-widest">Satisfaction</p>
+<h3 class="text-4xl font-black text-on-surface mt-2">4.9<span class="text-xl">/5</span></h3>
+<div class="flex gap-0.5 mt-4 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+</div>
+<!-- Layout Split: Inbox vs Knowledge Base -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Inquiry List (Inbox) -->
+<div class="lg:col-span-2 space-y-6">
+<div class="flex items-center justify-between">
+<h4 class="text-xl font-extrabold plusJakartaSans">Recent Inquiries</h4>
+<div class="flex gap-2">
+<button class="bg-surface-container-high px-4 py-2 rounded-full text-xs font-bold hover:bg-primary-container transition-colors">All</button>
+<button class="bg-surface-container px-4 py-2 rounded-full text-xs font-bold text-on-surface-variant">Pending</button>
+</div>
+</div>
+<div class="space-y-4">
+<!-- Ticket Item 1 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl hover:scale-[1.01] transition-all border border-outline-variant/5 shadow-sm flex items-start gap-5">
+<div class="w-12 h-12 rounded-full bg-tertiary-container/20 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-tertiary">package_2</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h5 class="font-bold text-on-surface">Missing wooden train set piece</h5>
+<span class="bg-error-container text-on-error-container text-[10px] px-2 py-0.5 rounded-full font-bold">URGENT</span>
+</div>
+<p class="text-sm text-on-surface-variant line-clamp-1 mb-3">Order #TB-9921: "The magnetic coupler on the blue caboose is missing..."</p>
+<div class="flex items-center justify-between text-[11px] font-semibold text-on-surface-variant">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">person</span> Sarah Jenkins</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">schedule</span> 4 mins ago</span>
+</div>
+</div>
+</div>
+<!-- Ticket Item 2 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl hover:scale-[1.01] transition-all border border-outline-variant/5 shadow-sm flex items-start gap-5">
+<div class="w-12 h-12 rounded-full bg-secondary-container/20 flex items-center justify-center shrink-0 text-secondary">
+<span class="material-symbols-outlined">local_shipping</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h5 class="font-bold text-on-surface">International shipping quote</h5>
+<span class="bg-surface-container text-on-surface-variant text-[10px] px-2 py-0.5 rounded-full font-bold">STABLE</span>
+</div>
+<p class="text-sm text-on-surface-variant line-clamp-1 mb-3">"Do you ship the oversized Dollhouse to New Zealand?"</p>
+<div class="flex items-center justify-between text-[11px] font-semibold text-on-surface-variant">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">person</span> Marcus Aurelius</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">schedule</span> 2 hours ago</span>
+</div>
+</div>
+</div>
+<!-- Ticket Item 3 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl hover:scale-[1.01] transition-all border border-outline-variant/5 shadow-sm flex items-start gap-5">
+<div class="w-12 h-12 rounded-full bg-primary-container/20 flex items-center justify-center shrink-0 text-primary">
+<span class="material-symbols-outlined">credit_card</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h5 class="font-bold text-on-surface">Refund for duplicate order</h5>
+<span class="bg-primary-container text-on-primary-container text-[10px] px-2 py-0.5 rounded-full font-bold">PROCESSING</span>
+</div>
+<p class="text-sm text-on-surface-variant line-clamp-1 mb-3">"I accidentally clicked checkout twice during the sale..."</p>
+<div class="flex items-center justify-between text-[11px] font-semibold text-on-surface-variant">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">person</span> Elena Fisher</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">schedule</span> 5 hours ago</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- FAQ Management & Quick Help -->
+<div class="space-y-8">
+<div class="bg-surface-container-low p-8 rounded-xl">
+<h4 class="text-xl font-extrabold plusJakartaSans mb-6">FAQ Management</h4>
+<div class="space-y-4">
+<div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/10">
+<p class="text-xs font-bold text-primary uppercase tracking-tighter mb-1">MOST VIEWED</p>
+<h6 class="text-sm font-bold">"How do I clean wooden toys?"</h6>
+<p class="text-xs text-on-surface-variant mt-1">1.2k views this week</p>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/10">
+<p class="text-xs font-bold text-secondary uppercase tracking-tighter mb-1">NEWLY ADDED</p>
+<h6 class="text-sm font-bold">"Returns for personalized items"</h6>
+<p class="text-xs text-on-surface-variant mt-1">Updated yesterday</p>
+</div>
+</div>
+<button class="w-full mt-6 py-3 border-2 border-dashed border-outline-variant text-on-surface-variant text-sm font-bold rounded-xl hover:border-primary hover:text-primary transition-all">
+                        + Draft New Article
+                    </button>
+</div>
+<div class="bg-inverse-surface text-inverse-on-surface p-8 rounded-xl relative overflow-hidden">
+<div class="relative z-10">
+<h4 class="text-lg font-bold text-white mb-2">Need a Hand?</h4>
+<p class="text-xs opacity-70 mb-6">Your AI Copilot is ready to draft responses or summarize long ticket histories.</p>
+<button class="bg-white text-black px-6 py-2 rounded-full text-xs font-black flex items-center gap-2 hover:bg-primary-container transition-colors">
+<span class="material-symbols-outlined text-sm">smart_toy</span>
+                            Open AI Assistant
+                        </button>
+</div>
+<div class="absolute -right-8 -top-8 w-32 h-32 bg-primary/20 blur-3xl rounded-full"></div>
+</div>
+</div>
+</div>
+<!-- Transactional Action Bar -->
+<div class="fixed bottom-10 right-10 flex gap-4">
+<button class="flex items-center gap-3 bg-[#25D366] text-white px-8 py-4 rounded-full font-black shadow-2xl hover:scale-105 transition-transform">
+<span class="material-symbols-outlined">forum</span>
+                WhatsApp Support
+            </button>
+</div>
+</main>
+<!-- Footer (Authority: JSON) -->
+<footer class="bg-neutral-100 dark:bg-neutral-900 full-width rounded-t-xl mt-20 flex flex-col md:flex-row justify-between items-center px-12 py-10 w-full ml-auto md:w-[calc(100%-16rem)]">
+<p class="Inter text-sm tracking-wide text-neutral-500 font-medium">© 2024 The Curated Toybox. Designed for play.</p>
+<div class="flex gap-8 mt-6 md:mt-0">
+<a class="text-neutral-500 hover:text-yellow-600 underline underline-offset-4 text-sm font-medium" href="#">Privacy Policy</a>
+<a class="text-neutral-500 hover:text-yellow-600 underline underline-offset-4 text-sm font-medium" href="#">Shipping Info</a>
+<a class="text-neutral-500 hover:text-yellow-600 underline underline-offset-4 text-sm font-medium" href="#">Wholesale</a>
+</div>
+</footer>
+</body></html>

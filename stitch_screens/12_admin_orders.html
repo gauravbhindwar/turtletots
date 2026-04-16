@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-container": "#ff9655",
+                        "on-secondary-fixed-variant": "#004f9e",
+                        "inverse-on-surface": "#9b9d9e",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-container": "#532200",
+                        "inverse-surface": "#0c0f10",
+                        "tertiary": "#964300",
+                        "surface-tint": "#6d5a00",
+                        "surface-dim": "#d1d5d7",
+                        "primary": "#6d5a00",
+                        "primary-dim": "#5f4e00",
+                        "surface-container-high": "#e0e3e4",
+                        "primary-fixed": "#fad538",
+                        "secondary-container": "#bcd2ff",
+                        "surface-container-low": "#eff1f2",
+                        "on-tertiary-fixed-variant": "#612900",
+                        "on-tertiary-fixed": "#2d0f00",
+                        "on-error-container": "#520c00",
+                        "on-primary-container": "#5a4a00",
+                        "surface-bright": "#f5f6f7",
+                        "secondary-dim": "#004e9d",
+                        "secondary-fixed": "#bcd2ff",
+                        "tertiary-dim": "#843a00",
+                        "primary-container": "#fad538",
+                        "inverse-primary": "#fad538",
+                        "outline-variant": "#abadae",
+                        "surface-container": "#e6e8ea",
+                        "outline": "#757778",
+                        "on-error": "#ffefec",
+                        "secondary": "#005ab2",
+                        "error-container": "#f95630",
+                        "on-secondary-fixed": "#00336b",
+                        "on-primary-fixed-variant": "#655300",
+                        "on-primary-fixed": "#443700",
+                        "surface-variant": "#dadddf",
+                        "tertiary-fixed": "#ff9655",
+                        "primary-fixed-dim": "#ebc729",
+                        "tertiary-fixed-dim": "#f6853b",
+                        "surface-container-highest": "#dadddf",
+                        "on-surface-variant": "#595c5d",
+                        "surface": "#f5f6f7",
+                        "on-background": "#2c2f30",
+                        "on-secondary-container": "#00468e",
+                        "secondary-fixed-dim": "#a5c5ff",
+                        "on-surface": "#2c2f30",
+                        "on-tertiary": "#fff0e9",
+                        "on-secondary": "#eff2ff",
+                        "error-dim": "#b92902",
+                        "error": "#b02500",
+                        "on-primary": "#fff2ce",
+                        "background": "#f5f6f7"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "2xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, .plusJakartaSans { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface overflow-x-hidden min-h-screen">
+<aside class="flex flex-col h-full py-8 bg-neutral-50 dark:bg-neutral-950 h-screen w-64 fixed left-0 top-0 rounded-r-[3rem] z-50">
+<div class="px-8 mb-10">
+<h1 class="text-xl font-extrabold text-yellow-600 plusJakartaSans">The Toybox</h1>
+<p class="text-[10px] text-neutral-400 uppercase tracking-widest mt-1">Toybox Management</p>
+</div>
+<div class="flex flex-col flex-grow">
+<!-- Nav Item: Orders (Active) -->
+<a class="flex items-center gap-3 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-200 rounded-full mx-2 font-bold px-6 py-3 scale-[1.02] transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="package_2">package_2</span>
+<span class="text-sm font-label">Orders</span>
+</a>
+<!-- Nav Item: AI Assistant -->
+<a class="flex items-center gap-3 text-neutral-500 dark:text-neutral-400 px-6 py-3 mx-2 hover:bg-neutral-200 dark:hover:bg-neutral-800 rounded-full transition-all group" href="#">
+<span class="material-symbols-outlined" data-icon="smart_toy">smart_toy</span>
+<span class="text-sm font-label">AI Assistant</span>
+</a>
+<!-- Nav Item: Support -->
+<a class="flex items-center gap-3 text-neutral-500 dark:text-neutral-400 px-6 py-3 mx-2 hover:bg-neutral-200 dark:hover:bg-neutral-800 rounded-full transition-all group" href="#">
+<span class="material-symbols-outlined" data-icon="contact_support">contact_support</span>
+<span class="text-sm font-label">Support</span>
+</a>
+<!-- Nav Item: Settings -->
+<a class="flex items-center gap-3 text-neutral-500 dark:text-neutral-400 px-6 py-3 mx-2 hover:bg-neutral-200 dark:hover:bg-neutral-800 rounded-full transition-all group" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="text-sm font-label">Settings</span>
+</a>
+<!-- Nav Item: Catalog -->
+<a class="flex items-center gap-3 text-neutral-500 dark:text-neutral-400 px-6 py-3 mx-2 hover:bg-neutral-200 dark:hover:bg-neutral-800 rounded-full transition-all group" href="#">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+<span class="text-sm font-label">Catalog</span>
+</a>
+</div>
+<div class="px-4 mt-auto">
+<button class="w-full bg-primary-container text-on-primary-container rounded-full py-4 font-bold flex items-center justify-center gap-2 shadow-[0_10px_20px_rgba(109,90,0,0.1)] hover:scale-105 transition-transform duration-200">
+<span class="material-symbols-outlined text-xl" data-icon="add">add</span>
+<span class="text-sm font-label">Add New Toy</span>
+</button>
+<div class="mt-8 flex items-center gap-3 px-4">
+<img alt="Admin Profile" class="w-10 h-10 rounded-full object-cover ring-2 ring-yellow-400/20" data-alt="close-up portrait of a friendly professional man in his 30s with a clean background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfW63G8w-8YjjZ83X6Nf4f5zX7Gqk9A1vRXGDMO7--XhPvM-L2-xB-ef0gJhcMBLOBs4IteqXbHVjM3OM5PXKgTFALFTQLKFzfVUR_Wz0VfnKHE19ceAUKkQGUVg4wKuNHpWj0lks7zUj5JWYtuzPZ3nvfAyUbARUW8GXanrx2OzX4xGyftGX_cIeS0d9EY8ePRx1b4nE9AsuM1AIDIeEqqgSLv2o_w6xAU7cbfJ8a1-lhgsHNZjROgdc70S1WudN-CJ_zvR24YbTZ"/>
+<div>
+<p class="text-xs font-bold text-on-surface leading-tight">Admin Profile</p>
+<p class="text-[10px] text-neutral-500">Master Curator</p>
+</div>
+</div>
+</div>
+</aside>
+<main class="ml-64 p-8 min-h-screen">
+<!-- Top Bar / Header Content -->
+<header class="flex justify-between items-end mb-12">
+<div>
+<h2 class="text-4xl font-black plusJakartaSans tracking-tight text-on-surface">Orders Management</h2>
+<p class="text-neutral-500 mt-2 font-medium">Tracking 142 orders across all shipping zones.</p>
+</div>
+<div class="flex gap-4">
+<div class="bg-surface-container-low px-6 py-3 rounded-full flex items-center gap-3 focus-within:bg-surface-container-lowest transition-all ring-1 ring-transparent focus-within:ring-primary/20">
+<span class="material-symbols-outlined text-neutral-400" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm placeholder:text-neutral-400 w-64" placeholder="Find an order..." type="text"/>
+</div>
+<button class="bg-secondary-container text-on-secondary-container px-6 py-3 rounded-full font-bold flex items-center gap-2 hover:scale-105 transition-transform">
+<span class="material-symbols-outlined" data-icon="filter_list">filter_list</span>
+<span class="text-sm">Filters</span>
+</button>
+</div>
+</header>
+<!-- Bento Grid Stats -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+<div class="bg-surface-container-lowest p-8 rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.02)] border border-white/50">
+<div class="flex justify-between items-start mb-4">
+<div class="p-3 bg-primary-container rounded-2xl">
+<span class="material-symbols-outlined text-on-primary-container" data-icon="pending_actions">pending_actions</span>
+</div>
+<span class="text-[10px] font-bold text-primary px-3 py-1 bg-primary/10 rounded-full uppercase">Today</span>
+</div>
+<h3 class="text-3xl font-black plusJakartaSans text-on-surface">24</h3>
+<p class="text-neutral-500 text-sm font-medium mt-1">Processing Orders</p>
+</div>
+<div class="bg-surface-container-lowest p-8 rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.02)] border border-white/50">
+<div class="flex justify-between items-start mb-4">
+<div class="p-3 bg-secondary-container rounded-2xl">
+<span class="material-symbols-outlined text-on-secondary-container" data-icon="local_shipping">local_shipping</span>
+</div>
+<span class="text-[10px] font-bold text-secondary px-3 py-1 bg-secondary/10 rounded-full uppercase">+12.5%</span>
+</div>
+<h3 class="text-3xl font-black plusJakartaSans text-on-surface">86</h3>
+<p class="text-neutral-500 text-sm font-medium mt-1">In Transit</p>
+</div>
+<div class="bg-surface-container-lowest p-8 rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.02)] border border-white/50">
+<div class="flex justify-between items-start mb-4">
+<div class="p-3 bg-tertiary-container rounded-2xl">
+<span class="material-symbols-outlined text-on-tertiary-container" data-icon="verified">verified</span>
+</div>
+<span class="text-[10px] font-bold text-tertiary px-3 py-1 bg-tertiary/10 rounded-full uppercase">Total</span>
+</div>
+<h3 class="text-3xl font-black plusJakartaSans text-on-surface">1,204</h3>
+<p class="text-neutral-500 text-sm font-medium mt-1">Delivered Lifetime</p>
+</div>
+</div>
+<!-- Orders Table Section -->
+<section class="bg-surface-container-lowest rounded-[3rem] shadow-[0_40px_80px_rgba(109,90,0,0.04)] overflow-hidden">
+<div class="p-8 border-b border-surface-container flex justify-between items-center bg-white/50 backdrop-blur-md">
+<div class="flex gap-4">
+<button class="px-6 py-2 bg-secondary-fixed text-on-secondary-fixed rounded-full text-sm font-bold">All Orders</button>
+<button class="px-6 py-2 text-neutral-500 hover:text-primary transition-colors text-sm font-semibold">In Progress</button>
+<button class="px-6 py-2 text-neutral-500 hover:text-primary transition-colors text-sm font-semibold">Completed</button>
+</div>
+<div class="flex items-center gap-2 text-neutral-400 text-sm">
+<span class="material-symbols-outlined text-lg" data-icon="sort">sort</span>
+<span>Sorted by Date</span>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="text-neutral-400 text-[11px] uppercase tracking-widest">
+<th class="px-8 py-6 font-bold">Order ID</th>
+<th class="px-8 py-6 font-bold">Customer</th>
+<th class="px-8 py-6 font-bold">Items</th>
+<th class="px-8 py-6 font-bold">Total</th>
+<th class="px-8 py-6 font-bold">Status</th>
+<th class="px-8 py-6 font-bold text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container/30">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors group">
+<td class="px-8 py-6">
+<span class="font-bold text-on-surface">#TY-9021</span>
+</td>
+<td class="px-8 py-6">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container text-xs font-bold">AS</div>
+<span class="font-semibold text-sm">Alice Sterling</span>
+</div>
+</td>
+<td class="px-8 py-6">
+<div class="flex -space-x-3 overflow-hidden">
+<img alt="toy" class="inline-block h-8 w-8 rounded-full ring-2 ring-white" data-alt="a handcrafted wooden elephant toy with smooth edges and a minimalist design" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB82PBAJQ8i-wjDLvXGmc-w31IkpDZnQ8U0FtkgRYLLoqk3Xlib_tb0HxZPuxoAA62nxYNPWKBOwbh-LVL_DjG88szZntkaESBHx3MmxdX346NXImCBGenC6U_zKlzEYdZiXSfXUV3K72bK8EnYWhJ-YTV9peym4J9IHcOPWmdJ4zbANTVg8hSKMlO0UsDiSWyPXN5oHwyn-p7Rs0MYgVxFEL-4n6WpHUE0X420FakpeIY94Jyh0oMPWE15AdRPKVnkWW-NRHJKKILD"/>
+<img alt="toy" class="inline-block h-8 w-8 rounded-full ring-2 ring-white" data-alt="colorful wooden building blocks in various geometric shapes scattered on a neutral surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_T2Ts7WQ5MV-nLqOYa3H2DVWJo0LImN5byBF43TX9chRhJP8BYLkvX88F-3xqD7IPfMqoOByO4JGmHmfLnOnuoCMADY2MZ8frkH4gPg5GTgqBS2g3GQkpV0Yq6ULkws40T6AVnuEuFLWZRQ3A-emtaN2fJH2swtDOyZaJbgAIOOvXixyyuknJSciNhC062046p964fSOFck4a4Ui7TVZX8iLVC_VvFt4HdW1vYyODlD6te-ZBavY657cdc1v8H2PNlZVNHjNKc2Hx"/>
+<div class="inline-block h-8 w-8 rounded-full bg-neutral-100 flex items-center justify-center text-[10px] font-bold text-neutral-400 ring-2 ring-white">+2</div>
+</div>
+</td>
+<td class="px-8 py-6">
+<span class="font-bold text-on-surface">$124.50</span>
+</td>
+<td class="px-8 py-6">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+                                    Processing
+                                </span>
+</td>
+<td class="px-8 py-6 text-right">
+<button class="p-2 hover:bg-white rounded-full transition-all group-hover:shadow-md">
+<span class="material-symbols-outlined text-neutral-400 group-hover:text-primary" data-icon="visibility">visibility</span>
+</button>
+<button class="p-2 hover:bg-white rounded-full transition-all group-hover:shadow-md">
+<span class="material-symbols-outlined text-neutral-400 group-hover:text-primary" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors group">
+<td class="px-8 py-6">
+<span class="font-bold text-on-surface">#TY-9020</span>
+</td>
+<td class="px-8 py-6">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-tertiary-container flex items-center justify-center text-on-tertiary-container text-xs font-bold">MK</div>
+<span class="font-semibold text-sm">Marcus Kane</span>
+</div>
+</td>
+<td class="px-8 py-6">
+<div class="flex -space-x-3 overflow-hidden">
+<img alt="toy" class="inline-block h-8 w-8 rounded-full ring-2 ring-white" data-alt="a vintage-style red wooden toy race car with white racing stripes on a light background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvd0R6wAUmPO3qFMQ3aVu8Z5Dt-6JPO3Q1CciDSfzlhNZWSRrgz5vEHUZebKSmCOfJb6OTPP2EC-v0Rj-4jbN5o1DOkz2X2LcgHo4GK5gH8ADbRexOYrEsk4nrOlLgjX9InqX0PrRiErABYPvftq8fVMEkVUTx6_-5yyxbNtJRXVv_pYuPCxIgCbgW6Vox1k1m0Cem06TmCc2KDsrZI2V2rTHPo1wGbryIMQ-sIS0_3mHnAym435_StNlXKYhq_b7RLPJtHkQa1kXT"/>
+</div>
+</td>
+<td class="px-8 py-6">
+<span class="font-bold text-on-surface">$45.00</span>
+</td>
+<td class="px-8 py-6">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary/10 text-secondary text-xs font-bold uppercase">
+<span class="material-symbols-outlined text-xs" data-icon="local_shipping">local_shipping</span>
+                                    Shipped
+                                </span>
+</td>
+<td class="px-8 py-6 text-right">
+<button class="p-2 hover:bg-white rounded-full transition-all group-hover:shadow-md">
+<span class="material-symbols-outlined text-neutral-400 group-hover:text-primary" data-icon="visibility">visibility</span>
+</button>
+<button class="p-2 hover:bg-white rounded-full transition-all group-hover:shadow-md">
+<span class="material-symbols-outlined text-neutral-400 group-hover:text-primary" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors group">
+<td class="px-8 py-6">
+<span class="font-bold text-on-surface">#TY-9019</span>
+</td>
+<td class="px-8 py-6">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-neutral-200 flex items-center justify-center text-neutral-600 text-xs font-bold">BW</div>
+<span class="font-semibold text-sm">Bella Watson</span>
+</div>
+</td>
+<td class="px-8 py-6">
+<div class="flex -space-x-3 overflow-hidden">
+<img alt="toy" class="inline-block h-8 w-8 rounded-full ring-2 ring-white" data-alt="a plush knitted teddy bear with soft brown texture and friendly stitched eyes" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSZONpe58TITAlxggdFX1BW2TOYIhrX7Jg09vrdME4XDPP_A4TniQknlFDBsBBfKlK5YQaDtZDPSEPtnwSTvs1QOttrHtlTh6D6v4ANy3uUNDBQdoUNIfM7irMcewEZYmrmDCwkQlc9fTWqbQx7fXFI11AH4dTIXQcKl9j9wlK6gzA9t_QG5Ngy5Tgx-T8-jKtc2C7F0krt-DHOSfG_ovFa-TnXoPanVnsII02p2rdfzi3DvCvrRRfeoY3yMNg71k7Vyyhz7zNm8RN"/>
+<img alt="toy" class="inline-block h-8 w-8 rounded-full ring-2 ring-white" data-alt="colorful wooden building blocks in various geometric shapes scattered on a neutral surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAr5a9bKzWQxVzhHeRet8myrP6weIbzX04J2eWbCz40SYb-vUNkINKk0WBtul41loXEZSpHLb73D2LfTvDD67FKAuettQh_wL2JFNs_XtlzGE-REDG5jgUrWwGkv94X5cZ-aqboizQf2eubJWVMYapFnU-KL6AGzNwbM1KUMhKL1g1psADKzOODzmpvyXxCvF4VmrTah1oMCdcCzqNP8VTbW7mVaaV7DXbSFYF0QJRhRbtfdV_G5KnIiPKvY71gj9HptY5k17eGn9-j"/>
+</div>
+</td>
+<td class="px-8 py-6">
+<span class="font-bold text-on-surface">$210.00</span>
+</td>
+<td class="px-8 py-6">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-bold uppercase">
+<span class="material-symbols-outlined text-xs" data-icon="check_circle">check_circle</span>
+                                    Delivered
+                                </span>
+</td>
+<td class="px-8 py-6 text-right">
+<button class="p-2 hover:bg-white rounded-full transition-all group-hover:shadow-md">
+<span class="material-symbols-outlined text-neutral-400 group-hover:text-primary" data-icon="visibility">visibility</span>
+</button>
+<button class="p-2 hover:bg-white rounded-full transition-all group-hover:shadow-md">
+<span class="material-symbols-outlined text-neutral-400 group-hover:text-primary" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors group">
+<td class="px-8 py-6">
+<span class="font-bold text-on-surface">#TY-9018</span>
+</td>
+<td class="px-8 py-6">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container text-xs font-bold">DR</div>
+<span class="font-semibold text-sm">Dave Rogers</span>
+</div>
+</td>
+<td class="px-8 py-6">
+<div class="flex -space-x-3 overflow-hidden">
+<img alt="toy" class="inline-block h-8 w-8 rounded-full ring-2 ring-white" data-alt="colorful wooden building blocks in various geometric shapes scattered on a neutral surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCaZYwzXtL1QLgtHzFW22hwPT2PlNohVJZRCKfDnC1mEXfZ0HTVfuciRnovvUTq2O0llzwUggQI35c8h3CKi1mvMEeNDgoSKtX_uHLA_kbtOzdVUid2Gxg5vntHQgeYrTJx8Y3fWQM2vAgW3QheJm-KuS1jYPQ8sOrghrfxuRnwb9MwGNvP8BmnezB5hjMN9LfVCYYev3fjZ98t5XyYl6zUscrH6RurPC1Sa3jUMUY5N2EiXR1rzk1q9XOjVb2Q9sV0YJNXaBNCeK8b"/>
+</div>
+</td>
+<td class="px-8 py-6">
+<span class="font-bold text-on-surface">$32.99</span>
+</td>
+<td class="px-8 py-6">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+                                    Processing
+                                </span>
+</td>
+<td class="px-8 py-6 text-right">
+<button class="p-2 hover:bg-white rounded-full transition-all group-hover:shadow-md">
+<span class="material-symbols-outlined text-neutral-400 group-hover:text-primary" data-icon="visibility">visibility</span>
+</button>
+<button class="p-2 hover:bg-white rounded-full transition-all group-hover:shadow-md">
+<span class="material-symbols-outlined text-neutral-400 group-hover:text-primary" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-8 flex justify-between items-center bg-neutral-50/50">
+<span class="text-xs font-semibold text-neutral-400">Showing 1-10 of 142 orders</span>
+<div class="flex gap-2">
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-white shadow-sm text-neutral-400 hover:text-primary transition-all">
+<span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-on-primary font-bold shadow-md">1</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-white shadow-sm text-neutral-600 hover:text-primary transition-all font-bold">2</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-white shadow-sm text-neutral-600 hover:text-primary transition-all font-bold">3</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-white shadow-sm text-neutral-400 hover:text-primary transition-all">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+<footer class="ml-64 bg-neutral-100 dark:bg-neutral-900 full-width rounded-t-[3rem] mt-20">
+<div class="flex flex-col md:flex-row justify-between items-center px-12 py-10 w-full">
+<div class="flex items-center gap-6">
+<p class="text-neutral-500 hover:text-yellow-600 text-sm font-semibold transition-colors duration-200 underline underline-offset-4 cursor-pointer">Privacy Policy</p>
+<p class="text-neutral-500 hover:text-yellow-600 text-sm font-semibold transition-colors duration-200 underline underline-offset-4 cursor-pointer">Shipping Info</p>
+<p class="text-neutral-500 hover:text-yellow-600 text-sm font-semibold transition-colors duration-200 underline underline-offset-4 cursor-pointer">Wholesale</p>
+</div>
+<div class="mt-4 md:mt-0">
+<p class="Inter text-sm tracking-wide text-neutral-500">© 2024 The Curated Toybox. Designed for play.</p>
+</div>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>The Toybox Admin - AI Assistant</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-container": "#ff9655",
+                    "on-secondary-fixed-variant": "#004f9e",
+                    "inverse-on-surface": "#9b9d9e",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-container": "#532200",
+                    "inverse-surface": "#0c0f10",
+                    "tertiary": "#964300",
+                    "surface-tint": "#6d5a00",
+                    "surface-dim": "#d1d5d7",
+                    "primary": "#6d5a00",
+                    "primary-dim": "#5f4e00",
+                    "surface-container-high": "#e0e3e4",
+                    "primary-fixed": "#fad538",
+                    "secondary-container": "#bcd2ff",
+                    "surface-container-low": "#eff1f2",
+                    "on-tertiary-fixed-variant": "#612900",
+                    "on-tertiary-fixed": "#2d0f00",
+                    "on-error-container": "#520c00",
+                    "on-primary-container": "#5a4a00",
+                    "surface-bright": "#f5f6f7",
+                    "secondary-dim": "#004e9d",
+                    "secondary-fixed": "#bcd2ff",
+                    "tertiary-dim": "#843a00",
+                    "primary-container": "#fad538",
+                    "inverse-primary": "#fad538",
+                    "outline-variant": "#abadae",
+                    "surface-container": "#e6e8ea",
+                    "outline": "#757778",
+                    "on-error": "#ffefec",
+                    "secondary": "#005ab2",
+                    "error-container": "#f95630",
+                    "on-secondary-fixed": "#00336b",
+                    "on-primary-fixed-variant": "#655300",
+                    "on-primary-fixed": "#443700",
+                    "surface-variant": "#dadddf",
+                    "tertiary-fixed": "#ff9655",
+                    "primary-fixed-dim": "#ebc729",
+                    "tertiary-fixed-dim": "#f6853b",
+                    "surface-container-highest": "#dadddf",
+                    "on-surface-variant": "#595c5d",
+                    "surface": "#f5f6f7",
+                    "on-background": "#2c2f30",
+                    "on-secondary-container": "#00468e",
+                    "secondary-fixed-dim": "#a5c5ff",
+                    "on-surface": "#2c2f30",
+                    "on-tertiary": "#fff0e9",
+                    "on-secondary": "#eff2ff",
+                    "error-dim": "#b92902",
+                    "error": "#b02500",
+                    "on-primary": "#fff2ce",
+                    "background": "#f5f6f7"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Plus Jakarta Sans"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, .plusJakartaSans { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-neutral-50 dark:bg-neutral-950 text-on-surface">
+<!-- SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 rounded-r-[3rem] bg-neutral-50 dark:bg-neutral-950 flex flex-col h-full py-8 surface-container-low border-r border-outline-variant/10 z-50">
+<div class="px-8 mb-10">
+<div class="flex items-center gap-3 mb-2">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">toys</span>
+</div>
+<h1 class="text-xl font-extrabold text-yellow-600 leading-none">The Toybox</h1>
+</div>
+<p class="text-[10px] uppercase tracking-widest text-neutral-400 font-bold px-1">Toybox Management</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="text-neutral-500 dark:text-neutral-400 px-6 py-3 flex items-center gap-4 hover:bg-neutral-200 dark:hover:bg-neutral-800 rounded-full mx-4 transition-all duration-200 group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">package_2</span>
+<span class="font-medium">Orders</span>
+</a>
+<!-- Active Tab: AI Assistant -->
+<a class="bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-200 rounded-full mx-4 font-bold flex items-center gap-4 px-6 py-3 scale(1.02) shadow-sm" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+<span class="font-bold">AI Assistant</span>
+</a>
+<a class="text-neutral-500 dark:text-neutral-400 px-6 py-3 flex items-center gap-4 hover:bg-neutral-200 dark:hover:bg-neutral-800 rounded-full mx-4 transition-all duration-200 group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">storefront</span>
+<span class="font-medium">Catalog</span>
+</a>
+<a class="text-neutral-500 dark:text-neutral-400 px-6 py-3 flex items-center gap-4 hover:bg-neutral-200 dark:hover:bg-neutral-800 rounded-full mx-4 transition-all duration-200 group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">contact_support</span>
+<span class="font-medium">Support</span>
+</a>
+<a class="text-neutral-500 dark:text-neutral-400 px-6 py-3 flex items-center gap-4 hover:bg-neutral-200 dark:hover:bg-neutral-800 rounded-full mx-4 transition-all duration-200 group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">settings</span>
+<span class="font-medium">Settings</span>
+</a>
+</nav>
+<div class="px-6 mt-auto">
+<button class="w-full py-4 bg-primary text-on-primary font-bold rounded-full flex items-center justify-center gap-2 hover:scale-105 transition-transform shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined">add</span>
+                Add New Toy
+            </button>
+<div class="mt-8 flex items-center gap-3 px-2">
+<img alt="Admin Profile" class="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm" data-alt="close-up portrait of a professional male store manager with a friendly smile in a bright modern office setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDoKjBdXybsvjeHcDk76fuWNefjwOGjCp8dF1RVjc47_4D3dIfXBV_TcjWSTMCZLTiUHcXMP1bfbsu-tJJwqPFGk3JijtifLS5GpSDjJ36FcN4sSEqw-d2TLHzPpvj_l05LtwgyonWx54_Run34IS5um16wKpLtlAEg52ZH_CHU9xSR4rWke41-lMVonKIJP60sLm1pOgY5WiLIDz7-xSsxyEF76E5SIyuM0Z4K7uJBhkdewaDKXB8R6hJwEj127C33IrEVWzvMK1yB"/>
+<div>
+<p class="text-xs font-bold text-on-surface">Admin Profile</p>
+<p class="text-[10px] text-neutral-400">Store Manager</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="ml-64 min-h-screen p-8 lg:p-12">
+<header class="flex justify-between items-end mb-12">
+<div>
+<h2 class="text-4xl font-black text-on-surface tracking-tight plusJakartaSans mb-2">AI Assistant</h2>
+<p class="text-neutral-500 font-medium">Generate insights, product copy, and sales reports in seconds.</p>
+</div>
+<div class="flex gap-3">
+<span class="px-4 py-2 bg-secondary-container text-on-secondary-container rounded-full text-xs font-bold flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+                    AI Engine Online
+                </span>
+</div>
+</header>
+<!-- Bento Grid for Quick Insights -->
+<div class="grid grid-cols-12 gap-6 mb-8">
+<div class="col-span-12 lg:col-span-8 bg-surface-container-lowest rounded-xl p-8 shadow-[0_40px_40px_rgba(109,90,0,0.06)] flex flex-col h-[600px] border border-outline-variant/10">
+<!-- Chat History -->
+<div class="flex-1 overflow-y-auto space-y-6 mb-6 pr-4">
+<!-- Bot Message -->
+<div class="flex gap-4">
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-xs text-on-primary-container" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-2xl rounded-tl-none max-w-[80%]">
+<p class="text-sm text-on-surface-variant leading-relaxed">Hello! I'm your Toybox Assistant. I've analyzed last week's sales. Would you like to see the **Top 3 Trending Items** or should I **draft descriptions** for the new wooden puzzles?</p>
+</div>
+</div>
+<!-- User Message -->
+<div class="flex gap-4 flex-row-reverse">
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-xs text-on-secondary-container">person</span>
+</div>
+<div class="bg-secondary-container/30 p-4 rounded-2xl rounded-tr-none max-w-[80%]">
+<p class="text-sm text-on-secondary-container font-medium">Show me the sales trends for the eco-friendly category this month.</p>
+</div>
+</div>
+<!-- Bot Response with Data Visualization Placeholder -->
+<div class="flex gap-4">
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-xs text-on-primary-container" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-2xl rounded-tl-none max-w-[90%] w-full">
+<p class="text-sm text-on-surface-variant mb-4">The **Eco-Friendly category** has seen a 24% growth compared to last month. Here's the velocity chart:</p>
+<div class="h-48 w-full bg-white rounded-xl border border-outline-variant/20 relative overflow-hidden flex items-end p-4 gap-2">
+<!-- Mock Chart -->
+<div class="flex-1 bg-primary-container h-1/4 rounded-t-md"></div>
+<div class="flex-1 bg-primary-container h-2/5 rounded-t-md"></div>
+<div class="flex-1 bg-primary-container h-1/2 rounded-t-md"></div>
+<div class="flex-1 bg-primary-container h-3/4 rounded-t-md"></div>
+<div class="flex-1 bg-primary-container h-2/3 rounded-t-md"></div>
+<div class="flex-1 bg-primary h-full rounded-t-md relative">
+<span class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-bold text-primary">Peak</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Input Area -->
+<div class="relative">
+<input class="w-full bg-surface-container-low border-none rounded-full py-4 pl-6 pr-32 focus:ring-2 focus:ring-primary/20 text-on-surface placeholder:text-neutral-400" placeholder="Ask about inventory, sales, or descriptions..." type="text"/>
+<div class="absolute right-2 top-2 flex gap-2">
+<button class="p-2 text-neutral-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">mic</span>
+</button>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-full font-bold text-sm hover:scale-105 transition-transform flex items-center gap-2">
+                            Send
+                            <span class="material-symbols-outlined text-sm">send</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Quick Actions & Suggested Prompts -->
+<div class="col-span-12 lg:col-span-4 space-y-6">
+<div class="bg-secondary-container/20 p-6 rounded-xl border border-secondary-container/30">
+<h3 class="font-bold text-secondary mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined">bolt</span>
+                        Quick Actions
+                    </h3>
+<div class="grid grid-cols-1 gap-3">
+<button class="text-left p-4 bg-white rounded-xl hover:shadow-md transition-all group">
+<p class="text-xs font-bold text-on-surface mb-1 group-hover:text-primary">Restock Alert</p>
+<p class="text-[10px] text-neutral-500">Analyze items with low stock levels</p>
+</button>
+<button class="text-left p-4 bg-white rounded-xl hover:shadow-md transition-all group">
+<p class="text-xs font-bold text-on-surface mb-1 group-hover:text-primary">SEO Copywriting</p>
+<p class="text-[10px] text-neutral-500">Generate 5 descriptions for new toys</p>
+</button>
+<button class="text-left p-4 bg-white rounded-xl hover:shadow-md transition-all group">
+<p class="text-xs font-bold text-on-surface mb-1 group-hover:text-primary">Competitor Check</p>
+<p class="text-[10px] text-neutral-500">Price comparison for trending toys</p>
+</button>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 shadow-sm">
+<h3 class="font-bold text-on-surface mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined">history</span>
+                        Recent Summaries
+                    </h3>
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-yellow-400"></div>
+<span class="text-xs text-on-surface-variant truncate">Monday Morning Sales Audit</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-neutral-300"></div>
+<span class="text-xs text-on-surface-variant truncate">Wooden Blocks SKU:293 Description</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-neutral-300"></div>
+<span class="text-xs text-on-surface-variant truncate">Inventory Forecast Q4</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Inventory Heatmap / Status (Asymmetric Card) -->
+<div class="bg-white rounded-xl p-8 border border-outline-variant/10 flex items-center gap-8 shadow-sm">
+<div class="w-1/3">
+<img alt="Toys" class="rounded-2xl w-full h-40 object-cover shadow-inner" data-alt="artistic arrangement of colorful wooden toy blocks and shapes on a clean white surface with soft shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPpppyOwy7pN0v_DGCAL68QcM4g5U_Z7Wz1EiXCpujOnhYa9Q_xC9QCFeE8gKwXkg0TkGvxK8vLv_QpjbM3ekW1eOzkqQzdicXAmO4R9lAywq6jeKWrN0NSm2TKve_CWm2wOY6ZJQQKyq-3iatdSUIVWZqHqpPEoz-zus5BdRwQCZtaCrOUQrVDHKyHHkHny-AqMvso_Y0nE271uOh0QGxoTCBLIZ0-TfhVcQYVHiwWG1geREJHyBIUghYpFk84B84uu_vdhKzC5sc"/>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-2 mb-2">
+<span class="text-[10px] font-black bg-tertiary-container text-on-tertiary-container px-2 py-1 rounded uppercase tracking-wider">AI Insights</span>
+<span class="text-[10px] text-neutral-400">Update 2m ago</span>
+</div>
+<h4 class="text-xl font-bold plusJakartaSans mb-2">High Demand Prediction</h4>
+<p class="text-sm text-neutral-500 leading-relaxed mb-4">I've detected an upcoming spike for **Montessori Toys** in the next 14 days based on local search trends. I suggest increasing stock by 15% to avoid stockouts.</p>
+<div class="flex gap-4">
+<button class="text-xs font-bold text-secondary underline underline-offset-4 decoration-2">Create Purchase Order</button>
+<button class="text-xs font-bold text-neutral-400 hover:text-on-surface">Dismiss</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-neutral-100 dark:bg-neutral-900 full-width rounded-t-[3rem] mt-20 flex flex-col md:flex-row justify-between items-center px-12 py-10 w-full ml-auto md:w-[calc(100%-16rem)]">
+<p class="text-neutral-500 hover:text-yellow-600 text-sm tracking-wide font-medium">© 2024 The Curated Toybox. Designed for play.</p>
+<div class="flex gap-8 mt-6 md:mt-0">
+<a class="text-neutral-500 hover:text-yellow-600 underline underline-offset-4 text-sm tracking-wide transition-all" href="#">Privacy Policy</a>
+<a class="text-neutral-500 hover:text-yellow-600 underline underline-offset-4 text-sm tracking-wide transition-all" href="#">Shipping Info</a>
+<a class="text-neutral-500 hover:text-yellow-600 underline underline-offset-4 text-sm tracking-wide transition-all" href="#">Wholesale</a>
+</div>
+</footer>
+</body></html>

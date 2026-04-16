@@ -1,27 +1,20 @@
-const fs = require('fs');
 const https = require('https');
-const path = require('path');
+const fs = require('fs');
 
-const screens = [
-  { name: '1_home', url: 'https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sXzRlZjBkNzkyMDliOTRkNWRiYWU1YTEyMzU2MTY3OTAxEgsSBxDOo_X-4QIYAZIBJAoKcHJvamVjdF9pZBIWQhQxMDYxOTE0MTIzNDIzMDM5NzIxMg&filename=&opi=89354086' },
-  { name: '2_product_details', url: 'https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sXzJhNjVkNTBlNTI2NDQ5YmZiMDlhYmYwYTAyMjQ0NTJmEgsSBxDOo_X-4QIYAZIBJAoKcHJvamVjdF9pZBIWQhQxMDYxOTE0MTIzNDIzMDM5NzIxMg&filename=&opi=89354086' },
-  { name: '3_cart', url: 'https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sXzQzOWVkOTE1NzBhYzRiYTNhNWFiZDFhYmVmZDM0YjVkEgsSBxDOo_X-4QIYAZIBJAoKcHJvamVjdF9pZBIWQhQxMDYxOTE0MTIzNDIzMDM5NzIxMg&filename=&opi=89354086' },
-  { name: '4_admin_dash', url: 'https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sX2Q4OTg4MjYwN2UwNTQyNDY5ODM0N2VhODliZGM5M2VhEgsSBxDOo_X-4QIYAZIBJAoKcHJvamVjdF9pZBIWQhQxMDYxOTE0MTIzNDIzMDM5NzIxMg&filename=&opi=89354086' },
-  { name: '5_admin_edit_product', url: 'https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sXzE2ZWYzYzMwZjkwMDQ2MGI4NTNlNTVlODY2NDZmNmZjEgsSBxDOo_X-4QIYAZIBJAoKcHJvamVjdF9pZBIWQhQxMDYxOTE0MTIzNDIzMDM5NzIxMg&filename=&opi=89354086' },
-  { name: '6_admin_categories', url: 'https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sX2YwNDE2NzU2MjE3ODRjYTViNzNkMWRlNWZhMmEyZDM3EgsSBxDOo_X-4QIYAZIBJAoKcHJvamVjdF9pZBIWQhQxMDYxOTE0MTIzNDIzMDM5NzIxMg&filename=&opi=89354086' },
-  { name: '7_admin_products', url: 'https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sXzdiMWZjZmEwNjA3ODQyMDNhMzgyMTRkMmNlNTY0NzIwEgsSBxDOo_X-4QIYAZIBJAoKcHJvamVjdF9pZBIWQhQxMDYxOTE0MTIzNDIzMDM5NzIxMg&filename=&opi=89354086' },
-  { name: '8_landing', url: 'https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sXzAwZDNiYjZjOGE3YzRjNmRhZTdjMDFkOGIxZmIzNjM2EgsSBxDOo_X-4QIYAZIBJAoKcHJvamVjdF9pZBIWQhQxMDYxOTE0MTIzNDIzMDM5NzIxMg&filename=&opi=89354086' }
+const downloads = [
+  { name: '10_admin_login.html', url: 'https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sX2M4OTM2MjY1NWE3ZTRmYTFhNWNlNzQ0MTM1OTNiMTJhEgsSBxDOo_X-4QIYAZIBJAoKcHJvamVjdF9pZBIWQhQxMDYxOTE0MTIzNDIzMDM5NzIxMg&filename=&opi=89354086' },
+  { name: '11_admin_settings.html', url: 'https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sXzIwMjZkMGRlMTkxMTRhMDdiMjNjZWIyZDI3YjQzYjExEgsSBxDOo_X-4QIYAZIBJAoKcHJvamVjdF9pZBIWQhQxMDYxOTE0MTIzNDIzMDM5NzIxMg&filename=&opi=89354086' },
+  { name: '12_admin_orders.html', url: 'https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sXzQ1NjRiOTdkOWZmNDQzYzQ4ZDM4ZmM3ZWI3NjhlYjFhEgsSBxDOo_X-4QIYAZIBJAoKcHJvamVjdF9pZBIWQhQxMDYxOTE0MTIzNDIzMDM5NzIxMg&filename=&opi=89354086' },
+  { name: '13_admin_support.html', url: 'https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sXzQ2NTRjOTE1ODI2MjRkOTliYTFhZDdkMjI4MGU5ODVlEgsSBxDOo_X-4QIYAZIBJAoKcHJvamVjdF9pZBIWQhQxMDYxOTE0MTIzNDIzMDM5NzIxMg&filename=&opi=89354086' },
+  { name: '14_admin_ai.html', url: 'https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sX2ZmMGMxNWE4N2YxZTQyY2I5NTllZDFiODNjZTU4ZjJmEgsSBxDOo_X-4QIYAZIBJAoKcHJvamVjdF9pZBIWQhQxMDYxOTE0MTIzNDIzMDM5NzIxMg&filename=&opi=89354086' },
+  { name: '15_best_sellers.html', url: 'https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sX2RkODQzOGY0M2E0YzQ4ZWU5NDJhNDE3ODk1YjA1Njk5EgsSBxDOo_X-4QIYAZIBJAoKcHJvamVjdF9pZBIWQhQxMDYxOTE0MTIzNDIzMDM5NzIxMg&filename=&opi=89354086' },
+  { name: '16_new_arrivals.html', url: 'https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sX2VhMDI2NzI0YWIxYzQxMGZhYTlmOTBkNGE0OGFhZDkzEgsSBxDOo_X-4QIYAZIBJAoKcHJvamVjdF9pZBIWQhQxMDYxOTE0MTIzNDIzMDM5NzIxMg&filename=&opi=89354086' }
 ];
 
-screens.forEach(screen => {
-  https.get(screen.url, (res) => {
-    const file = fs.createWriteStream(path.join(__dirname, 'stitch_screens', `${screen.name}.html`));
-    res.pipe(file);
-    file.on('finish', () => {
-      file.close();
-      console.log(`Downloaded ${screen.name}`);
-    });
-  }).on('error', (err) => {
-    console.error(`Error downloading ${screen.name}:`, err.message);
+downloads.forEach(dl => {
+  const file = fs.createWriteStream('./stitch_screens/' + dl.name);
+  https.get(dl.url, function(response) {
+    response.pipe(file);
+    file.on('finish', () => file.close());
   });
 });

@@ -1,10 +1,21 @@
 import React from 'react';
-import { Outlet, Link } from 'react-router-dom';
+import { Outlet, Link, useLocation } from 'react-router-dom';
 import useCartStore from '../store/cartStore';
+import useFavoritesStore from '../store/favoritesStore';
+import { useAuthSession } from '../hooks/useAuthSession';
 
 const ShopLayout = () => {
   const { cartItems } = useCartStore();
+  const { favoriteItems } = useFavoritesStore();
+  const { isAuthenticated, role } = useAuthSession();
+  const location = useLocation();
   const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+  const favoritesCount = favoriteItems.length;
+  const isPrivileged = role === 'admin' || role === 'manager';
+  const accountTarget = isAuthenticated ? (isPrivileged ? '/admin' : '/profile') : '/login';
+
+  const activeClass = "text-yellow-700 dark:text-yellow-400 border-b-4 border-yellow-400 rounded-full px-1 hover:scale-105 transition-transform font-bold";
+  const inactiveClass = "text-stone-600 dark:text-stone-400 font-medium hover:scale-105 hover:text-yellow-600 transition-transform";
 
   return (
     <div className="bg-surface text-on-surface selection:bg-primary-container selection:text-on-primary-container min-h-screen">
@@ -13,9 +24,9 @@ const ShopLayout = () => {
         <div className="flex items-center gap-12">
           <Link to="/" className="text-2xl font-black tracking-tighter text-yellow-700 dark:text-yellow-400 plusJakartaSans">TurtleTots</Link>
           <div className="hidden md:flex gap-6 items-center">
-            <Link className="text-yellow-700 dark:text-yellow-400 border-b-4 border-yellow-400 rounded-full px-1 hover:scale-105 transition-transform font-bold" to="/">Shop All</Link>
-            <Link className="text-stone-600 dark:text-stone-400 font-medium hover:scale-105 hover:text-yellow-600 transition-transform" to="/">New Arrivals</Link>
-            <Link className="text-stone-600 dark:text-stone-400 font-medium hover:scale-105 hover:text-yellow-600 transition-transform" to="/">Best Sellers</Link>
+            <Link className={location.pathname === '/' ? activeClass : inactiveClass} to="/">Shop All</Link>
+            <Link className={location.pathname === '/new-arrivals' ? activeClass : inactiveClass} to="/new-arrivals">New Arrivals</Link>
+            <Link className={location.pathname === '/best-sellers' ? activeClass : inactiveClass} to="/best-sellers">Best Sellers</Link>
           </div>
         </div>
         <div className="flex items-center gap-6">
@@ -24,6 +35,14 @@ const ShopLayout = () => {
             <input className="bg-transparent border-none focus:ring-0 text-sm w-48 font-medium" placeholder="Search toys..." type="text" />
           </div>
           <div className="flex items-center gap-4">
+            <Link to="/favorites" className="w-10 h-10 relative flex items-center justify-center rounded-full hover:bg-surface-container transition-colors">
+              <span className="material-symbols-outlined text-yellow-700" style={{ fontVariationSettings: favoritesCount > 0 ? "'FILL' 1" : "'FILL' 0" }}>favorite</span>
+              {favoritesCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-error text-on-error text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-bold">
+                  {favoritesCount}
+                </span>
+              )}
+            </Link>
             <Link to="/cart" className="w-10 h-10 relative flex items-center justify-center rounded-full hover:bg-surface-container transition-colors">
               <span className="material-symbols-outlined text-yellow-700">shopping_cart</span>
               {cartCount > 0 && (
@@ -32,9 +51,18 @@ const ShopLayout = () => {
                 </span>
               )}
             </Link>
-            <Link to="/admin" className="w-10 h-10 flex items-center justify-center rounded-full bg-primary-container text-on-primary-container shadow-sm">
-              <span className="material-symbols-outlined">person</span>
-            </Link>
+            {isAuthenticated ? (
+              <Link to={accountTarget} className="w-10 h-10 flex items-center justify-center rounded-full bg-primary-container text-on-primary-container shadow-sm">
+                <span className="material-symbols-outlined">person</span>
+              </Link>
+            ) : (
+              <Link
+                to="/login"
+                className="px-5 py-2 rounded-full bg-primary-container text-on-primary-container font-bold text-sm shadow-sm hover:scale-105 transition-transform"
+              >
+                Login
+              </Link>
+            )}
           </div>
         </div>
       </nav>
@@ -50,19 +78,27 @@ const ShopLayout = () => {
           <span className="material-symbols-outlined">home</span>
           <span className="plusJakartaSans text-[10px] font-bold">Home</span>
         </Link>
-        <div className="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 active:scale-90 transition-transform">
-          <span className="material-symbols-outlined">search</span>
-          <span className="plusJakartaSans text-[10px] font-bold">Search</span>
-        </div>
+        <Link to="/favorites" className="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 active:scale-90 transition-transform relative">
+          <span className="material-symbols-outlined" style={{ fontVariationSettings: favoritesCount > 0 ? "'FILL' 1" : "'FILL' 0" }}>favorite</span>
+          <span className="plusJakartaSans text-[10px] font-bold">Favs</span>
+          {favoritesCount > 0 && <span className="absolute top-0 right-1 w-2 h-2 bg-error rounded-full"></span>}
+        </Link>
         <Link to="/cart" className="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 active:scale-90 transition-transform relative">
           <span className="material-symbols-outlined">shopping_basket</span>
           <span className="plusJakartaSans text-[10px] font-bold">Cart</span>
           {cartCount > 0 && <span className="absolute top-0 right-1 w-2 h-2 bg-error rounded-full"></span>}
         </Link>
-        <Link to="/admin" className="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 active:scale-90 transition-transform">
-          <span className="material-symbols-outlined">person</span>
-          <span className="plusJakartaSans text-[10px] font-bold">Profile</span>
-        </Link>
+        {isAuthenticated ? (
+          <Link to={accountTarget} className="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 active:scale-90 transition-transform">
+            <span className="material-symbols-outlined">person</span>
+            <span className="plusJakartaSans text-[10px] font-bold">Profile</span>
+          </Link>
+        ) : (
+          <Link to="/login" className="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 active:scale-90 transition-transform">
+            <span className="material-symbols-outlined">login</span>
+            <span className="plusJakartaSans text-[10px] font-bold">Login</span>
+          </Link>
+        )}
       </div>
     </div>
   );
