@@ -74,31 +74,33 @@ const ShopLayout = () => {
 
       {/* BottomNavBar (Mobile only) */}
       <div className="md:hidden fixed bottom-0 w-full h-20 bg-white/90 dark:bg-stone-900/90 backdrop-blur-md flex justify-around items-center px-6 z-50 rounded-t-xl shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
-        <Link to="/" className="flex flex-col items-center justify-center bg-yellow-400 text-stone-900 rounded-full w-14 h-14 -translate-y-4 shadow-lg active:scale-90 transition-transform">
-          <span className="material-symbols-outlined">home</span>
-          <span className="plusJakartaSans text-[10px] font-bold">Home</span>
-        </Link>
-        <Link to="/favorites" className="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 active:scale-90 transition-transform relative">
-          <span className="material-symbols-outlined" style={{ fontVariationSettings: favoritesCount > 0 ? "'FILL' 1" : "'FILL' 0" }}>favorite</span>
-          <span className="plusJakartaSans text-[10px] font-bold">Favs</span>
-          {favoritesCount > 0 && <span className="absolute top-0 right-1 w-2 h-2 bg-error rounded-full"></span>}
-        </Link>
-        <Link to="/cart" className="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 active:scale-90 transition-transform relative">
-          <span className="material-symbols-outlined">shopping_basket</span>
-          <span className="plusJakartaSans text-[10px] font-bold">Cart</span>
-          {cartCount > 0 && <span className="absolute top-0 right-1 w-2 h-2 bg-error rounded-full"></span>}
-        </Link>
-        {isAuthenticated ? (
-          <Link to={accountTarget} className="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 active:scale-90 transition-transform">
-            <span className="material-symbols-outlined">person</span>
-            <span className="plusJakartaSans text-[10px] font-bold">Profile</span>
-          </Link>
-        ) : (
-          <Link to="/login" className="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 active:scale-90 transition-transform">
-            <span className="material-symbols-outlined">login</span>
-            <span className="plusJakartaSans text-[10px] font-bold">Login</span>
-          </Link>
-        )}
+        {[{
+          to: '/',
+          icon: 'home',
+          label: 'Home'
+        }, {
+          to: '/best-sellers',
+          icon: 'workspace_premium',
+          label: 'Best'
+        }, {
+          to: '/new-arrivals',
+          icon: 'auto_awesome',
+          label: 'New'
+        }].map((item) => {
+          const isActive = location.pathname === item.to;
+
+          return (
+            <Link
+              key={item.to}
+              to={item.to}
+              className={`flex flex-col items-center justify-center rounded-full w-16 h-16 transition-all active:scale-90 ${isActive ? 'bg-yellow-400 text-stone-900 shadow-lg -translate-y-4' : 'text-stone-400 dark:text-stone-500'}`}
+              aria-label={item.to === '/best-sellers' ? 'Best Sellers' : item.to === '/new-arrivals' ? 'New Arrivals' : 'Home'}
+            >
+              <span className="material-symbols-outlined">{item.icon}</span>
+              <span className="plusJakartaSans text-[10px] font-bold">{item.label}</span>
+            </Link>
+          );
+        })}
       </div>
     </div>
   );

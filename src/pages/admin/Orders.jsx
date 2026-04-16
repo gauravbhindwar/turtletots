@@ -1,136 +1,272 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { supabase } from '../../utils/supabase';
+
+const SEARCH_TIMEOUT_MS = 12000;
+
+const ORDER_STATUS = {
+  pending: { label: 'Pending', className: 'bg-amber-100 text-amber-700' },
+  confirmed: { label: 'Confirmed', className: 'bg-blue-100 text-blue-700' },
+  processing: { label: 'Processing', className: 'bg-primary/10 text-primary' },
+  shipped: { label: 'Shipped', className: 'bg-secondary-container/40 text-secondary-dim' },
+  delivered: { label: 'Delivered', className: 'bg-green-100 text-green-700' },
+  cancelled: { label: 'Cancelled', className: 'bg-error-container/30 text-error' }
+};
+
+const STATUS_FILTERS = [
+  { value: 'all', label: 'All Status' },
+  { value: 'pending', label: 'Pending' },
+  { value: 'confirmed', label: 'Confirmed' },
+  { value: 'processing', label: 'Processing' },
+  { value: 'shipped', label: 'Shipped' },
+  { value: 'delivered', label: 'Delivered' },
+  { value: 'cancelled', label: 'Cancelled' }
+];
 
 const AdminOrders = () => {
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+
+  useEffect(() => {
+    fetchOrders();
+  }, []);
+
+  const fetchOrders = async () => {
+    setLoading(true);
+    setError('');
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), SEARCH_TIMEOUT_MS);
+
+    try {
+      const { data: ordersData, error: ordersError } = await supabase
+        .from('orders')
+        .select('id, order_number, user_id, status, total_amount, created_at, order_items(quantity, unit_price, products(name, slug, image_url))')
+        .order('created_at', { ascending: false })
+        .limit(250)
+        .abortSignal(controller.signal);
+
+      if (ordersError) {
+        setError(ordersError.message || 'Unable to load orders right now.');
+        setOrders([]);
+        setLoading(false);
+        return;
+      }
+
+      const rawOrders = ordersData || [];
+      const userIds = Array.from(new Set(rawOrders.map((order) => order.user_id).filter(Boolean)));
+
+      let profilesById = {};
+
+      if (userIds.length) {
+        const { data: profileRows, error: profilesError } = await supabase
+          .from('profiles')
+          .select('id, full_name, email')
+          .in('id', userIds);
+
+        if (!profilesError) {
+          profilesById = (profileRows || []).reduce((accumulator, profile) => {
+            accumulator[profile.id] = profile;
+            return accumulator;
+          }, {});
+        }
+      }
+
+      const normalized = rawOrders.map((order) => {
+        const orderItems = Array.isArray(order.order_items) ? order.order_items : [];
+        const productNames = orderItems
+          .map((item) => item.products?.name)
+          .filter(Boolean);
+        const totalItems = orderItems.reduce((sum, item) => sum + Number(item.quantity || 0), 0);
+        const customer = profilesById[order.user_id] || null;
+
+        return {
+          ...order,
+          customer_name: customer?.full_name || customer?.email || 'Guest Customer',
+          customer_email: customer?.email || '',
+          product_names: productNames,
+          total_items: totalItems,
+          first_image: orderItems.find((item) => item.products?.image_url)?.products?.image_url || ''
+        };
+      });
+
+      setOrders(normalized);
+      setLoading(false);
+    } catch (fetchError) {
+      const isTimeout = fetchError?.name === 'AbortError';
+      setError(isTimeout ? 'Order request timed out.' : 'Unable to load orders right now.');
+      setOrders([]);
+      setLoading(false);
+    } finally {
+      clearTimeout(timeoutId);
+    }
+  };
+
+  const filteredOrders = useMemo(() => {
+    const query = searchTerm.trim().toLowerCase();
+
+    return orders.filter((order) => {
+      if (statusFilter !== 'all' && order.status !== statusFilter) {
+        return false;
+      }
+
+      if (!query) {
+        return true;
+      }
+
+      const haystack = [
+        order.order_number,
+        order.customer_name,
+        order.customer_email,
+        ...(order.product_names || [])
+      ]
+        .filter(Boolean)
+        .join(' ')
+        .toLowerCase();
+
+      return haystack.includes(query);
+    });
+  }, [orders, searchTerm, statusFilter]);
+
+  const summary = useMemo(() => {
+    const processing = orders.filter((order) => ['pending', 'confirmed', 'processing'].includes(order.status)).length;
+    const transit = orders.filter((order) => order.status === 'shipped').length;
+    const delivered = orders.filter((order) => order.status === 'delivered').length;
+
+    return {
+      processing,
+      transit,
+      delivered
+    };
+  }, [orders]);
+
+  const getStatusBadge = (status) => {
+    return ORDER_STATUS[status] || {
+      label: (status || 'Unknown').toString(),
+      className: 'bg-surface-container text-on-surface-variant'
+    };
+  };
+
   return (
     <>
-      <header className="flex justify-between items-end mb-12">
+      <header className="flex flex-col md:flex-row md:items-end justify-between gap-5 mb-8 md:mb-12">
         <div>
-          <h2 className="text-4xl font-black plusJakartaSans tracking-tight text-on-surface">Orders Management</h2>
-          <p className="text-neutral-500 mt-2 font-medium">Tracking orders across all shipping zones.</p>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black plusJakartaSans tracking-tight text-on-surface">Orders Management</h2>
+          <p className="text-neutral-500 mt-2 font-medium">Search by order, customer, or product name.</p>
         </div>
-        <div className="flex gap-4">
-          <div className="bg-surface-container-low px-6 py-3 rounded-full flex items-center gap-3 focus-within:bg-surface-container-lowest transition-all ring-1 ring-transparent focus-within:ring-primary/20">
+        <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+          <div className="bg-surface-container-low px-4 sm:px-5 py-2.5 sm:py-3 rounded-full flex items-center gap-3">
             <span className="material-symbols-outlined text-neutral-400">search</span>
-            <input className="bg-transparent border-none focus:ring-0 text-sm placeholder:text-neutral-400 w-64 outline-none" placeholder="Find an order..." type="text"/>
+            <input
+              className="bg-transparent border-none focus:ring-0 text-sm placeholder:text-neutral-400 w-full sm:w-72 md:w-64 outline-none"
+              placeholder="Find order or product..."
+              type="text"
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
+            />
           </div>
-          <button className="bg-secondary-container text-on-secondary-container px-6 py-3 rounded-full font-bold flex items-center gap-2 hover:scale-105 transition-transform">
-            <span className="material-symbols-outlined">filter_list</span>
-            <span className="text-sm">Filters</span>
-          </button>
+
+          <select
+            value={statusFilter}
+            onChange={(event) => setStatusFilter(event.target.value)}
+            className="bg-secondary-container/50 text-on-secondary-container px-4 sm:px-5 py-2.5 sm:py-3 rounded-full font-bold text-sm outline-none"
+          >
+            {STATUS_FILTERS.map((filterItem) => (
+              <option key={filterItem.value} value={filterItem.value}>
+                {filterItem.label}
+              </option>
+            ))}
+          </select>
         </div>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        <div className="bg-surface-container-lowest p-8 rounded-2xl shadow-sm border border-outline-variant/10">
-          <div className="flex justify-between items-start mb-4">
-            <div className="p-3 bg-primary-container rounded-2xl text-on-primary-container">
-              <span className="material-symbols-outlined">pending_actions</span>
-            </div>
-            <span className="text-[10px] font-bold text-primary px-3 py-1 bg-primary/10 rounded-full uppercase">Today</span>
-          </div>
-          <h3 className="text-3xl font-black plusJakartaSans text-on-surface">24</h3>
-          <p className="text-neutral-500 text-sm font-medium mt-1">Processing Orders</p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 mb-8 md:mb-10">
+        <div className="bg-surface-container-lowest p-4 sm:p-6 rounded-2xl shadow-sm border border-outline-variant/10">
+          <p className="text-xs uppercase tracking-widest font-bold text-on-surface-variant">Processing</p>
+          <p className="text-2xl sm:text-3xl font-black plusJakartaSans mt-2">{summary.processing}</p>
         </div>
-        <div className="bg-surface-container-lowest p-8 rounded-2xl shadow-sm border border-outline-variant/10">
-          <div className="flex justify-between items-start mb-4">
-            <div className="p-3 bg-secondary-container rounded-2xl text-on-secondary-container">
-              <span className="material-symbols-outlined">local_shipping</span>
-            </div>
-            <span className="text-[10px] font-bold text-secondary px-3 py-1 bg-secondary/10 rounded-full uppercase">+12.5%</span>
-          </div>
-          <h3 className="text-3xl font-black plusJakartaSans text-on-surface">86</h3>
-          <p className="text-neutral-500 text-sm font-medium mt-1">In Transit</p>
+        <div className="bg-surface-container-lowest p-4 sm:p-6 rounded-2xl shadow-sm border border-outline-variant/10">
+          <p className="text-xs uppercase tracking-widest font-bold text-on-surface-variant">In Transit</p>
+          <p className="text-2xl sm:text-3xl font-black plusJakartaSans mt-2">{summary.transit}</p>
         </div>
-        <div className="bg-surface-container-lowest p-8 rounded-2xl shadow-sm border border-outline-variant/10">
-          <div className="flex justify-between items-start mb-4">
-            <div className="p-3 bg-tertiary-container rounded-2xl text-on-tertiary-container">
-              <span className="material-symbols-outlined">verified</span>
-            </div>
-            <span className="text-[10px] font-bold text-tertiary px-3 py-1 bg-tertiary/10 rounded-full uppercase">Total</span>
-          </div>
-          <h3 className="text-3xl font-black plusJakartaSans text-on-surface">1,204</h3>
-          <p className="text-neutral-500 text-sm font-medium mt-1">Delivered Lifetime</p>
+        <div className="bg-surface-container-lowest p-4 sm:p-6 rounded-2xl shadow-sm border border-outline-variant/10 sm:col-span-2 xl:col-span-1">
+          <p className="text-xs uppercase tracking-widest font-bold text-on-surface-variant">Delivered</p>
+          <p className="text-2xl sm:text-3xl font-black plusJakartaSans mt-2">{summary.delivered}</p>
         </div>
       </div>
 
-      <section className="bg-surface-container-lowest rounded-2xl shadow-sm overflow-hidden border border-outline-variant/10">
-        <div className="p-8 border-b border-surface-container flex justify-between items-center">
-          <div className="flex gap-4">
-            <button className="px-6 py-2 bg-secondary-fixed text-on-secondary-fixed rounded-full text-sm font-bold border border-outline-variant/20">All Orders</button>
-            <button className="px-6 py-2 text-neutral-500 hover:text-primary transition-colors text-sm font-semibold">In Progress</button>
-            <button className="px-6 py-2 text-neutral-500 hover:text-primary transition-colors text-sm font-semibold">Completed</button>
+      <section className="bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant/10 overflow-hidden">
+        {error && (
+          <div className="mx-6 mt-6 rounded-xl border border-error/30 bg-error-container/10 px-4 py-3 text-sm font-semibold text-error">
+            {error}
           </div>
-          <div className="flex items-center gap-2 text-neutral-400 text-sm">
-            <span className="material-symbols-outlined text-lg">sort</span>
-            <span>Sorted by Date</span>
-          </div>
-        </div>
+        )}
+
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          <table className="w-full min-w-[920px] text-left border-collapse">
             <thead>
-              <tr className="text-neutral-400 text-[11px] uppercase tracking-widest bg-surface-container-low/50">
-                <th className="px-8 py-6 font-bold">Order ID</th>
-                <th className="px-8 py-6 font-bold">Customer</th>
-                <th className="px-8 py-6 font-bold">Items</th>
-                <th className="px-8 py-6 font-bold">Total</th>
-                <th className="px-8 py-6 font-bold">Status</th>
-                <th className="px-8 py-6 font-bold text-right">Actions</th>
+              <tr className="bg-surface-container-low/50">
+                <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-on-surface-variant">Order</th>
+                <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-on-surface-variant">Customer</th>
+                <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-on-surface-variant">Products</th>
+                <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-on-surface-variant">Items</th>
+                <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-on-surface-variant">Total</th>
+                <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-on-surface-variant">Status</th>
+                <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-on-surface-variant">Placed</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-surface-container/30">
-              <tr className="hover:bg-surface-container-low/50 transition-colors group">
-                <td className="px-8 py-6"><span className="font-bold text-on-surface">#TY-9021</span></td>
-                <td className="px-8 py-6">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container text-xs font-bold">AS</div>
-                    <span className="font-semibold text-sm">Alice Sterling</span>
-                  </div>
-                </td>
-                <td className="px-8 py-6">
-                  <div className="flex -space-x-3 overflow-hidden">
-                    <div className="inline-block h-8 w-8 rounded-full bg-primary flex items-center justify-center text-[10px] font-bold text-white ring-2 ring-white">T</div>
-                    <div className="inline-block h-8 w-8 rounded-full bg-neutral-100 flex items-center justify-center text-[10px] font-bold text-neutral-400 ring-2 ring-white">+2</div>
-                  </div>
-                </td>
-                <td className="px-8 py-6"><span className="font-bold text-on-surface">₹12,450.00</span></td>
-                <td className="px-8 py-6">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase">
-                    <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
-                    Processing
-                  </span>
-                </td>
-                <td className="px-8 py-6 text-right">
-                  <button className="p-2 hover:bg-surface-container rounded-full transition-all group-hover:shadow-md">
-                    <span className="material-symbols-outlined text-neutral-400 group-hover:text-primary">visibility</span>
-                  </button>
-                </td>
-              </tr>
-              <tr className="hover:bg-surface-container-low/50 transition-colors group">
-                <td className="px-8 py-6"><span className="font-bold text-on-surface">#TY-9019</span></td>
-                <td className="px-8 py-6">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-neutral-200 flex items-center justify-center text-neutral-600 text-xs font-bold">BW</div>
-                    <span className="font-semibold text-sm">Bella Watson</span>
-                  </div>
-                </td>
-                <td className="px-8 py-6">
-                  <div className="flex -space-x-3 overflow-hidden">
-                    <div className="inline-block h-8 w-8 rounded-full bg-tertiary flex items-center justify-center text-[10px] font-bold text-white ring-2 ring-white">B</div>
-                  </div>
-                </td>
-                <td className="px-8 py-6"><span className="font-bold text-on-surface">₹4,500.00</span></td>
-                <td className="px-8 py-6">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-bold uppercase">
-                    <span className="material-symbols-outlined text-xs">check_circle</span>
-                    Delivered
-                  </span>
-                </td>
-                <td className="px-8 py-6 text-right">
-                  <button className="p-2 hover:bg-surface-container rounded-full transition-all group-hover:shadow-md">
-                    <span className="material-symbols-outlined text-neutral-400 group-hover:text-primary">visibility</span>
-                  </button>
-                </td>
-              </tr>
+            <tbody className="divide-y divide-surface-container">
+              {loading ? (
+                <tr>
+                  <td colSpan="7" className="px-6 py-8 text-center text-on-surface-variant">Loading orders...</td>
+                </tr>
+              ) : filteredOrders.length === 0 ? (
+                <tr>
+                  <td colSpan="7" className="px-6 py-8 text-center text-on-surface-variant">No matching orders found.</td>
+                </tr>
+              ) : (
+                filteredOrders.map((order) => {
+                  const status = getStatusBadge(order.status);
+                  const firstTwoProducts = (order.product_names || []).slice(0, 2);
+                  const overflowCount = Math.max(0, (order.product_names || []).length - firstTwoProducts.length);
+
+                  return (
+                    <tr key={order.id} className="hover:bg-surface-container-low/30 transition-colors">
+                      <td className="px-6 py-4">
+                        <p className="font-bold text-on-surface">{order.order_number}</p>
+                      </td>
+                      <td className="px-6 py-4">
+                        <p className="font-semibold text-on-surface">{order.customer_name}</p>
+                        {order.customer_email && <p className="text-xs text-on-surface-variant">{order.customer_email}</p>}
+                      </td>
+                      <td className="px-6 py-4">
+                        <p className="text-sm text-on-surface">{firstTwoProducts.join(', ') || 'No products'}</p>
+                        {overflowCount > 0 && <p className="text-xs text-on-surface-variant">+{overflowCount} more</p>}
+                      </td>
+                      <td className="px-6 py-4">
+                        <p className="font-bold text-on-surface">{order.total_items}</p>
+                      </td>
+                      <td className="px-6 py-4">
+                        <p className="font-black text-on-surface">₹{Number(order.total_amount || 0).toFixed(2)}</p>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className={`inline-flex px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${status.className}`}>
+                          {status.label}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-xs text-on-surface-variant font-semibold">
+                        {new Date(order.created_at).toLocaleDateString('en-IN', {
+                          day: '2-digit',
+                          month: 'short',
+                          year: 'numeric'
+                        })}
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
             </tbody>
           </table>
         </div>

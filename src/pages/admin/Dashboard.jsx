@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../utils/supabase';
-
-const HEADER_AVATAR_URL = 'https://lh3.googleusercontent.com/aida-public/AB6AXuDUY4nPZsEvTYs-gsLmK9XeVcnnW0ri30Ww7qQ1_qTPz9-BwRxVOgzXcWK4aSHnUFH4p9fnRW-TStElfb8te35PXxGuURXdosQaUUCeE0BCjgBGA-2iFsECtoAdx9EoKz6e8Lb-xxna6Aw1VV6aTM8c6hLRRXGNVwlfalcNuqvXb5xgF7p-cYrIGNc9lxLxtDhEk_mOWa4kyGG35JCl9P4utEe9qND3hKNCQWofaqOx5Yx6uclI1Hc6ZVZBukB-uuUmfeCJWwU9E6wn';
+import { getInventoryState, toSafeStock } from '../../utils/inventory';
 
 const FALLBACK_IMAGE = 'https://lh3.googleusercontent.com/aida-public/AB6AXuDXOGZdz9c8D6FEXVlEW3oqYeShLr1ZHOjoOALBaSuudQH4_VRB442YX-REBIpxY9WuPnRbrwdQaUy_5MppIOFoybEPdlgiTe2vajyygUAXWhQm4wDdMQfJET643K2qLnevYPs3HCap8clAoRlGJ2PsBtli14Zi81Edpeh0-7Wi3SDn8EusLfOal7uLOdiv5KNEF1esYTXe1pBus9YogQ7P0GhYFJDKHxwNIL5lVm5UKpoN076GlN7lCHJGvvnEVhJDD65xfzi4k6-i';
 
@@ -43,6 +43,47 @@ const SAMPLE_ROWS = [
     imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDXOGZdz9c8D6FEXVlEW3oqYeShLr1ZHOjoOALBaSuudQH4_VRB442YX-REBIpxY9WuPnRbrwdQaUy_5MppIOFoybEPdlgiTe2vajyygUAXWhQm4wDdMQfJET643K2qLnevYPs3HCap8clAoRlGJ2PsBtli14Zi81Edpeh0-7Wi3SDn8EusLfOal7uLOdiv5KNEF1esYTXe1pBus9YogQ7P0GhYFJDKHxwNIL5lVm5UKpoN076GlN7lCHJGvvnEVhJDD65xfzi4k6-i'
   }
 ];
+
+const DEFAULT_CATEGORY_DISTRIBUTION = [
+  { name: 'Educational', percent: 45, colorClass: 'bg-primary' },
+  { name: 'Plushies', percent: 30, colorClass: 'bg-secondary' },
+  { name: 'Wooden Toys', percent: 15, colorClass: 'bg-tertiary' },
+  { name: 'Others', percent: 10, colorClass: 'bg-outline-variant' }
+];
+
+const CATEGORY_DISTRIBUTION_COLORS = ['bg-primary', 'bg-secondary', 'bg-tertiary', 'bg-outline-variant'];
+
+const toSafeNumber = (value) => {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : 0;
+};
+
+const buildCategoryDistribution = (items) => {
+  if (!Array.isArray(items) || items.length === 0) {
+    return DEFAULT_CATEGORY_DISTRIBUTION;
+  }
+
+  const normalized = items
+    .map((item) => ({
+      name: item?.name || 'Others',
+      count: toSafeNumber(item?.count ?? item?.product_count)
+    }))
+    .filter((item) => item.count >= 0)
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 4);
+
+  const total = normalized.reduce((sum, item) => sum + item.count, 0);
+
+  if (!total) {
+    return DEFAULT_CATEGORY_DISTRIBUTION;
+  }
+
+  return normalized.map((item, index) => ({
+    name: item.name,
+    percent: Math.max(1, Math.round((item.count / total) * 100)),
+    colorClass: CATEGORY_DISTRIBUTION_COLORS[index] || 'bg-outline-variant'
+  }));
+};
 
 const formatCompactNumber = (value) => {
   if (!value) return '0';
@@ -88,6 +129,7 @@ const getCategoryChipClass = (categoryName) => {
 };
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [dashboardData, setDashboardData] = useState({
     totalProducts: 0,
@@ -95,13 +137,40 @@ const Dashboard = () => {
     totalViews: 0,
     lowStockAlerts: 0,
     recentProducts: [],
-    categoryDistribution: [
-      { name: 'Educational', percent: 45, colorClass: 'bg-primary' },
-      { name: 'Plushies', percent: 30, colorClass: 'bg-secondary' },
-      { name: 'Wooden Toys', percent: 15, colorClass: 'bg-tertiary' },
-      { name: 'Others', percent: 10, colorClass: 'bg-outline-variant' }
-    ]
+    categoryDistribution: DEFAULT_CATEGORY_DISTRIBUTION
   });
+
+  const enrichRecentProductsWithStock = async (rows = []) => {
+    const productIds = rows.map((row) => row?.id).filter(Boolean);
+
+    if (!productIds.length) {
+      return [];
+    }
+
+    const { data: variantRows, error: variantsError } = await supabase
+      .from('product_variants')
+      .select('product_id, stock')
+      .in('product_id', productIds);
+
+    if (variantsError) {
+      return rows.map((row) => ({
+        ...row,
+        total_stock: toSafeStock(row?.total_stock)
+      }));
+    }
+
+    const stockByProduct = {};
+
+    (variantRows || []).forEach((variant) => {
+      if (!variant?.product_id) return;
+      stockByProduct[variant.product_id] = (stockByProduct[variant.product_id] || 0) + toSafeStock(variant.stock);
+    });
+
+    return rows.map((row) => ({
+      ...row,
+      total_stock: toSafeStock(stockByProduct[row.id] ?? row?.total_stock)
+    }));
+  };
 
   useEffect(() => {
     fetchDashboardData();
@@ -109,6 +178,28 @@ const Dashboard = () => {
 
   const fetchDashboardData = async () => {
     setLoading(true);
+
+    const { data: snapshotData, error: snapshotError } = await supabase.rpc('get_admin_dashboard_snapshot');
+
+    if (!snapshotError && snapshotData) {
+      const snapshotRow = Array.isArray(snapshotData) ? snapshotData[0] : snapshotData;
+      const snapshot = snapshotRow?.get_admin_dashboard_snapshot || snapshotRow;
+
+      if (snapshot && typeof snapshot === 'object') {
+        const recentProductsWithStock = await enrichRecentProductsWithStock(Array.isArray(snapshot.recentProducts) ? snapshot.recentProducts : []);
+
+        setDashboardData({
+          totalProducts: toSafeNumber(snapshot.totalProducts),
+          totalCategories: toSafeNumber(snapshot.totalCategories),
+          totalViews: toSafeNumber(snapshot.totalViews),
+          lowStockAlerts: toSafeNumber(snapshot.lowStockAlerts),
+          recentProducts: recentProductsWithStock,
+          categoryDistribution: buildCategoryDistribution(snapshot.categoryDistribution)
+        });
+        setLoading(false);
+        return;
+      }
+    }
 
     const [
       productCountRes,
@@ -123,47 +214,29 @@ const Dashboard = () => {
       supabase.from('products').select('views_count'),
       supabase
         .from('products')
-        .select('id, name, slug, image_url, is_available, created_at, categories(name)')
+        .select('id, name, slug, image_url, is_available, created_at, category_id, categories(name)')
         .order('created_at', { ascending: false })
         .limit(5),
       supabase
         .from('product_variants')
         .select('id', { count: 'exact', head: true })
         .lte('stock', 5),
-      supabase.from('products').select('categories(name)')
+      supabase.rpc('list_categories_with_product_counts')
     ]);
 
-    const totalViews = (viewsRes.data || []).reduce((sum, item) => sum + (item.views_count || 0), 0);
+    const totalViews = (viewsRes.data || []).reduce((sum, item) => sum + toSafeNumber(item.views_count), 0);
 
     const lowStockFromVariants = lowStockRes.count || 0;
     const lowStockFallback = (recentRes.data || []).filter((item) => !item.is_available).length;
-
-    const distributionMap = {};
-    (categoryDistRes.data || []).forEach((item) => {
-      const categoryName = item.categories?.name || 'Others';
-      distributionMap[categoryName] = (distributionMap[categoryName] || 0) + 1;
-    });
-
-    const distributionTotal = Object.values(distributionMap).reduce((sum, value) => sum + value, 0);
-    const distributionColors = ['bg-primary', 'bg-secondary', 'bg-tertiary', 'bg-outline-variant'];
-
-    const dynamicDistribution = distributionTotal > 0
-      ? Object.entries(distributionMap)
-          .sort((a, b) => b[1] - a[1])
-          .slice(0, 4)
-          .map(([name, count], index) => ({
-            name,
-            percent: Math.max(1, Math.round((count / distributionTotal) * 100)),
-            colorClass: distributionColors[index] || 'bg-outline-variant'
-          }))
-      : dashboardData.categoryDistribution;
+    const dynamicDistribution = buildCategoryDistribution(categoryDistRes.data);
+    const recentProductsWithStock = await enrichRecentProductsWithStock(recentRes.data || []);
 
     setDashboardData({
       totalProducts: productCountRes.count || 0,
       totalCategories: categoryCountRes.count || 0,
       totalViews,
       lowStockAlerts: lowStockFromVariants || lowStockFallback,
-      recentProducts: recentRes.data || [],
+      recentProducts: recentProductsWithStock,
       categoryDistribution: dynamicDistribution
     });
 
@@ -181,19 +254,26 @@ const Dashboard = () => {
   const recentRows = useMemo(() => {
     if (!dashboardData.recentProducts.length) return SAMPLE_ROWS;
 
-    return dashboardData.recentProducts.map((product, index) => {
-      const isLow = !product.is_available;
-      const pseudoStock = isLow ? Math.max(1, 2 - index) : Math.max(8, 40 - index * 4);
+    return dashboardData.recentProducts.map((product) => {
+      const totalStock = toSafeStock(product.total_stock);
+      const inventoryState = product.is_available === false
+        ? {
+            label: 'Not for Sale',
+            textClass: 'text-outline font-bold',
+            dotClass: 'bg-outline'
+          }
+        : getInventoryState(totalStock);
+      const categoryName = product.category_name || product.categories?.name || 'Uncategorized';
 
       return {
         id: product.id,
         name: product.name,
         sku: `SKU: ${((product.slug || product.id || 'toy').slice(0, 8)).toUpperCase()}`,
-        category: product.categories?.name || 'Uncategorized',
-        categoryClass: getCategoryChipClass(product.categories?.name),
-        stockLabel: isLow ? `Low Stock (${pseudoStock})` : `In Stock (${pseudoStock})`,
-        stockClass: isLow ? 'text-error font-bold' : 'text-on-surface',
-        dotClass: isLow ? 'bg-error animate-pulse' : 'bg-green-500',
+        category: categoryName,
+        categoryClass: getCategoryChipClass(categoryName),
+        stockLabel: inventoryState.label,
+        stockClass: inventoryState.textClass,
+        dotClass: inventoryState.dotClass,
         updated: getTimeAgo(product.created_at),
         imageUrl: product.image_url || FALLBACK_IMAGE
       };
@@ -211,90 +291,77 @@ const Dashboard = () => {
 
   return (
     <>
-      <header className="flex justify-between items-center mb-10">
+      <header className="mb-8 md:mb-10">
         <div>
-          <h2 className="text-3xl font-black text-on-surface tracking-tight plusJakartaSans">Overview Dashboard</h2>
+          <h2 className="text-2xl sm:text-3xl font-black text-on-surface tracking-tight plusJakartaSans">Overview Dashboard</h2>
           <p className="text-on-surface-variant font-medium">Welcome back! Here's what's happening today.</p>
-        </div>
-        <div className="flex items-center gap-4">
-          <div className="relative">
-            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
-            <input
-              className="pl-10 pr-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary w-64 text-sm font-medium"
-              placeholder="Search data..."
-              type="text"
-            />
-          </div>
-          <div className="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden border-2 border-white shadow-sm">
-            <img className="w-full h-full object-cover" src={HEADER_AVATAR_URL} alt="Admin avatar" />
-          </div>
         </div>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-        <div className="bg-surface-container-lowest p-8 rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.03)] flex flex-col justify-between hover:scale-[1.02] transition-transform duration-300">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-5 mb-8 md:mb-10">
+        <div className="bg-surface-container-lowest p-5 sm:p-6 lg:p-8 rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.03)] flex flex-col justify-between hover:scale-[1.01] transition-transform duration-300">
           <div className="flex justify-between items-start mb-4">
-            <div className="w-12 h-12 bg-secondary-container rounded-2xl flex items-center justify-center">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-secondary-container rounded-2xl flex items-center justify-center">
               <span className="material-symbols-outlined text-secondary" style={{ fontVariationSettings: "'FILL' 1" }}>inventory</span>
             </div>
             <span className="text-xs font-bold px-2 py-1 bg-green-100 text-green-700 rounded-lg">+4%</span>
           </div>
           <div>
             <p className="text-on-surface-variant text-sm font-bold uppercase tracking-widest mb-1">Total Products</p>
-            <h3 className="text-4xl font-black text-on-surface">{dashboardData.totalProducts}</h3>
+            <h3 className="text-3xl sm:text-4xl font-black text-on-surface">{dashboardData.totalProducts}</h3>
           </div>
         </div>
 
-        <div className="bg-surface-container-lowest p-8 rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.03)] flex flex-col justify-between hover:scale-[1.02] transition-transform duration-300">
+        <div className="bg-surface-container-lowest p-5 sm:p-6 lg:p-8 rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.03)] flex flex-col justify-between hover:scale-[1.01] transition-transform duration-300">
           <div className="flex justify-between items-start mb-4">
-            <div className="w-12 h-12 bg-tertiary-container/20 rounded-2xl flex items-center justify-center">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-tertiary-container/20 rounded-2xl flex items-center justify-center">
               <span className="material-symbols-outlined text-tertiary" style={{ fontVariationSettings: "'FILL' 1" }}>category</span>
             </div>
             <span className="text-xs font-bold px-2 py-1 bg-stone-100 text-stone-500 rounded-lg">Steady</span>
           </div>
           <div>
             <p className="text-on-surface-variant text-sm font-bold uppercase tracking-widest mb-1">Categories</p>
-            <h3 className="text-4xl font-black text-on-surface">{dashboardData.totalCategories}</h3>
+            <h3 className="text-3xl sm:text-4xl font-black text-on-surface">{dashboardData.totalCategories}</h3>
           </div>
         </div>
 
-        <div className="bg-surface-container-lowest p-8 rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.03)] flex flex-col justify-between hover:scale-[1.02] transition-transform duration-300">
+        <div className="bg-surface-container-lowest p-5 sm:p-6 lg:p-8 rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.03)] flex flex-col justify-between hover:scale-[1.01] transition-transform duration-300">
           <div className="flex justify-between items-start mb-4">
-            <div className="w-12 h-12 bg-primary-container rounded-2xl flex items-center justify-center">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary-container rounded-2xl flex items-center justify-center">
               <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>visibility</span>
             </div>
             <span className="text-xs font-bold px-2 py-1 bg-green-100 text-green-700 rounded-lg">+12.4%</span>
           </div>
           <div>
             <p className="text-on-surface-variant text-sm font-bold uppercase tracking-widest mb-1">Total Views</p>
-            <h3 className="text-4xl font-black text-on-surface">{formatCompactNumber(dashboardData.totalViews)}</h3>
+            <h3 className="text-3xl sm:text-4xl font-black text-on-surface">{formatCompactNumber(dashboardData.totalViews)}</h3>
           </div>
         </div>
 
-        <div className="bg-error-container text-on-error-container p-8 rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.03)] flex flex-col justify-between hover:scale-[1.02] transition-transform duration-300">
+        <div className="bg-error-container text-on-error-container p-5 sm:p-6 lg:p-8 rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.03)] flex flex-col justify-between hover:scale-[1.01] transition-transform duration-300">
           <div className="flex justify-between items-start mb-4">
-            <div className="w-12 h-12 bg-white/30 rounded-2xl flex items-center justify-center">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white/30 rounded-2xl flex items-center justify-center">
               <span className="material-symbols-outlined text-on-error-container" style={{ fontVariationSettings: "'FILL' 1" }}>warning</span>
             </div>
             <span className="text-xs font-black px-2 py-1 bg-white/40 text-on-error-container rounded-lg">Action!</span>
           </div>
           <div>
             <p className="text-on-error-container/80 text-sm font-bold uppercase tracking-widest mb-1">Low Stock Alerts</p>
-            <h3 className="text-4xl font-black">{dashboardData.lowStockAlerts}</h3>
+            <h3 className="text-3xl sm:text-4xl font-black">{dashboardData.lowStockAlerts}</h3>
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 bg-surface-container-lowest p-10 rounded-xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] relative overflow-hidden">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 md:gap-8">
+        <div className="lg:col-span-2 bg-surface-container-lowest p-5 sm:p-6 lg:p-10 rounded-xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] relative overflow-hidden">
           <div className="flex justify-between items-end mb-8">
             <div>
               <h4 className="text-xl font-black mb-1 plusJakartaSans">Product Views</h4>
               <p className="text-on-surface-variant text-sm font-medium">Monthly engagement performance</p>
             </div>
             <div className="flex gap-2">
-              <button className="px-4 py-2 bg-surface-container text-xs font-bold rounded-full">Week</button>
-              <button className="px-4 py-2 bg-primary text-on-primary rounded-full text-xs font-bold">Month</button>
+              <button className="px-3 sm:px-4 py-1.5 sm:py-2 bg-surface-container text-xs font-bold rounded-full">Week</button>
+              <button className="px-3 sm:px-4 py-1.5 sm:py-2 bg-primary text-on-primary rounded-full text-xs font-bold">Month</button>
             </div>
           </div>
 
@@ -325,12 +392,12 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="bg-surface-container-lowest p-10 rounded-xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)]">
+        <div className="bg-surface-container-lowest p-5 sm:p-6 lg:p-10 rounded-xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)]">
           <h4 className="text-xl font-black mb-1 plusJakartaSans">Category Distribution</h4>
-          <p className="text-on-surface-variant text-sm font-medium mb-10">Inventory by toy type</p>
+          <p className="text-on-surface-variant text-sm font-medium mb-6 sm:mb-10">Inventory by toy type</p>
 
-          <div className="flex justify-center mb-10">
-            <div className="relative w-48 h-48 rounded-full border-[16px] border-surface-container flex items-center justify-center">
+          <div className="flex justify-center mb-6 sm:mb-10">
+            <div className="relative w-40 h-40 sm:w-48 sm:h-48 rounded-full border-[14px] sm:border-[16px] border-surface-container flex items-center justify-center">
               <div className="absolute inset-0 rounded-full border-[16px] border-secondary border-t-transparent border-r-transparent transform rotate-45"></div>
               <div className="absolute inset-0 rounded-full border-[16px] border-primary border-b-transparent border-l-transparent transform -rotate-12"></div>
               <div className="text-center">
@@ -354,15 +421,20 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="mt-10 bg-surface-container-lowest rounded-xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] overflow-hidden">
-        <div className="px-10 py-8 border-b border-surface-container flex justify-between items-center">
+      <div className="mt-8 md:mt-10 bg-surface-container-lowest rounded-xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] overflow-hidden">
+        <div className="px-4 sm:px-6 lg:px-10 py-5 sm:py-6 lg:py-8 border-b border-surface-container flex justify-between items-center gap-4">
           <h4 className="text-xl font-black plusJakartaSans">Recent Inventory Updates</h4>
-          <button className="text-secondary text-sm font-bold flex items-center gap-1 hover:underline">
+          <button
+            type="button"
+            onClick={() => navigate('/admin/inventory')}
+            className="text-secondary text-xs sm:text-sm font-bold flex items-center gap-1 hover:underline whitespace-nowrap"
+          >
             View All <span className="material-symbols-outlined text-sm">arrow_forward</span>
           </button>
         </div>
 
-        <table className="w-full text-left">
+        <div className="overflow-x-auto">
+        <table className="w-full text-left min-w-[760px]">
           <thead>
             <tr className="text-[11px] uppercase tracking-widest text-outline font-black">
               <th className="px-10 py-6">Product</th>
@@ -399,11 +471,8 @@ const Dashboard = () => {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
-
-      <button className="fixed bottom-8 right-8 w-16 h-16 bg-primary text-on-primary rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50" type="button" aria-label="Add new item">
-        <span className="material-symbols-outlined text-3xl">add</span>
-      </button>
 
       {loading && (
         <div className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-surface-container-high px-4 py-2 rounded-full text-xs font-bold text-on-surface-variant shadow-sm">

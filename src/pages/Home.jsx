@@ -1,24 +1,126 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import useCartStore from '../store/cartStore';
 import useFavoritesStore from '../store/favoritesStore';
-import seedData from '../../assets.json';
+import { supabase } from '../utils/supabase';
+import { getInventoryState, getTotalStockFromVariants } from '../utils/inventory';
+
+const HOME_HERO_IMAGE = 'https://lh3.googleusercontent.com/aida-public/AB6AXuCfYhv3d-un4C0rNmRWV4E3skjiDojogHJ0rW-C0WLn3ZFlHwhXw3n3SZt107EZYOntu0DaQ7ssVuxLBjpvuWZmmagK1DfVmCv-5N3x3JGNy-YbULyGzXBAjTv03cjdS2a-B8zt6_zkRt_jVnrKg4fxhcBrUS1phex2FRwXAu8cGndcXtxX8Ii550Dp3fhK0bW7mERpX66a3vh4SaXw4tqTPDIRvsCXQ4yIqAGkBex1uBrsm7CH2isvZWjg7ly9PJyjIny1rW8T4L0n';
 
 const Home = () => {
-  const addToCart = useCartStore(state => state.addToCart);
+  const addToCart = useCartStore((state) => state.addToCart);
   const { toggleFavorite, isFavorite } = useFavoritesStore();
-  // Optional: In a real app we'd fetch these from our useProducts hook.
-  // Using seedData here for exact Stitch UI replication for now.
-  const { products, categories, hero_image } = seedData;
 
-  const [selectedCategories, setSelectedCategories] = useState(() => categories.map((category) => category.slug));
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchCatalog = async () => {
+      setLoading(true);
+      setError('');
+
+      const [categoriesRes, productsRes] = await Promise.all([
+        supabase
+          .from('categories')
+          .select('id, name, slug')
+          .order('name', { ascending: true }),
+        supabase
+          .from('products')
+          .select('id, slug, name, description, price, discount_price, image_url, is_available, categories(name, slug), product_variants(stock)')
+          .eq('is_available', true)
+          .order('created_at', { ascending: false })
+      ]);
+
+      if (!isMounted) {
+        return;
+      }
+
+      if (categoriesRes.error || productsRes.error) {
+        setCategories([]);
+        setProducts([]);
+        setError(productsRes.error?.message || categoriesRes.error?.message || 'Unable to load shop items right now.');
+        setLoading(false);
+        return;
+      }
+
+      const categoryRows = categoriesRes.data || [];
+      const productRows = (productsRes.data || []).map((product, index) => {
+        const totalStock = getTotalStockFromVariants(product.product_variants);
+        const effectiveStock = product.is_available ? totalStock : 0;
+        const sellingPrice = Number(product.price || 0);
+        const originalPrice = Number(product.discount_price || 0);
+        const isOnSale = Number.isFinite(originalPrice) && originalPrice > sellingPrice && sellingPrice > 0;
+        const saleDiscountPercent = isOnSale
+          ? Math.max(1, Math.round(((originalPrice - sellingPrice) / originalPrice) * 100))
+          : 0;
+
+        return {
+          ...product,
+          id: product.id || product.slug || `home-${index}`,
+          price: sellingPrice,
+          discount_price: isOnSale ? originalPrice : null,
+          category_slug: product.categories?.slug || '',
+          category_name: product.categories?.name || 'Uncategorized',
+          inventory: getInventoryState(effectiveStock),
+          is_on_sale: isOnSale,
+          sale_discount_percent: saleDiscountPercent
+        };
+      });
+
+      setCategories(categoryRows);
+      setProducts(productRows);
+      setLoading(false);
+    };
+
+    fetchCatalog();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const [selectedCategories, setSelectedCategories] = useState([]);
   const [viewMode, setViewMode] = useState('grid');
 
   const maxAvailablePrice = useMemo(() => {
     return products.reduce((max, product) => Math.max(max, Number(product.price || 0)), 0);
   }, [products]);
 
-  const [maxPriceFilter, setMaxPriceFilter] = useState(maxAvailablePrice);
+  const [maxPriceFilter, setMaxPriceFilter] = useState(0);
+
+  useEffect(() => {
+    if (!categories.length) {
+      setSelectedCategories([]);
+      return;
+    }
+
+    setSelectedCategories((previous) => {
+      if (!previous.length) {
+        return categories.map((category) => category.slug);
+      }
+
+      return previous.filter((slug) => categories.some((category) => category.slug === slug));
+    });
+  }, [categories]);
+
+  useEffect(() => {
+    if (!maxAvailablePrice) {
+      setMaxPriceFilter(0);
+      return;
+    }
+
+    setMaxPriceFilter((previous) => {
+      if (!previous || previous > maxAvailablePrice) {
+        return maxAvailablePrice;
+      }
+
+      return previous;
+    });
+  }, [maxAvailablePrice]);
 
   const categoryNameBySlug = useMemo(() => {
     return categories.reduce((acc, category) => {
@@ -29,7 +131,7 @@ const Home = () => {
 
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
-      const isCategoryMatched = selectedCategories.includes(product.category_slug);
+      const isCategoryMatched = !product.category_slug || selectedCategories.includes(product.category_slug);
       const isPriceMatched = Number(product.price || 0) <= maxPriceFilter;
       return isCategoryMatched && isPriceMatched;
     });
@@ -47,22 +149,73 @@ const Home = () => {
 
   const sliderStep = maxAvailablePrice > 1000 ? 100 : 10;
 
+  const heroStats = useMemo(() => {
+    const inStockCount = products.filter((product) => product.inventory?.totalStock > 0).length;
+    const onSaleCount = products.filter((product) => product.is_on_sale).length;
+
+    return [
+      { label: 'Toys in Stock', value: inStockCount },
+      { label: 'Categories', value: categories.length },
+      { label: 'On Sale', value: onSaleCount }
+    ];
+  }, [products, categories]);
+
   return (
     <>
       {/* Hero Section */}
-      <section className="px-8 mt-8">
-        <div className="relative h-[600px] w-full rounded-xl overflow-hidden shadow-xl bg-surface-container-high">
-          <img alt="Hero Toys" className="w-full h-full object-cover" src={hero_image} />
-          <div className="absolute inset-0 bg-gradient-to-r from-stone-900/40 via-stone-900/10 to-transparent flex flex-col justify-center px-16">
-            <h1 className="plusJakartaSans font-extrabold text-7xl text-white max-w-xl leading-tight tracking-tight">
-              TurtleTots: <br /><span className="text-primary-container">Where Fun Lives!</span>
-            </h1>
-            <p className="text-white/90 text-xl mt-6 max-w-md font-medium">Curated playthings designed to spark imagination and bring boundless joy to every home.</p>
-            <div className="mt-10 flex gap-4">
-              <button className="bg-primary-container text-on-primary-fixed px-10 py-4 rounded-full font-bold text-lg shadow-lg hover:scale-105 transition-all flex items-center gap-2">
-                Explore Toys
-                <span className="material-symbols-outlined">arrow_forward</span>
-              </button>
+      <section className="px-4 sm:px-6 lg:px-8 mt-4 sm:mt-8">
+        <div className="relative w-full rounded-[2rem] overflow-hidden shadow-[0_30px_80px_-20px_rgba(0,0,0,0.35)] bg-[#090b10] border border-white/10">
+          <div className="relative flex flex-col lg:grid lg:grid-cols-12 lg:min-h-[560px]">
+            <div className="order-2 lg:order-1 lg:col-span-5 px-6 sm:px-8 lg:px-12 py-8 lg:py-10 bg-gradient-to-br from-black/80 via-black/65 to-transparent">
+              <div className="inline-flex items-center gap-2 rounded-full bg-white/15 backdrop-blur-md border border-white/20 px-4 py-2 text-[11px] sm:text-xs font-black uppercase tracking-[0.18em] text-white w-fit">
+                <span className="material-symbols-outlined text-sm">toys</span>
+                Playtime, Curated Daily
+              </div>
+
+              <div className="mt-5 max-w-xl">
+                <h1 className="plusJakartaSans font-extrabold text-[42px] leading-[0.96] sm:text-6xl lg:text-[70px] text-white tracking-[-0.03em]">
+                  TurtleTots
+                  <span className="block text-primary-container mt-1 sm:mt-2">Where Fun Lives!</span>
+                </h1>
+
+                <p className="text-white/90 text-base sm:text-lg mt-5 max-w-lg font-medium leading-relaxed">
+                  Curated playthings designed to spark imagination, build confidence, and bring boundless joy to every home.
+                </p>
+
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <Link
+                    to="/best-sellers"
+                    className="bg-primary-container text-on-primary-fixed px-6 sm:px-8 py-3 sm:py-3.5 rounded-full font-black text-sm sm:text-base shadow-lg hover:scale-105 transition-all flex items-center gap-2"
+                  >
+                    Explore Best Sellers
+                    <span className="material-symbols-outlined">arrow_forward</span>
+                  </Link>
+                  <Link
+                    to="/new-arrivals"
+                    className="bg-white/15 text-white border border-white/35 backdrop-blur-md px-6 sm:px-7 py-3 sm:py-3.5 rounded-full font-bold text-sm sm:text-base hover:bg-white/20 transition-colors"
+                  >
+                    New Arrivals
+                  </Link>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-2 sm:gap-3 w-full max-w-xs sm:max-w-sm mt-6">
+                {heroStats.map((stat) => (
+                  <div key={stat.label} className="rounded-2xl border border-white/20 bg-white/10 backdrop-blur-md px-3 sm:px-4 py-3">
+                    <p className="text-white text-lg sm:text-2xl font-black leading-none">{stat.value}</p>
+                    <p className="text-white/80 text-[10px] sm:text-xs font-bold uppercase tracking-wider mt-1">{stat.label}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="order-1 lg:order-2 lg:col-span-7 relative min-h-[320px] sm:min-h-[420px] lg:min-h-[560px] bg-black">
+              <img
+                alt="Hero Toys"
+                className="absolute inset-0 w-full h-full object-cover lg:object-contain lg:object-center"
+                src={HOME_HERO_IMAGE}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent lg:bg-gradient-to-l lg:from-black/10 lg:via-transparent lg:to-black/35"></div>
             </div>
           </div>
         </div>
@@ -127,6 +280,7 @@ const Home = () => {
             <div>
               <h2 className="plusJakartaSans text-4xl font-extrabold tracking-tight">Handpicked Treasures</h2>
               <p className="text-on-surface-variant font-medium mt-1">Showing {filteredProducts.length} items</p>
+              {error && <p className="text-error text-sm font-semibold mt-2">{error}</p>}
             </div>
             <div className="flex gap-2">
               <button
@@ -146,7 +300,11 @@ const Home = () => {
             </div>
           </div>
 
-          {!filteredProducts.length ? (
+          {loading ? (
+            <div className="bg-surface-container-lowest rounded-xl p-10 text-center text-on-surface-variant font-semibold">
+              Loading products...
+            </div>
+          ) : !filteredProducts.length ? (
             <div className="bg-surface-container-lowest rounded-xl p-10 text-center text-on-surface-variant font-semibold">
               No products match your category or price filters.
             </div>
@@ -160,8 +318,10 @@ const Home = () => {
                   <div key={product.slug} className="bg-surface-container-lowest rounded-xl p-4 shadow-[0_20px_40px_-10px_rgba(0,0,0,0.03)] hover:shadow-[0_40px_60px_-15px_rgba(109,90,0,0.08)] transition-all group">
                     <Link to={`/product/${product.slug}`} className="block relative rounded-xl overflow-hidden bg-surface-container-high h-72 mb-6 cursor-pointer">
                       <img alt={product.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src={product.image_url} />
-                      {product.discount_price && (
-                        <span className="absolute top-4 left-4 bg-error text-on-error px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest">Sale</span>
+                      {product.is_on_sale && (
+                        <span className="absolute top-4 left-4 bg-error text-on-error px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest">
+                          Sale {product.sale_discount_percent}%
+                        </span>
                       )}
                       <button
                         className="absolute top-4 right-4 bg-white/80 backdrop-blur-md w-10 h-10 rounded-full flex items-center justify-center text-error hover:scale-110 transition-transform"
@@ -179,18 +339,28 @@ const Home = () => {
                         <h3 className="plusJakartaSans font-extrabold text-xl mb-2 hover:text-primary transition-colors">{product.name}</h3>
                       </Link>
                       <div className="flex items-center gap-2 mb-6">
-                        <p className="text-primary font-black text-2xl">₹{product.price.toFixed(2)}</p>
-                        {product.discount_price && (
-                          <p className="text-on-surface-variant line-through text-sm">₹{product.discount_price.toFixed(2)}</p>
+                        <p className="text-primary font-black text-2xl">₹{Number(product.price || 0).toFixed(2)}</p>
+                        {product.is_on_sale && (
+                          <p className="text-on-surface-variant line-through text-sm">₹{Number(product.discount_price || 0).toFixed(2)}</p>
                         )}
                       </div>
+
+                      <div className={`inline-flex px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider mb-5 ${product.inventory.chipClass}`}>
+                        {product.inventory.shortLabel}
+                      </div>
+
                       <div className="flex gap-3">
                         <button
-                          onClick={() => addToCart({ id: product.slug, ...product })}
-                          className="flex-1 bg-primary-container text-on-primary-container h-12 rounded-full font-bold flex items-center justify-center gap-2 hover:bg-primary-fixed-dim transition-colors"
+                          onClick={() => addToCart({ ...product, quantity: 1 })}
+                          disabled={product.inventory.totalStock <= 0}
+                          className={`flex-1 h-12 rounded-full font-bold flex items-center justify-center gap-2 transition-colors ${
+                            product.inventory.totalStock > 0
+                              ? 'bg-primary-container text-on-primary-container hover:bg-primary-fixed-dim'
+                              : 'bg-surface-variant text-outline cursor-not-allowed'
+                          }`}
                         >
                           <span className="material-symbols-outlined text-lg">add_shopping_cart</span>
-                          Add
+                          {product.inventory.totalStock > 0 ? 'Add' : 'Out of Stock'}
                         </button>
                       </div>
                     </div>
@@ -215,6 +385,11 @@ const Home = () => {
                           <div>
                             <p className="text-xs font-bold uppercase tracking-widest text-secondary mb-1">{categoryNameBySlug[product.category_slug] || 'Uncategorized'}</p>
                             <h3 className="plusJakartaSans font-extrabold text-2xl leading-tight">{product.name}</h3>
+                            {product.is_on_sale && (
+                              <span className="inline-flex mt-2 px-2.5 py-1 rounded-full bg-error text-on-error text-[10px] font-black uppercase tracking-widest">
+                                Sale {product.sale_discount_percent}% Off
+                              </span>
+                            )}
                           </div>
                           <button
                             className="w-10 h-10 rounded-full bg-error-container/10 text-error hover:scale-105 transition-transform"
@@ -229,21 +404,31 @@ const Home = () => {
 
                       <div className="flex flex-wrap items-center gap-4 justify-between">
                         <div className="flex items-center gap-2">
-                          <p className="text-primary font-black text-3xl">₹{product.price.toFixed(2)}</p>
-                          {product.discount_price && (
-                            <p className="text-on-surface-variant line-through text-base">₹{product.discount_price.toFixed(2)}</p>
+                          <p className="text-primary font-black text-3xl">₹{Number(product.price || 0).toFixed(2)}</p>
+                          {product.is_on_sale && (
+                            <p className="text-on-surface-variant line-through text-base">₹{Number(product.discount_price || 0).toFixed(2)}</p>
                           )}
                         </div>
+
+                        <div className={`inline-flex px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider ${product.inventory.chipClass}`}>
+                          {product.inventory.shortLabel}
+                        </div>
+
                         <div className="flex gap-3">
                           <Link to={`/product/${product.slug}`} className="px-5 h-11 rounded-full bg-surface-container-low text-on-surface-variant font-bold inline-flex items-center justify-center hover:bg-surface-container-high transition-colors">
                             Details
                           </Link>
                           <button
-                            onClick={() => addToCart({ id: product.slug, ...product })}
-                            className="px-5 h-11 rounded-full bg-primary-container text-on-primary-container font-bold flex items-center justify-center gap-2 hover:bg-primary-fixed-dim transition-colors"
+                            onClick={() => addToCart({ ...product, quantity: 1 })}
+                            disabled={product.inventory.totalStock <= 0}
+                            className={`px-5 h-11 rounded-full font-bold flex items-center justify-center gap-2 transition-colors ${
+                              product.inventory.totalStock > 0
+                                ? 'bg-primary-container text-on-primary-container hover:bg-primary-fixed-dim'
+                                : 'bg-surface-variant text-outline cursor-not-allowed'
+                            }`}
                           >
                             <span className="material-symbols-outlined text-lg">add_shopping_cart</span>
-                            Add
+                            {product.inventory.totalStock > 0 ? 'Add' : 'Out of Stock'}
                           </button>
                         </div>
                       </div>

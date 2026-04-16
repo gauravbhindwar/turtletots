@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { supabase } from '../../utils/supabase';
 
 const ROLE_OPTIONS = ['user', 'manager', 'admin'];
+const PAGE_SIZE = 20;
 
 const Users = () => {
   const [loading, setLoading] = useState(true);
@@ -9,15 +10,21 @@ const Users = () => {
   const [users, setUsers] = useState([]);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [currentPage, setCurrentPage] = useState(0);
+  const [hasNextPage, setHasNextPage] = useState(false);
 
-  const fetchUsers = async () => {
+  const fetchUsers = async (page = currentPage) => {
     setLoading(true);
     setError('');
+
+    const from = page * PAGE_SIZE;
+    const to = from + PAGE_SIZE - 1;
 
     const { data, error: fetchError } = await supabase
       .from('profiles')
       .select('id, full_name, email, phone, address, role, created_at')
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false })
+      .range(from, to + 1);
 
     if (fetchError) {
       setError(fetchError.message || 'Unable to load users.');
@@ -25,13 +32,15 @@ const Users = () => {
       return;
     }
 
-    setUsers(data || []);
+    const rows = data || [];
+    setHasNextPage(rows.length > PAGE_SIZE);
+    setUsers(rows.slice(0, PAGE_SIZE));
     setLoading(false);
   };
 
   useEffect(() => {
-    fetchUsers();
-  }, []);
+    fetchUsers(currentPage);
+  }, [currentPage]);
 
   const updateUserField = (id, field, value) => {
     setUsers((previous) =>
@@ -74,6 +83,9 @@ const Users = () => {
     setSavingId('');
   };
 
+  const canGoPrev = currentPage > 0;
+  const canGoNext = hasNextPage;
+
   return (
     <>
       <header className="mb-10">
@@ -95,10 +107,10 @@ const Users = () => {
 
       <section className="bg-surface-container-lowest rounded-2xl border border-outline-variant/10 shadow-sm overflow-hidden">
         <div className="px-6 py-5 border-b border-surface-container flex items-center justify-between">
-          <h3 className="text-lg font-bold plusJakartaSans">Accounts ({users.length})</h3>
+          <h3 className="text-lg font-bold plusJakartaSans">Accounts</h3>
           <button
             type="button"
-            onClick={fetchUsers}
+            onClick={() => fetchUsers(currentPage)}
             className="px-4 py-2 rounded-full bg-surface-container-low text-on-surface-variant text-sm font-bold"
           >
             Refresh
@@ -193,6 +205,31 @@ const Users = () => {
               )}
             </tbody>
           </table>
+        </div>
+
+        <div className="flex items-center justify-between gap-4 px-6 py-5 border-t border-surface-container bg-surface-container-low/20">
+          <p className="text-xs font-semibold text-on-surface-variant">
+            Page {currentPage + 1}
+          </p>
+
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setCurrentPage((page) => Math.max(0, page - 1))}
+              disabled={!canGoPrev}
+              className="px-4 py-2 rounded-full bg-surface-container-low text-on-surface-variant text-sm font-bold disabled:opacity-40"
+            >
+              Prev
+            </button>
+            <button
+              type="button"
+              onClick={() => setCurrentPage((page) => page + 1)}
+              disabled={!canGoNext}
+              className="px-4 py-2 rounded-full bg-surface-container-low text-on-surface-variant text-sm font-bold disabled:opacity-40"
+            >
+              Next
+            </button>
+          </div>
         </div>
       </section>
     </>

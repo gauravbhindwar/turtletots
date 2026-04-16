@@ -2,48 +2,98 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../utils/supabase';
 import useCartStore from '../store/cartStore';
+import { useToast } from '../components/ToastProvider';
+import WhatsAppBrandIcon from '../components/WhatsAppBrandIcon';
+import { getStoreSettings } from '../utils/storeSettings';
+import { getInventoryState, getTotalStockFromVariants } from '../utils/inventory';
 
 const ProductDetails = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [quantity, setQuantity] = useState(1);
+  const [waNumber, setWaNumber] = useState(import.meta.env.VITE_WHATSAPP_NUMBER || '919876543210');
   const { addToCart } = useCartStore();
+  const { showToast } = useToast();
 
   useEffect(() => {
     fetchProduct();
   }, [slug]);
 
+  useEffect(() => {
+    let isMounted = true;
+
+    const hydrateWhatsAppNumber = async () => {
+      const settings = await getStoreSettings();
+      const configuredNumber = settings?.whatsapp_order_number?.trim();
+
+      if (isMounted && configuredNumber) {
+        setWaNumber(configuredNumber);
+      }
+    };
+
+    hydrateWhatsAppNumber();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   const fetchProduct = async () => {
     setLoading(true);
-    const { data } = await supabase
+    setError('');
+
+    const { data, error: fetchError } = await supabase
       .from('products')
-      .select('*, categories(name)')
+      .select('id, slug, name, description, price, discount_price, image_url, is_available, categories(name), product_variants(stock)')
       .eq('slug', slug)
-      .single();
+      .maybeSingle();
     
-    if (data) setProduct(data);
+    if (fetchError) {
+      setError(fetchError.message || 'Unable to load product details.');
+      setProduct(null);
+      setLoading(false);
+      return;
+    }
+
+    if (data) {
+      setProduct(data);
+    } else {
+      setProduct(null);
+      setError('Product not found.');
+    }
+
     setLoading(false);
   };
 
   const handleAddToCart = () => {
     if(!product) return;
+
+    const stockState = getInventoryState(product.is_available ? getTotalStockFromVariants(product.product_variants) : 0);
+
+    if (stockState.totalStock <= 0) {
+      showToast('This product is currently out of stock for cart checkout.', { type: 'info' });
+      return;
+    }
+
     addToCart({ ...product, quantity });
-    // Toast notification could go here
-    alert(`${product.name} added to cart!`);
+    showToast(`${product.name} added to cart!`, { type: 'success' });
   };
 
   const handleWhatsAppOrder = () => {
     if(!product) return;
-    const waNumber = import.meta.env.VITE_WHATSAPP_NUMBER || '919876543210';
     const message = `Hello! I would like to order ${quantity}x of ${product.name} (₹${(product.price * quantity).toFixed(2)}) from TurtleTots.`;
     const encoded = encodeURIComponent(message);
     window.open(`https://wa.me/${waNumber.replace(/[^0-9]/g, '')}?text=${encoded}`, '_blank');
   };
 
   if (loading) return <div className="p-32 text-center text-xl font-bold">Loading product details...</div>;
-  if (!product) return <div className="p-32 text-center text-xl font-bold text-error">Product not found.</div>;
+  if (!product) return <div className="p-32 text-center text-xl font-bold text-error">{error || 'Product not found.'}</div>;
+
+  const inventoryState = getInventoryState(product.is_available ? getTotalStockFromVariants(product.product_variants) : 0);
+  const canAddToCart = product.is_available && inventoryState.totalStock > 0;
 
   return (
     <main className="pt-7 pb-24 px-4 md:px-12 lg:px-24 max-w-[1440px] mx-auto min-h-screen">
@@ -93,13 +143,16 @@ const ProductDetails = () => {
 
           <div className="flex items-center gap-4">
             <span className="text-4xl plusJakartaSans font-black text-on-surface">
-              ₹{product.price.toFixed(2)}
+              ₹{Number(product.price || 0).toFixed(2)}
             </span>
             {product.discount_price && (
               <span className="text-xl plusJakartaSans font-bold text-on-surface-variant line-through">
-                ₹{product.discount_price.toFixed(2)}
+                ₹{Number(product.discount_price || 0).toFixed(2)}
               </span>
             )}
+            <span className={`inline-flex px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${inventoryState.chipClass}`}>
+              {inventoryState.shortLabel}
+            </span>
           </div>
 
           <p className="text-lg text-on-surface-variant leading-relaxed">
@@ -120,15 +173,21 @@ const ProductDetails = () => {
                   </button>
                 </div>
                 
-                <button onClick={handleAddToCart} disabled={!product.is_available} className={`flex-1 h-14 font-headline font-bold rounded-full shadow-sm flex items-center justify-center gap-2 transition-all ${product.is_available ? 'bg-primary-container text-on-primary-container hover:bg-primary hover:text-white' : 'bg-surface-variant text-outline cursor-not-allowed'}`}>
+                <button onClick={handleAddToCart} disabled={!canAddToCart} className={`flex-1 h-14 font-headline font-bold rounded-full shadow-sm flex items-center justify-center gap-2 transition-all ${canAddToCart ? 'bg-primary-container text-on-primary-container hover:bg-primary hover:text-white' : 'bg-surface-variant text-outline cursor-not-allowed'}`}>
                   <span className="material-symbols-outlined">shopping_basket</span>
-                  {product.is_available ? 'Add to Cart' : 'Out of Stock'}
+                  {canAddToCart ? 'Add to Cart' : 'Out of Stock'}
                 </button>
               </div>
 
+              {product.is_available && inventoryState.totalStock <= 0 && (
+                <p className="text-xs font-semibold text-on-surface-variant">
+                  This item is out of stock for cart checkout, but you can still contact us via WhatsApp.
+                </p>
+              )}
+
               {product.is_available && (
                 <button onClick={handleWhatsAppOrder} className="w-full h-14 bg-[#25D366] text-white font-headline font-bold rounded-full flex items-center justify-center gap-3 shadow-md hover:brightness-105 transition-all">
-                  <span className="material-symbols-outlined fill-current">chat</span>
+                  <WhatsAppBrandIcon className="w-6 h-6" />
                   Order via WhatsApp
                 </button>
               )}

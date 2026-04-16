@@ -78,10 +78,19 @@ const Categories = () => {
   const fetchCategories = async () => {
     setLoading(true);
     setActionError('');
-    const { data, error } = await supabase
-      .from('categories')
-      .select('id, name, slug, icon, products(count)')
-      .order('created_at', { ascending: false });
+
+    let { data, error } = await supabase.rpc('list_categories_with_product_counts');
+
+    if (error) {
+      // Backward-compatible fallback if migration has not been applied yet.
+      const fallback = await supabase
+        .from('categories')
+        .select('id, name, slug, icon, products(count)')
+        .order('created_at', { ascending: false });
+
+      data = fallback.data;
+      error = fallback.error;
+    }
 
     if (error) {
       setActionError(getErrorMessage(error, 'Unable to load categories right now.'));
@@ -89,7 +98,12 @@ const Categories = () => {
       return;
     }
 
-    setCategories(data || []);
+    const normalized = (data || []).map((category) => ({
+      ...category,
+      product_count: Number(category.product_count ?? (Array.isArray(category.products) ? category.products[0]?.count || 0 : 0))
+    }));
+
+    setCategories(normalized);
     setLoading(false);
   };
 
@@ -199,23 +213,23 @@ const Categories = () => {
 
   return (
     <>
-      <header className="flex justify-between items-center mb-12">
+      <header className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-8 md:mb-12">
         <div>
-          <h2 className="text-4xl font-extrabold tracking-tight text-on-surface plusJakartaSans">Category Management</h2>
+          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-on-surface plusJakartaSans">Category Management</h2>
           <p className="text-on-surface-variant font-medium mt-2">Organize and curate your toy collections</p>
         </div>
 
-        <div className="flex items-center gap-4 mb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 w-full sm:w-auto">
           <button
             type="button"
             onClick={openCreateCategoryModal}
-            className="bg-primary-container text-on-primary-container px-6 py-3 rounded-full font-bold flex items-center gap-2 hover:scale-105 transition-transform"
+            className="self-start sm:self-auto bg-primary-container text-on-primary-container px-5 sm:px-6 py-2.5 sm:py-3 rounded-full font-bold flex items-center gap-2 hover:scale-105 transition-transform text-sm sm:text-base"
           >
             <span className="material-symbols-outlined">add</span>
             Add Category
           </button>
 
-          <div className="flex items-center gap-3 bg-surface-container-high px-4 py-2 rounded-xl border border-outline-variant/10">
+          <div className="hidden sm:flex items-center gap-3 bg-surface-container-high px-4 py-2 rounded-xl border border-outline-variant/10">
             <div className="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-secondary font-bold text-xs">AM</div>
             <span className="text-sm font-semibold text-on-surface">Admin Mode</span>
           </div>
@@ -235,18 +249,18 @@ const Categories = () => {
       )}
 
       {/* Categories Bento Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
         {loading ? (
           <p className="p-4">Loading...</p>
         ) : categories.map((cat, i) => {
           const iconOption = getIconOption(cat.icon || ICON_OPTIONS[i % ICON_OPTIONS.length].value);
 
           return (
-            <div key={cat.id} className="group relative bg-surface-container-lowest rounded-2xl p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border border-outline-variant/10">
-              <div className="absolute -top-4 -right-4 w-24 h-24 rounded-2xl bg-secondary-container/10 -z-10 group-hover:scale-110 transition-transform"></div>
+            <div key={cat.id} className="group relative bg-surface-container-lowest rounded-2xl p-4 sm:p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border border-outline-variant/10">
+              <div className="absolute -top-3 -right-3 w-16 h-16 sm:w-24 sm:h-24 rounded-2xl bg-secondary-container/10 -z-10 group-hover:scale-110 transition-transform"></div>
               
-              <div className="flex justify-between items-start mb-6">
-                <div className={`w-14 h-14 rounded-full flex items-center justify-center ${iconOption.classes}`}>
+              <div className="flex justify-between items-start mb-4 sm:mb-6">
+                <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center ${iconOption.classes}`}>
                   <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>{iconOption.value}</span>
                 </div>
                 <div className="flex gap-2">
@@ -262,12 +276,12 @@ const Categories = () => {
                 </div>
               </div>
 
-              <h3 className="text-2xl font-bold text-on-surface plusJakartaSans capitalize">{cat.name}</h3>
+              <h3 className="text-xl sm:text-2xl font-bold text-on-surface plusJakartaSans capitalize">{cat.name}</h3>
               <p className="text-sm text-on-surface-variant mt-1">Slug: {cat.slug}</p>
               
-              <div className="mt-8 pt-6 border-t border-outline-variant/10 flex items-center justify-between">
+              <div className="mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-outline-variant/10 flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="text-3xl font-black text-primary">{Array.isArray(cat.products) ? (cat.products[0]?.count || 0) : 0}</span>
+                  <span className="text-2xl sm:text-3xl font-black text-primary">{cat.product_count || 0}</span>
                   <span className="text-xs font-bold uppercase tracking-widest text-outline">Items</span>
                 </div>
                 <span className="px-3 py-1 bg-success/20 text-[#128C7E] text-[10px] font-bold rounded-full">ACTIVE</span>
@@ -280,25 +294,25 @@ const Categories = () => {
         <button
           type="button"
           onClick={openCreateCategoryModal}
-          className="group border-4 border-dashed border-outline-variant/20 rounded-2xl flex flex-col items-center justify-center p-8 text-center hover:border-primary-container hover:bg-primary-container/10 transition-all min-h-[250px]"
+          className="group border-4 border-dashed border-outline-variant/20 rounded-2xl flex flex-col items-center justify-center p-6 sm:p-8 text-center hover:border-primary-container hover:bg-primary-container/10 transition-all min-h-[200px] sm:min-h-[250px]"
         >
-          <div className="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center text-outline group-hover:bg-primary-container group-hover:text-on-primary-container transition-all mb-4">
-            <span className="material-symbols-outlined text-3xl">add</span>
+          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-surface-container flex items-center justify-center text-outline group-hover:bg-primary-container group-hover:text-on-primary-container transition-all mb-3 sm:mb-4">
+            <span className="material-symbols-outlined text-2xl sm:text-3xl">add</span>
           </div>
-          <h4 className="text-lg font-bold text-on-surface">New Category</h4>
+          <h4 className="text-base sm:text-lg font-bold text-on-surface">New Category</h4>
           <p className="text-sm text-outline mt-1">Expand your toy catalog</p>
         </button>
       </div>
 
       {isCategoryModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm p-4 flex items-center justify-center" onClick={closeCategoryModal}>
+        <div className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm p-3 sm:p-4 flex items-start sm:items-center justify-center overflow-y-auto" onClick={closeCategoryModal}>
           <div
-            className="w-full max-w-xl bg-surface-container-lowest border border-outline-variant/20 rounded-2xl p-6 md:p-8 shadow-2xl"
+            className="w-full max-w-xl my-4 sm:my-0 bg-surface-container-lowest border border-outline-variant/20 rounded-2xl p-4 sm:p-6 md:p-8 shadow-2xl max-h-[92vh] overflow-y-auto"
             onClick={(event) => event.stopPropagation()}
           >
-            <div className="flex items-start justify-between gap-4 mb-6">
+            <div className="flex items-start justify-between gap-4 mb-4 sm:mb-6">
               <div>
-                <h3 className="text-2xl font-extrabold text-on-surface plusJakartaSans">{modalTitle}</h3>
+                <h3 className="text-xl sm:text-2xl font-extrabold text-on-surface plusJakartaSans">{modalTitle}</h3>
                 <p className="text-sm text-on-surface-variant mt-1">Choose a name, slug, and icon for this category.</p>
               </div>
               <button
@@ -311,7 +325,7 @@ const Categories = () => {
               </button>
             </div>
 
-            <form onSubmit={upsertCategory} className="space-y-5">
+            <form onSubmit={upsertCategory} className="space-y-4 sm:space-y-5">
               <div>
                 <label className="text-xs font-bold uppercase tracking-wider text-outline block mb-2">Category Name</label>
                 <input
@@ -345,7 +359,7 @@ const Categories = () => {
 
               <div>
                 <label className="text-xs font-bold uppercase tracking-wider text-outline block mb-2">Icon</label>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-3">
                   {ICON_OPTIONS.map((iconOption) => {
                     const isSelected = formValues.icon === iconOption.value;
 
@@ -354,30 +368,30 @@ const Categories = () => {
                         key={iconOption.value}
                         type="button"
                         onClick={() => setFormValues((previous) => ({ ...previous, icon: iconOption.value }))}
-                        className={`border rounded-[2rem] px-3 py-4 h-[122px] flex flex-col items-center justify-center gap-2 text-center transition-all ${isSelected ? 'border-primary ring-2 ring-primary/30 bg-primary-container/10' : 'border-outline-variant/20 hover:bg-surface-container-low'}`}
+                        className={`border rounded-[1.5rem] sm:rounded-[2rem] px-2.5 sm:px-3 py-3 sm:py-4 h-[104px] sm:h-[122px] flex flex-col items-center justify-center gap-1.5 sm:gap-2 text-center transition-all ${isSelected ? 'border-primary ring-2 ring-primary/30 bg-primary-container/10' : 'border-outline-variant/20 hover:bg-surface-container-low'}`}
                       >
-                        <div className={`w-11 h-11 rounded-full flex items-center justify-center ${iconOption.classes}`}>
+                        <div className={`w-9 h-9 sm:w-11 sm:h-11 rounded-full flex items-center justify-center ${iconOption.classes}`}>
                           <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>{iconOption.value}</span>
                         </div>
-                        <span className="text-sm font-bold text-on-surface leading-tight">{iconOption.label}</span>
+                        <span className="text-xs sm:text-sm font-bold text-on-surface leading-tight">{iconOption.label}</span>
                       </button>
                     );
                   })}
                 </div>
               </div>
 
-              <div className="pt-2 flex justify-end gap-3">
+              <div className="pt-2 flex justify-end gap-2 sm:gap-3">
                 <button
                   type="button"
                   onClick={closeCategoryModal}
-                  className="px-5 py-2.5 rounded-full bg-surface-container-low text-on-surface-variant font-semibold hover:bg-surface-container-high transition-colors"
+                  className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-surface-container-low text-on-surface-variant font-semibold hover:bg-surface-container-high transition-colors text-sm"
                   disabled={submitting}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2.5 rounded-full bg-primary-container text-on-primary-container font-bold hover:scale-105 transition-transform disabled:opacity-70 disabled:hover:scale-100"
+                  className="px-5 sm:px-6 py-2 sm:py-2.5 rounded-full bg-primary-container text-on-primary-container font-bold hover:scale-105 transition-transform disabled:opacity-70 disabled:hover:scale-100 text-sm sm:text-base"
                   disabled={submitting}
                 >
                   {submitLabel}

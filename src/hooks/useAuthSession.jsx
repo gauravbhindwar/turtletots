@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { supabase } from '../utils/supabase';
+import useCartStore from '../store/cartStore';
+import useFavoritesStore from '../store/favoritesStore';
 
 const AuthSessionContext = createContext(null);
 
@@ -12,6 +14,99 @@ const ROLE_PRIORITY = {
 };
 
 const LOADING_SAFETY_MS = 10000;
+const PROFILE_CACHE_TTL_MS = 2 * 60 * 1000;
+const PROFILE_CACHE_STORAGE_KEY = 'turtletots-profile-cache';
+const profileCache = new Map();
+
+const canUseSessionStorage = () => typeof window !== 'undefined' && typeof window.sessionStorage !== 'undefined';
+
+const readProfileStorage = () => {
+  if (!canUseSessionStorage()) return {};
+
+  try {
+    const raw = window.sessionStorage.getItem(PROFILE_CACHE_STORAGE_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === 'object' ? parsed : {};
+  } catch (_error) {
+    return {};
+  }
+};
+
+const writeProfileStorage = (payload) => {
+  if (!canUseSessionStorage()) return;
+
+  try {
+    window.sessionStorage.setItem(PROFILE_CACHE_STORAGE_KEY, JSON.stringify(payload));
+  } catch (_error) {
+    // Ignore storage write errors.
+  }
+};
+
+const clearAllCachedProfiles = () => {
+  profileCache.clear();
+
+  if (!canUseSessionStorage()) return;
+  window.sessionStorage.removeItem(PROFILE_CACHE_STORAGE_KEY);
+};
+
+const clearClientStores = () => {
+  useCartStore.getState().clearCart();
+  useFavoritesStore.getState().clearFavorites();
+
+  if (useFavoritesStore.persist?.clearStorage) {
+    useFavoritesStore.persist.clearStorage();
+    return;
+  }
+
+  if (canUseSessionStorage()) {
+    window.sessionStorage.removeItem('turtletots-favorites-session');
+  }
+};
+
+const getCachedProfile = (userId) => {
+  const entry = profileCache.get(userId);
+
+  if (!entry) {
+    const storedProfiles = readProfileStorage();
+    const persistedEntry = storedProfiles[userId];
+
+    if (!persistedEntry) {
+      return null;
+    }
+
+    if (persistedEntry.expiresAt < Date.now()) {
+      delete storedProfiles[userId];
+      writeProfileStorage(storedProfiles);
+      return null;
+    }
+
+    profileCache.set(userId, persistedEntry);
+    return persistedEntry.profile;
+  }
+
+  if (entry.expiresAt < Date.now()) {
+    profileCache.delete(userId);
+    return null;
+  }
+
+  return entry.profile;
+};
+
+const setCachedProfile = (profile) => {
+  if (!profile?.id) return;
+
+  const cacheEntry = {
+    profile,
+    expiresAt: Date.now() + PROFILE_CACHE_TTL_MS
+  };
+
+  profileCache.set(profile.id, cacheEntry);
+
+  const storedProfiles = readProfileStorage();
+  storedProfiles[profile.id] = cacheEntry;
+  writeProfileStorage(storedProfiles);
+};
 
 const normalizeRole = (value) => {
   if (!value) return 'user';
@@ -55,7 +150,14 @@ const upsertFallbackProfile = async (user) => {
   return data;
 };
 
-const fetchProfile = async (user) => {
+const fetchProfile = async (user, { bypassCache = false } = {}) => {
+  if (!bypassCache) {
+    const cached = getCachedProfile(user.id);
+    if (cached) {
+      return cached;
+    }
+  }
+
   const { data, error } = await supabase
     .from('profiles')
     .select(PROFILE_COLUMNS)
@@ -67,10 +169,13 @@ const fetchProfile = async (user) => {
   }
 
   if (data) {
+    setCachedProfile(data);
     return data;
   }
 
-  return upsertFallbackProfile(user);
+  const fallbackProfile = await upsertFallbackProfile(user);
+  setCachedProfile(fallbackProfile);
+  return fallbackProfile;
 };
 
 export const AuthProvider = ({ children }) => {
@@ -86,6 +191,7 @@ export const AuthProvider = ({ children }) => {
       setUser(null);
       setProfile(null);
       setLoading(false);
+      clearAllCachedProfiles();
       return;
     }
 
@@ -105,6 +211,7 @@ export const AuthProvider = ({ children }) => {
           .single();
 
         if (!updateError && updatedProfile) {
+          setCachedProfile(updatedProfile);
           setProfile(updatedProfile);
           setLoading(false);
           return;
@@ -115,8 +222,14 @@ export const AuthProvider = ({ children }) => {
         ...storedProfile,
         role: resolvedRole
       });
+      setCachedProfile({
+        ...storedProfile,
+        role: resolvedRole
+      });
     } catch (error) {
-      setProfile(createFallbackProfile(activeUser));
+      const fallback = createFallbackProfile(activeUser);
+      setProfile(fallback);
+      setCachedProfile(fallback);
       console.error('Unable to load profile:', error.message);
     } finally {
       setLoading(false);
@@ -161,8 +274,19 @@ export const AuthProvider = ({ children }) => {
 
     const {
       data: { subscription }
-    } = supabase.auth.onAuthStateChange(async (_event, nextSession) => {
+    } = supabase.auth.onAuthStateChange(async (event, nextSession) => {
       if (!isMounted) return;
+
+      if (event === 'TOKEN_REFRESHED') {
+        // Avoid flashing global loaders on silent token refresh cycles.
+        setSession(nextSession || null);
+        if (!nextSession?.user) {
+          setUser(null);
+          setProfile(null);
+        }
+        return;
+      }
+
       setLoading(true);
 
       const safetyTimer = setTimeout(() => {
@@ -195,20 +319,16 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const refreshProfile = async () => {
-    if (!user?.id) return;
+    if (!user?.id) return null;
 
-    const { data, error } = await supabase
-      .from('profiles')
-      .select(PROFILE_COLUMNS)
-      .eq('id', user.id)
-      .single();
-
-    if (error) {
+    try {
+      const data = await fetchProfile(user, { bypassCache: true });
+      setProfile(data);
+      return data;
+    } catch (error) {
       console.error('Unable to refresh profile:', error.message);
-      return;
+      return null;
     }
-
-    setProfile(data);
   };
 
   const signOut = async () => {
@@ -220,6 +340,8 @@ export const AuthProvider = ({ children }) => {
       setUser(null);
       setProfile(null);
       setLoading(false);
+      clearAllCachedProfiles();
+      clearClientStores();
 
       const { error } = await signOutPromise;
 

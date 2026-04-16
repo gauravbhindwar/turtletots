@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import { supabase } from '../../utils/supabase';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useAuthSession } from '../../hooks/useAuthSession';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const { refreshProfile } = useAuthSession();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -52,23 +50,7 @@ const Login = () => {
       setError(error.message);
       setLoading(false);
     } else {
-      const userId = data?.user?.id;
-
       let resolvedRole = (data?.user?.app_metadata?.role || 'user').toLowerCase();
-
-      if (userId) {
-        const { data: profileData } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', userId)
-          .maybeSingle();
-
-        if (profileData?.role) {
-          resolvedRole = String(profileData.role).toLowerCase();
-        }
-      }
-
-      await refreshProfile();
 
       const nextPath = getNextPath();
       if (nextPath && canNavigateToPath(nextPath, resolvedRole)) {

@@ -22,61 +22,65 @@ import Support from './pages/admin/Support';
 import Settings from './pages/admin/Settings';
 import AiAssistant from './pages/admin/AiAssistant';
 import Users from './pages/admin/Users';
+import { ToastProvider } from './components/ToastProvider';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<ShopLayout />}>
-          <Route index element={<Home />} />
-          <Route path="cart" element={<Cart />} />
-          <Route path="product/:slug" element={<ProductDetails />} />
-          <Route path="best-sellers" element={<BestSellers />} />
-          <Route path="new-arrivals" element={<NewArrivals />} />
-          <Route path="favorites" element={<Favorites />} />
-          <Route
-            path="profile"
-            element={(
-              <RequireAuth>
-                <Profile />
-              </RequireAuth>
-            )}
-          />
-        </Route>
+    <ToastProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<ShopLayout />}>
+            <Route index element={<Home />} />
+            <Route path="cart" element={<Cart />} />
+            <Route path="product/:slug" element={<ProductDetails />} />
+            <Route path="best-sellers" element={<BestSellers />} />
+            <Route path="new-arrivals" element={<NewArrivals />} />
+            <Route path="favorites" element={<Favorites />} />
+            <Route
+              path="profile"
+              element={(
+                <RequireAuth>
+                  <Profile />
+                </RequireAuth>
+              )}
+            />
+          </Route>
 
-        <Route path="/login" element={<Login />} />
-        <Route path="/admin/login" element={<Login />} />
-        <Route path="/404" element={<NotFound />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/admin/login" element={<Login />} />
+          <Route path="/404" element={<NotFound />} />
 
-        <Route
-          path="/admin"
-          element={(
-            <RequireRole allowedRoles={['admin', 'manager']} redirectTo="/404">
-              <AdminLayout />
-            </RequireRole>
-          )}
-        >
-          <Route index element={<Dashboard />} />
-          <Route path="products" element={<Products />} />
-          <Route path="product/:id" element={<EditProduct />} />
-          <Route path="categories" element={<Categories />} />
-          <Route path="orders" element={<Orders />} />
-          <Route path="support" element={<Support />} />
-          <Route path="settings" element={<Settings />} />
-          <Route path="ai" element={<AiAssistant />} />
           <Route
-            path="users"
+            path="/admin"
             element={(
-              <RequireRole allowedRoles={['admin']} redirectTo="/404">
-                <Users />
+              <RequireRole allowedRoles={['admin', 'manager']} redirectTo="/404">
+                <AdminLayout />
               </RequireRole>
             )}
-          />
-        </Route>
+          >
+            <Route index element={<Dashboard />} />
+            <Route path="products" element={<Products />} />
+            <Route path="inventory" element={<Products />} />
+            <Route path="product/:id" element={<EditProduct />} />
+            <Route path="categories" element={<Categories />} />
+            <Route path="orders" element={<Orders />} />
+            <Route path="support" element={<Support />} />
+            <Route path="settings" element={<Settings />} />
+            <Route path="ai" element={<AiAssistant />} />
+            <Route
+              path="users"
+              element={(
+                <RequireRole allowedRoles={['admin']} redirectTo="/404">
+                  <Users />
+                </RequireRole>
+              )}
+            />
+          </Route>
 
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </BrowserRouter>
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+    </ToastProvider>
   );
 }
 

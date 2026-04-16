@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Cropper from 'react-easy-crop';
 import { supabase } from '../../utils/supabase';
+import { getInventoryState, getTotalStockFromVariants, toSafeStock } from '../../utils/inventory';
 
 const createImage = (url) =>
   new Promise((resolve, reject) => {
@@ -51,6 +52,25 @@ const getCroppedBlob = async (imageSrc, pixelCrop) => {
   });
 };
 
+const CATEGORY_CACHE_TTL_MS = 5 * 60 * 1000;
+let categoryCache = {
+  data: null,
+  expiresAt: 0
+};
+
+const HIGHLIGHT_TAGS = [
+  {
+    value: 'best_seller',
+    label: 'Best Seller',
+    help: 'Show this product in the Best Sellers page.'
+  },
+  {
+    value: 'new_arrival',
+    label: 'New Arrival',
+    help: 'Show this product in the New Arrivals page.'
+  }
+];
+
 const EditProduct = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -59,6 +79,7 @@ const EditProduct = () => {
   const [categories, setCategories] = useState([]);
   const [formError, setFormError] = useState('');
   const [formSuccess, setFormSuccess] = useState('');
+  const [inventoryStock, setInventoryStock] = useState('0');
 
   const [imageMode, setImageMode] = useState('url');
   const [imageState, setImageState] = useState({ uploading: false, error: '', success: '' });
@@ -76,13 +97,18 @@ const EditProduct = () => {
     slug: '',
     description: '',
     price: '',
+    discount_price: '',
     is_available: true,
     image_url: '',
-    category_id: ''
+    category_id: '',
+    tags: []
   });
 
   useEffect(() => {
     fetchCategories();
+  }, []);
+
+  useEffect(() => {
     if (id && id !== 'new') {
       fetchProduct();
     }
@@ -97,18 +123,71 @@ const EditProduct = () => {
   }, [croppedPreviewUrl]);
 
   const fetchCategories = async () => {
-    const { data } = await supabase.from('categories').select('*');
-    if (data) setCategories(data);
+    if (categoryCache.data && categoryCache.expiresAt > Date.now()) {
+      setCategories(categoryCache.data);
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from('categories')
+      .select('id, name, slug')
+      .order('name', { ascending: true });
+
+    if (error) {
+      setCategories([]);
+      return;
+    }
+
+    const normalized = data || [];
+    setCategories(normalized);
+    categoryCache = {
+      data: normalized,
+      expiresAt: Date.now() + CATEGORY_CACHE_TTL_MS
+    };
   };
 
   const fetchProduct = async () => {
     setLoading(true);
-    const { data } = await supabase.from('products').select('*').eq('id', id).single();
+    const { data } = await supabase
+      .from('products')
+      .select('id, name, slug, description, price, discount_price, is_available, image_url, category_id, tags')
+      .eq('id', id)
+      .single();
+
+    const { data: variantData } = await supabase
+      .from('product_variants')
+      .select('stock')
+      .eq('product_id', id);
+
     if (data) {
-      setProduct(data);
+      setProduct({
+        ...data,
+        discount_price: data.discount_price ?? '',
+        tags: Array.isArray(data.tags) ? data.tags : []
+      });
       setImageMode('url');
     }
+
+    setInventoryStock(String(getTotalStockFromVariants(variantData || [])));
     setLoading(false);
+  };
+
+  const toggleProductTag = (tagValue) => {
+    setProduct((previous) => {
+      const currentTags = Array.isArray(previous.tags) ? previous.tags : [];
+      const hasTag = currentTags.includes(tagValue);
+
+      return {
+        ...previous,
+        tags: hasTag
+          ? currentTags.filter((tag) => tag !== tagValue)
+          : [...currentTags, tagValue]
+      };
+    });
+  };
+
+  const hasTag = (tagValue) => {
+    return Array.isArray(product.tags) && product.tags.includes(tagValue);
   };
 
   const onFileSelected = (event) => {
@@ -200,6 +279,89 @@ const EditProduct = () => {
     setFormSuccess('Image uploaded. Save product to persist this link in the database.');
   };
 
+  const syncProductInventory = async ({ productId, productSlug, targetStock }) => {
+    const safeTargetStock = toSafeStock(targetStock);
+
+    const { data: variants, error: variantsError } = await supabase
+      .from('product_variants')
+      .select('id, stock')
+      .eq('product_id', productId);
+
+    if (variantsError) {
+      throw new Error(variantsError.message || 'Unable to load current inventory.');
+    }
+
+    const variantRows = Array.isArray(variants) ? variants : [];
+
+    if (variantRows.length === 0) {
+      const generatedSku = `INV-${(productSlug || 'ITEM').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 10)}-${productId.slice(0, 8)}`;
+
+      const { error: insertError } = await supabase.from('product_variants').insert([
+        {
+          product_id: productId,
+          color: 'Default',
+          stock: safeTargetStock,
+          sku: generatedSku
+        }
+      ]);
+
+      if (insertError) {
+        throw new Error(insertError.message || 'Unable to save inventory.');
+      }
+
+      return;
+    }
+
+    const currentTotal = getTotalStockFromVariants(variantRows);
+    const delta = safeTargetStock - currentTotal;
+
+    if (delta === 0) {
+      return;
+    }
+
+    const updates = [];
+
+    if (delta > 0) {
+      const first = variantRows[0];
+      updates.push({
+        id: first.id,
+        stock: toSafeStock(first.stock) + delta
+      });
+    } else {
+      let remainingReduction = Math.abs(delta);
+
+      for (const variant of variantRows) {
+        if (remainingReduction <= 0) {
+          break;
+        }
+
+        const currentStock = toSafeStock(variant.stock);
+
+        if (!currentStock) {
+          continue;
+        }
+
+        const reduction = Math.min(currentStock, remainingReduction);
+        updates.push({
+          id: variant.id,
+          stock: currentStock - reduction
+        });
+        remainingReduction -= reduction;
+      }
+    }
+
+    for (const updateItem of updates) {
+      const { error: updateError } = await supabase
+        .from('product_variants')
+        .update({ stock: updateItem.stock })
+        .eq('id', updateItem.id);
+
+      if (updateError) {
+        throw new Error(updateError.message || 'Unable to save inventory.');
+      }
+    }
+  };
+
   const handleSave = async (e) => {
     e.preventDefault();
     setSaving(true);
@@ -230,6 +392,10 @@ const EditProduct = () => {
       missingFields.push('Cover image (URL or uploaded image)');
     }
 
+    if (!Number.isFinite(Number(inventoryStock)) || Number(inventoryStock) < 0) {
+      missingFields.push('Inventory quantity (must be 0 or more)');
+    }
+
     if (missingFields.length) {
       setFormError(`Please complete required fields: ${missingFields.join(', ')}.`);
       setSaving(false);
@@ -245,16 +411,70 @@ const EditProduct = () => {
     safeProduct.image_url = safeProduct.image_url.trim();
     safeProduct.price = Number(safeProduct.price);
 
+    const rawOriginalPrice = typeof safeProduct.discount_price === 'string'
+      ? safeProduct.discount_price.trim()
+      : safeProduct.discount_price;
+
+    if (rawOriginalPrice === '' || rawOriginalPrice === null || typeof rawOriginalPrice === 'undefined') {
+      safeProduct.discount_price = null;
+    } else {
+      const parsedOriginalPrice = Number(rawOriginalPrice);
+
+      if (!Number.isFinite(parsedOriginalPrice) || parsedOriginalPrice <= safeProduct.price) {
+        setFormError('For sale items, Original Price must be greater than Selling Price.');
+        setSaving(false);
+        return;
+      }
+
+      safeProduct.discount_price = parsedOriginalPrice;
+    }
+
+    const safeInventoryStock = toSafeStock(inventoryStock);
+    safeProduct.tags = Array.isArray(safeProduct.tags)
+      ? Array.from(
+          new Set(
+            safeProduct.tags
+              .filter((tag) => typeof tag === 'string')
+              .map((tag) => tag.trim())
+              .filter(Boolean)
+          )
+        )
+      : [];
+
     let response;
 
     if (id === 'new') {
-      response = await supabase.from('products').insert([safeProduct]);
+      response = await supabase
+        .from('products')
+        .insert([safeProduct])
+        .select('id, slug')
+        .single();
     } else {
-      response = await supabase.from('products').update(safeProduct).eq('id', id);
+      response = await supabase
+        .from('products')
+        .update(safeProduct)
+        .eq('id', id)
+        .select('id, slug')
+        .single();
     }
 
     if (response.error) {
       setFormError(response.error.message || 'Unable to save product.');
+      setSaving(false);
+      return;
+    }
+
+    const savedProductId = response.data?.id || id;
+    const savedSlug = response.data?.slug || safeProduct.slug;
+
+    try {
+      await syncProductInventory({
+        productId: savedProductId,
+        productSlug: savedSlug,
+        targetStock: safeInventoryStock
+      });
+    } catch (inventoryError) {
+      setFormError(inventoryError.message || 'Product saved but inventory update failed.');
       setSaving(false);
       return;
     }
@@ -264,6 +484,18 @@ const EditProduct = () => {
   };
 
   const previewImage = croppedPreviewUrl || product.image_url;
+  const inventoryState = getInventoryState(inventoryStock);
+  const sellingPriceValue = Number(product.price || 0);
+  const originalPriceValue = Number(product.discount_price || 0);
+  const saleItemEnabled = `${product.discount_price ?? ''}`.trim() !== '';
+  const hasValidSalePricing = saleItemEnabled
+    && Number.isFinite(sellingPriceValue)
+    && Number.isFinite(originalPriceValue)
+    && sellingPriceValue > 0
+    && originalPriceValue > sellingPriceValue;
+  const saleDiscountPercent = hasValidSalePricing
+    ? Math.max(1, Math.round(((originalPriceValue - sellingPriceValue) / originalPriceValue) * 100))
+    : 0;
 
   return (
     <>
@@ -511,7 +743,7 @@ const EditProduct = () => {
             <h3 className="text-lg font-bold plusJakartaSans">Pricing & Stock</h3>
             <div className="space-y-4">
               <label className="block">
-                <span className="text-xs font-bold text-on-surface-variant uppercase ml-2 mb-2 block tracking-wider">Base Price</span>
+                <span className="text-xs font-bold text-on-surface-variant uppercase ml-2 mb-2 block tracking-wider">Selling Price</span>
                 <div className="relative">
                   <span className="absolute left-6 top-1/2 -translate-y-1/2 font-bold text-on-surface-variant">₹</span>
                   <input
@@ -535,6 +767,106 @@ const EditProduct = () => {
                   />
                 </div>
               </label>
+
+              <div className="pt-1 flex items-center justify-between">
+                <div>
+                  <span className="text-sm font-bold text-on-surface block">Sale Item</span>
+                  <span className="text-[10px] text-on-surface-variant font-medium">Enable strike-through original price in storefront.</span>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={saleItemEnabled}
+                    onChange={(event) => {
+                      const enabled = event.target.checked;
+
+                      if (!enabled) {
+                        setProduct((previous) => ({ ...previous, discount_price: '' }));
+                        return;
+                      }
+
+                      const selling = Number(product.price || 0);
+                      const suggestedOriginal = Number.isFinite(selling) && selling > 0
+                        ? String(Math.ceil(selling * 1.2))
+                        : '';
+
+                      setProduct((previous) => ({
+                        ...previous,
+                        discount_price: previous.discount_price || suggestedOriginal
+                      }));
+                    }}
+                    className="sr-only peer"
+                  />
+                  <div className="w-14 h-8 bg-surface-container-high peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary-container"></div>
+                </label>
+              </div>
+
+              {saleItemEnabled && (
+                <>
+                  <label className="block">
+                    <span className="text-xs font-bold text-on-surface-variant uppercase ml-2 mb-2 block tracking-wider">Original Price (MRP)</span>
+                    <div className="relative">
+                      <span className="absolute left-6 top-1/2 -translate-y-1/2 font-bold text-on-surface-variant">₹</span>
+                      <input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        value={product.discount_price}
+                        onChange={(event) => {
+                          const rawValue = event.target.value;
+
+                          if (rawValue === '') {
+                            setProduct({ ...product, discount_price: '' });
+                            return;
+                          }
+
+                          const normalized = rawValue.replace(/^0+(?=\d)/, '');
+                          setProduct({ ...product, discount_price: normalized });
+                        }}
+                        className="w-full bg-surface-container-low border-0 rounded-lg py-4 pl-10 pr-6 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all"
+                        placeholder="0.00"
+                      />
+                    </div>
+                  </label>
+
+                  {hasValidSalePricing ? (
+                    <div className="rounded-lg border border-error/25 bg-error-container/10 px-4 py-3">
+                      <p className="text-xs font-bold uppercase tracking-widest text-error mb-1">Sale Active</p>
+                      <p className="text-sm font-semibold text-on-surface">
+                        Selling at ₹{sellingPriceValue.toFixed(2)} from ₹{originalPriceValue.toFixed(2)} ({saleDiscountPercent}% off)
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="rounded-lg border border-outline-variant/20 bg-surface-container-low px-4 py-3">
+                      <p className="text-sm font-semibold text-on-surface-variant">
+                        Enter an Original Price greater than Selling Price to activate sale pricing.
+                      </p>
+                    </div>
+                  )}
+                </>
+              )}
+
+              <label className="block">
+                <span className="text-xs font-bold text-on-surface-variant uppercase ml-2 mb-2 block tracking-wider">Inventory Quantity</span>
+                <input
+                  type="number"
+                  min="0"
+                  step="1"
+                  value={inventoryStock}
+                  onChange={(event) => setInventoryStock(event.target.value)}
+                  className="w-full bg-surface-container-low border-0 rounded-lg py-4 px-6 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all"
+                  placeholder="0"
+                />
+              </label>
+
+              <div className={`inline-flex px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${inventoryState.chipClass}`}>
+                {inventoryState.label}
+              </div>
+
+              <p className="text-xs text-on-surface-variant font-medium">
+                Inventory status is reflected on Dashboard, Shop, Best Sellers, and New Arrivals.
+              </p>
+
               <div className="pt-4 flex items-center justify-between">
                 <div>
                   <span className="text-sm font-bold text-on-surface block">Available for Sale</span>
@@ -560,6 +892,27 @@ const EditProduct = () => {
                   ))}
                 </select>
               </label>
+
+              <div className="rounded-xl border border-outline-variant/20 p-4 bg-surface-container-low/30 space-y-3">
+                <p className="text-xs font-bold uppercase tracking-wider text-on-surface-variant">Storefront Tags</p>
+                <div className="space-y-2">
+                  {HIGHLIGHT_TAGS.map((tagOption) => (
+                    <label key={tagOption.value} className="flex items-start gap-3 p-3 rounded-lg bg-surface-container-low border border-outline-variant/10 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={hasTag(tagOption.value)}
+                        onChange={() => toggleProductTag(tagOption.value)}
+                        className="mt-1 rounded border-outline-variant text-primary focus:ring-primary"
+                      />
+                      <span>
+                        <span className="text-sm font-bold text-on-surface block">{tagOption.label}</span>
+                        <span className="text-xs text-on-surface-variant">{tagOption.help}</span>
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
               <div className="p-6 bg-tertiary-container/10 rounded-2xl border-2 border-tertiary-container/20">
                 <div className="flex items-center gap-3 mb-3">
                   <span className="material-symbols-outlined text-tertiary" style={{fontVariationSettings: "'FILL' 1"}}>tips_and_updates</span>
