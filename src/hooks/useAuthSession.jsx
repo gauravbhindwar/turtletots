@@ -184,14 +184,26 @@ export const AuthProvider = ({ children }) => {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const resetAuthState = ({ clearProfileCache = true, clearStores = false } = {}) => {
+    setSession(null);
+    setUser(null);
+    setProfile(null);
+    setLoading(false);
+
+    if (clearProfileCache) {
+      clearAllCachedProfiles();
+    }
+
+    if (clearStores) {
+      clearClientStores();
+    }
+  };
+
   const hydrateSession = async (nextSession) => {
     setSession(nextSession || null);
 
     if (!nextSession?.user) {
-      setUser(null);
-      setProfile(null);
-      setLoading(false);
-      clearAllCachedProfiles();
+      resetAuthState();
       return;
     }
 
@@ -251,6 +263,7 @@ export const AuthProvider = ({ children }) => {
 
         if (error) {
           console.error('Unable to read auth session:', error.message);
+          await supabase.auth.signOut({ scope: 'local' });
         }
 
         if (isMounted) {
@@ -259,9 +272,8 @@ export const AuthProvider = ({ children }) => {
       } catch (error) {
         if (!isMounted) return;
         console.error('Session bootstrap failed:', error.message);
-        setSession(null);
-        setUser(null);
-        setProfile(null);
+        await supabase.auth.signOut({ scope: 'local' });
+        resetAuthState();
       } finally {
         clearTimeout(safetyTimer);
         if (isMounted) {
@@ -280,9 +292,10 @@ export const AuthProvider = ({ children }) => {
       if (event === 'TOKEN_REFRESHED') {
         // Avoid flashing global loaders on silent token refresh cycles.
         setSession(nextSession || null);
+        setUser(nextSession?.user || null);
         if (!nextSession?.user) {
-          setUser(null);
           setProfile(null);
+          clearAllCachedProfiles();
         }
         return;
       }
@@ -300,9 +313,8 @@ export const AuthProvider = ({ children }) => {
       } catch (error) {
         console.error('Auth state hydration failed:', error.message);
         if (!nextSession?.user) {
-          setSession(null);
-          setUser(null);
-          setProfile(null);
+          await supabase.auth.signOut({ scope: 'local' });
+          resetAuthState();
         }
       } finally {
         clearTimeout(safetyTimer);
@@ -336,12 +348,7 @@ export const AuthProvider = ({ children }) => {
       const signOutPromise = supabase.auth.signOut({ scope: 'local' });
 
       // Clear local auth state immediately so route guards react without waiting.
-      setSession(null);
-      setUser(null);
-      setProfile(null);
-      setLoading(false);
-      clearAllCachedProfiles();
-      clearClientStores();
+      resetAuthState({ clearStores: true });
 
       const { error } = await signOutPromise;
 

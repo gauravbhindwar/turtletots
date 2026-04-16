@@ -167,59 +167,87 @@ const Home = () => {
   return (
     <>
       {/* Hero Section */}
-      <section className="px-4 sm:px-6 lg:px-8 mt-4 sm:mt-8">
-        <div className="relative w-full rounded-[2rem] overflow-hidden shadow-[0_30px_80px_-20px_rgba(0,0,0,0.35)] bg-[#090b10] border border-white/10">
-          <div className="relative flex flex-col lg:grid lg:grid-cols-12 lg:min-h-[540px]">
-            <div className="order-2 lg:order-1 lg:col-span-5 px-4 sm:px-6 lg:px-12 py-6 sm:py-7 lg:py-10 bg-gradient-to-br from-black/85 via-black/70 to-transparent flex flex-col items-start text-left">
-              <div className="inline-flex items-center gap-2 rounded-full bg-white/15 backdrop-blur-md border border-white/20 px-4 py-2 text-[11px] sm:text-xs font-black uppercase tracking-[0.18em] text-white w-fit">
+      <section className="px-4 sm:px-6 lg:px-8 mt-1 sm:mt-1">
+        <div className="relative overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] border border-[#171a22] bg-[radial-gradient(circle_at_top_left,#262b3a_0%,#0b0d12_45%,#050608_100%)] shadow-[0_28px_75px_-28px_rgba(0,0,0,0.46)]">
+          <div className="absolute inset-0 bg-[linear-gradient(120deg,rgba(255,211,61,0.12),transparent_28%,transparent_72%,rgba(255,211,61,0.08))]"></div>
+          <div className="absolute left-[-8%] top-[12%] h-44 w-44 rounded-full bg-[#ffd84d]/12 blur-3xl"></div>
+          <div className="absolute bottom-[-10%] right-[18%] h-56 w-56 rounded-full bg-[#4c83ff]/12 blur-3xl"></div>
+
+          <div className="relative flex flex-col lg:grid lg:grid-cols-12 lg:min-h-[490px]">
+            <div className="order-2 lg:order-1 lg:col-span-5 px-5 sm:px-7 lg:px-10 py-6 sm:py-8 lg:py-10 flex flex-col items-start text-left">
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/14 bg-white/8 px-4 py-2 text-[11px] sm:text-xs font-black uppercase tracking-[0.22em] text-white backdrop-blur-md">
                 <span className="material-symbols-outlined text-sm">toys</span>
                 Playtime, Curated Daily
               </div>
 
-              <div className="mt-4 sm:mt-5 max-w-xl">
-                <h1 className="plusJakartaSans font-extrabold text-[28px] leading-[0.98] sm:text-5xl lg:text-[66px] text-white tracking-[-0.03em]">
+              <div className="mt-5 max-w-xl">
+                <p className="text-[#ffd84d] text-xs sm:text-sm font-bold uppercase tracking-[0.3em]">Modern toyroom essentials</p>
+                <h1 className="plusJakartaSans mt-2 font-extrabold text-[2.3rem] leading-[0.94] sm:text-[2.8rem] lg:text-[3.35rem] text-white tracking-[-0.05em]">
                   TurtleTots
-                  <span className="block text-primary-container mt-1 sm:mt-2">Where Fun Lives!</span>
+                  <span className="block mt-1 bg-[linear-gradient(180deg,#ffe67f_0%,#ffcc1d_100%)] bg-clip-text text-transparent">
+                    Where Fun
+                  </span>
+                  <span className="block bg-[linear-gradient(180deg,#ffe67f_0%,#ffcc1d_100%)] bg-clip-text text-transparent">
+                    Lives!
+                  </span>
                 </h1>
 
-                <p className="text-white/90 text-base sm:text-lg mt-4 sm:mt-5 max-w-lg font-medium leading-relaxed mx-auto lg:mx-0">
-                  Curated playthings designed to spark imagination, build confidence, and bring boundless joy to every home.
+                <p className="mt-4 max-w-lg text-sm sm:text-base lg:text-lg text-white/82 font-medium leading-relaxed">
+                  Curated playthings designed to spark imagination, build confidence, and turn every corner of your home into a place kids want to return to.
                 </p>
 
-                <div className="mt-5 sm:mt-6 flex flex-wrap gap-2.5 sm:gap-3 justify-start">
+                <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                   <Link
                     to="/best-sellers"
-                    className="bg-primary-container text-on-primary-fixed px-5 sm:px-8 py-2.5 sm:py-3.5 rounded-full font-black text-sm sm:text-base shadow-lg hover:scale-105 transition-all flex items-center gap-2"
+                    className="group inline-flex items-center justify-between gap-4 rounded-[1.4rem] bg-[linear-gradient(180deg,#ffe169_0%,#ffcc1d_100%)] px-5 py-2.5 sm:px-6 sm:py-3 text-[#3f3100] shadow-[0_18px_40px_-18px_rgba(255,208,41,0.9)] transition-all hover:-translate-y-0.5 hover:shadow-[0_22px_45px_-16px_rgba(255,208,41,0.95)]"
                   >
-                    Explore Best Sellers
-                    <span className="material-symbols-outlined">arrow_forward</span>
+                    <span className="flex flex-col items-start">
+                      <span className="text-[10px] sm:text-xs font-black uppercase tracking-[0.18em] text-[#6f5900]/80">Featured edit</span>
+                      <span className="text-sm sm:text-base font-black">Explore Best Sellers</span>
+                    </span>
+                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/35 text-[#493900] transition-transform group-hover:translate-x-1">
+                      <span className="material-symbols-outlined text-[22px]">arrow_forward</span>
+                    </span>
                   </Link>
                   <Link
                     to="/new-arrivals"
-                    className="bg-white/15 text-white border border-white/35 backdrop-blur-md px-5 sm:px-7 py-2.5 sm:py-3.5 rounded-full font-bold text-sm sm:text-base hover:bg-white/20 transition-colors"
+                    className="inline-flex items-center justify-center rounded-[1.4rem] border border-white/16 bg-white/8 px-5 py-3 text-sm sm:text-base font-bold text-white backdrop-blur-md transition-colors hover:bg-white/14"
                   >
                     New Arrivals
                   </Link>
+                  <a
+                    href="#handpicked-treasures"
+                    className="inline-flex items-center justify-center gap-2 rounded-[1.4rem] border border-[#ffd84d]/30 bg-[#ffd84d]/10 px-5 py-3 text-sm sm:text-base font-bold text-[#ffe67f] backdrop-blur-md transition-colors hover:bg-[#ffd84d]/16"
+                  >
+                    Browse Handpicked Items
+                    <span className="material-symbols-outlined text-[18px]">south</span>
+                  </a>
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-2 sm:gap-3 w-full max-w-sm mt-5 sm:mt-6 mx-auto lg:mx-0">
+              <div className="mt-2 grid w-full max-w-md grid-cols-3 gap-3">
                 {heroStats.map((stat) => (
-                  <div key={stat.label} className="rounded-full border border-white/20 bg-white/10 backdrop-blur-md px-2.5 sm:px-3 py-2.5 sm:py-3 min-h-[70px] sm:min-h-[80px] flex flex-col items-center justify-center text-center">
-                    <p className="text-white text-base sm:text-xl font-black leading-tight">{stat.value}</p>
-                    <p className="text-white/80 text-[9px] sm:text-xs font-bold uppercase tracking-wider mt-0.5 sm:mt-1">{stat.label}</p>
+                  <div key={stat.label} className="rounded-[1.55rem] border border-white/12 bg-white/8 px-3 py-3.5 sm:px-4 sm:py-4 backdrop-blur-md">
+                    <p className="text-white text-lg sm:text-[1.65rem] font-black leading-tight">{stat.value}</p>
+                    <p className="mt-2 text-[10px] sm:text-xs font-bold uppercase tracking-[0.18em] text-white/68 leading-snug">{stat.label}</p>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="order-1 lg:order-2 lg:col-span-7 relative min-h-[250px] sm:min-h-[340px] lg:min-h-[540px] bg-black">
+            <div className="order-1 lg:order-2 lg:col-span-7 relative min-h-[230px] sm:min-h-[320px] lg:min-h-[490px]">
+              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,6,8,0.05),rgba(5,6,8,0.55))] lg:bg-[linear-gradient(90deg,rgba(5,6,8,0.15),rgba(5,6,8,0.02)_36%,rgba(5,6,8,0.45))]"></div>
+              <div className="absolute inset-x-5 top-5 bottom-0 rounded-[1.8rem] border border-white/8 bg-white/[0.03] backdrop-blur-[2px] lg:inset-y-6 lg:left-0 lg:right-8"></div>
               <img
                 alt="Hero Toys"
-                className="absolute inset-0 w-full h-full object-cover lg:object-contain lg:object-center"
+                className="absolute inset-0 h-full w-full object-cover object-center"
                 src={HOME_HERO_IMAGE}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent lg:bg-gradient-to-l lg:from-black/10 lg:via-transparent lg:to-black/35"></div>
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_24%,transparent_0%,transparent_24%,rgba(0,0,0,0.28)_78%)]"></div>
+              <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6 lg:bottom-6 lg:left-auto lg:right-6 lg:max-w-[240px] rounded-[1.45rem] border border-white/12 bg-black/30 px-4 py-3.5 backdrop-blur-xl">
+                <p className="text-[10px] sm:text-xs font-black uppercase tracking-[0.24em] text-[#ffd84d]">Playroom Favorite</p>
+                <p className="mt-2 text-white text-sm sm:text-[15px] font-bold leading-snug">Discover collectible pieces and everyday play heroes kids keep reaching for.</p>
+              </div>
             </div>
           </div>
         </div>
@@ -280,7 +308,7 @@ const Home = () => {
 
         {/* Product Grid */}
         <div className="flex-1">
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 sm:mb-8 gap-3 sm:gap-4">
+          <div id="handpicked-treasures" className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 sm:mb-8 gap-3 sm:gap-4 scroll-mt-28">
             <div className="min-w-0 flex-1">
               <h2 className="plusJakartaSans text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight leading-tight">Handpicked Treasures</h2>
               <p className="text-on-surface-variant font-medium text-sm mt-1">Showing {filteredProducts.length} items</p>
@@ -290,21 +318,21 @@ const Home = () => {
               <button
                 type="button"
                 onClick={() => setShowMobileFilters((previous) => !previous)}
-                className="lg:hidden p-2 sm:p-2.5 rounded-lg bg-white shadow-sm border border-outline-variant/15 text-on-surface-variant text-xl"
+                className="lg:hidden p-2 sm:p-2.5 rounded bg-white shadow-sm border border-outline-variant/15 text-on-surface-variant text-xl"
                 aria-label="Toggle filters"
               >
                 <span className="material-symbols-outlined text-sm">tune</span>
               </button>
               <button
                 onClick={() => setViewMode('grid')}
-                className={`p-2 sm:p-2.5 rounded-lg border text-xl ${viewMode === 'grid' ? 'bg-white shadow-sm border-outline-variant/15' : 'text-on-surface-variant border-transparent'}`}
+                className={`p-2 sm:p-2.5 rounded border text-xl ${viewMode === 'grid' ? 'bg-white shadow-sm border-outline-variant/15' : 'text-on-surface-variant border-transparent'}`}
                 aria-label="Switch to grid view"
               >
                 <span className="material-symbols-outlined text-sm">grid_view</span>
               </button>
               <button
                 onClick={() => setViewMode('list')}
-                className={`p-2 sm:p-2.5 rounded-lg border text-xl ${viewMode === 'list' ? 'bg-white shadow-sm border-outline-variant/15' : 'text-on-surface-variant border-transparent'}`}
+                className={`p-2 sm:p-2.5 rounded border text-xl ${viewMode === 'list' ? 'bg-white shadow-sm border-outline-variant/15' : 'text-on-surface-variant border-transparent'}`}
                 aria-label="Switch to list view"
               >
                 <span className="material-symbols-outlined text-sm">view_list</span>

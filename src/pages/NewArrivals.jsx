@@ -73,20 +73,58 @@ const NewArrivals = () => {
     return (
         <main className="max-w-screen-2xl mx-auto px-8 pt-12 min-h-screen">
             {/* Hero Section */}
-            <div className="relative overflow-hidden bg-primary px-12 py-20 rounded-3xl mb-16 flex flex-col items-center justify-center text-center shadow-lg shadow-primary/10 group">
-                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
-                <div className="relative z-10">
-                    <div className="inline-block bg-white text-primary px-6 py-2 rounded-full text-sm font-black mb-6 shadow-md uppercase tracking-widest animate-bounce">Just Dropped</div>
-                    <h1 className="text-5xl md:text-7xl font-black text-white plusJakartaSans tracking-tighter leading-none mb-6">
-                        Fresh Out <br/>The Workshop
-                    </h1>
-                    <p className="text-xl text-primary-100 max-w-2xl mx-auto mb-8 font-medium">
-                        Be the first to explore our newest collection of meticulously crafted, imagination-sparking toys.
-                    </p>
-                    <button className="bg-surface-container-lowest text-primary px-10 py-4 rounded-full text-lg font-extrabold shadow-xl hover:scale-105 transition-transform flex items-center gap-2 mx-auto">
-                        <span className="material-symbols-outlined">auto_awesome</span>
-                        Shop Newest Arrivals
-                    </button>
+            <div className="relative isolate overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] mb-12 sm:mb-16 border border-[#8f7600]/20 bg-[linear-gradient(135deg,#8b7300_0%,#9d8200_40%,#735d00_100%)] shadow-[0_30px_80px_-28px_rgba(120,95,0,0.55)]">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,#fff6bf_0%,transparent_32%),linear-gradient(180deg,rgba(255,255,255,0.08),transparent_40%)] opacity-90"></div>
+                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.08]"></div>
+                <div className="absolute -left-16 top-12 h-40 w-40 rounded-full bg-white/10 blur-3xl"></div>
+                <div className="absolute -right-16 bottom-4 h-52 w-52 rounded-full bg-[#f8df77]/20 blur-3xl"></div>
+
+                <div className="relative grid gap-8 px-5 py-8 sm:px-8 sm:py-10 lg:grid-cols-[minmax(0,1.2fr)_minmax(280px,0.8fr)] lg:items-end lg:px-12 lg:py-14">
+                    <div className="max-w-3xl">
+                        <div className="inline-flex items-center gap-2 rounded-full bg-white text-primary px-4 py-2 text-[11px] sm:text-xs font-black uppercase tracking-[0.24em] shadow-lg shadow-black/10">
+                            <span className="material-symbols-outlined text-base">kid_star</span>
+                            Just Dropped
+                        </div>
+
+                        <h1 className="plusJakartaSans mt-5 text-[2.5rem] leading-[0.92] sm:text-6xl lg:text-[5.2rem] font-black tracking-[-0.05em] text-white max-w-4xl">
+                            Fresh Out
+                            <span className="block text-[#fff8d4]">The Workshop</span>
+                        </h1>
+
+                        <p className="mt-5 max-w-2xl text-sm sm:text-lg lg:text-xl leading-relaxed font-medium text-[#fff6d8]/92">
+                            Meet the latest playroom arrivals, crafted to spark imagination, invite storytelling, and make everyday play feel brand new.
+                        </p>
+
+                        <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                            <a
+                                href="#latest-arrivals"
+                                className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3.5 text-sm sm:text-base font-extrabold text-primary shadow-xl shadow-black/10 transition-transform hover:scale-[1.02]"
+                            >
+                                <span className="material-symbols-outlined text-[20px]">auto_awesome</span>
+                                Shop Newest Arrivals
+                            </a>
+                            <div className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 px-5 py-3 text-xs sm:text-sm font-semibold text-white/90 backdrop-blur-sm">
+                                Small-batch picks refreshed regularly
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:max-w-md lg:justify-self-end">
+                        {[
+                            { value: '08', label: 'Fresh finds in this edit' },
+                            { value: 'New', label: 'Shapes, stories, and textures' },
+                            { value: 'Soft', label: 'Warm finishes for calm corners' },
+                            { value: 'Gift', label: 'Ready for thoughtful surprises' }
+                        ].map((item) => (
+                            <div
+                                key={item.label}
+                                className="rounded-[1.6rem] border border-white/15 bg-white/10 px-4 py-4 sm:px-5 sm:py-5 backdrop-blur-md"
+                            >
+                                <p className="text-lg sm:text-2xl font-black text-white tracking-tight">{item.value}</p>
+                                <p className="mt-1 text-xs sm:text-sm leading-relaxed text-white/80">{item.label}</p>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
 
@@ -111,7 +149,7 @@ const NewArrivals = () => {
                     {products.length === 0 ? (
                         <div className="text-center py-20 text-on-surface-variant font-semibold">No products tagged as New Arrival right now.</div>
                     ) : (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-24">
+                        <div id="latest-arrivals" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-24">
                             {products.map(product => (
                                 <div key={product.id} className="bg-surface-container-lowest rounded-xl p-4 shadow-sm hover:shadow-[0_40px_40px_rgba(109,90,0,0.06)] transition-all group border border-outline-variant/5">
                                     <Link to={`/product/${product.slug}`} className="block">
