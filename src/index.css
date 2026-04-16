@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+
+@import "tailwindcss";
+@config "../tailwind.config.js";
+
+@layer base {
+  body { 
+    @apply font-body bg-surface text-on-surface selection:bg-primary-container selection:text-on-primary-container;
+  }
+}
+
+@layer utilities {
+  .plusJakartaSans { 
+    font-family: 'Plus Jakarta Sans', sans-serif; 
+  }
+  .material-symbols-outlined { 
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; 
+  }
+  .tactile-lift:hover { 
+    transform: scale(1.02); 
+  }
+}

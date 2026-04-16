@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>The Toybox | Your Cart</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-dim": "#843a00",
+                    "secondary-dim": "#004e9d",
+                    "surface-container-low": "#eff1f2",
+                    "on-primary-fixed": "#443700",
+                    "error-container": "#f95630",
+                    "primary-container": "#fad538",
+                    "tertiary-fixed": "#ff9655",
+                    "outline-variant": "#abadae",
+                    "surface-container-lowest": "#ffffff",
+                    "primary-fixed-dim": "#ebc729",
+                    "on-secondary-fixed-variant": "#004f9e",
+                    "surface-container": "#e6e8ea",
+                    "surface": "#f5f6f7",
+                    "primary-dim": "#5f4e00",
+                    "primary": "#6d5a00",
+                    "tertiary-fixed-dim": "#f6853b",
+                    "on-secondary": "#eff2ff",
+                    "on-tertiary": "#fff0e9",
+                    "on-error-container": "#520c00",
+                    "error": "#b02500",
+                    "tertiary-container": "#ff9655",
+                    "secondary-fixed": "#bcd2ff",
+                    "secondary": "#005ab2",
+                    "surface-variant": "#dadddf",
+                    "secondary-container": "#bcd2ff",
+                    "inverse-primary": "#fad538",
+                    "secondary-fixed-dim": "#a5c5ff",
+                    "surface-bright": "#f5f6f7",
+                    "on-surface": "#2c2f30",
+                    "on-primary-container": "#5a4a00",
+                    "on-error": "#ffefec",
+                    "inverse-surface": "#0c0f10",
+                    "on-primary-fixed-variant": "#655300",
+                    "on-primary": "#fff2ce",
+                    "surface-container-high": "#e0e3e4",
+                    "on-tertiary-fixed": "#2d0f00",
+                    "inverse-on-surface": "#9b9d9e",
+                    "error-dim": "#b92902",
+                    "tertiary": "#964300",
+                    "on-surface-variant": "#595c5d",
+                    "on-background": "#2c2f30",
+                    "outline": "#757778",
+                    "on-secondary-container": "#00468e",
+                    "on-tertiary-fixed-variant": "#612900",
+                    "surface-tint": "#6d5a00",
+                    "on-tertiary-container": "#532200",
+                    "background": "#f5f6f7",
+                    "surface-container-highest": "#dadddf",
+                    "surface-dim": "#d1d5d7",
+                    "primary-fixed": "#fad538",
+                    "on-secondary-fixed": "#00336b",
+                    "success": "#25D366"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "2xl": "3rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Plus Jakarta Sans"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .tactile-lift:hover {
+        transform: translateY(-4px) scale(1.02);
+      }
+      .glass-panel {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(20px);
+      }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface overflow-hidden">
+<!-- Top Navigation Anchor -->
+<nav class="fixed top-0 w-full flex justify-between items-center px-8 h-20 bg-white/80 dark:bg-stone-900/80 backdrop-blur-xl z-50 shadow-[0_40px_60px_-15px_rgba(109,90,0,0.06)]">
+<div class="text-2xl font-black tracking-tighter text-yellow-700 dark:text-yellow-400">The Toybox</div>
+<div class="hidden md:flex gap-8">
+<a class="text-stone-600 dark:text-stone-400 font-medium hover:scale-105 hover:text-yellow-600 transition-transform" href="#">Shop All</a>
+<a class="text-stone-600 dark:text-stone-400 font-medium hover:scale-105 hover:text-yellow-600 transition-transform" href="#">New Arrivals</a>
+<a class="text-stone-600 dark:text-stone-400 font-medium hover:scale-105 hover:text-yellow-600 transition-transform" href="#">Best Sellers</a>
+<a class="text-stone-600 dark:text-stone-400 font-medium hover:scale-105 hover:text-yellow-600 transition-transform" href="#">Categories</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-stone-600">person</button>
+<button class="material-symbols-outlined text-yellow-700 dark:text-yellow-400 p-2 bg-primary-container rounded-full shadow-sm">shopping_cart</button>
+</div>
+</nav>
+<!-- Main Page Content (Backgrounded) -->
+<main class="pt-32 px-8 pb-20 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
+<div class="space-y-6">
+<h1 class="font-headline text-6xl font-extrabold text-primary tracking-tight">Curated Joy <br/>for Little Hands.</h1>
+<p class="text-on-surface-variant text-lg max-w-md">Discovery starts here. Explore our collection of tactile, sustainable, and whimsical toys designed to last generations.</p>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container-low p-6 rounded-2xl h-64 flex items-end relative overflow-hidden group">
+<img class="absolute inset-0 object-cover opacity-80 group-hover:scale-110 transition-transform duration-700" data-alt="Modern colorful wooden alphabet blocks arranged neatly on a soft grey surface with bright natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXuVuXIppnr6YNVhd_xgqlrOYu1wfW4AdnI06ZT9bhkE5kby5Y1cEPi74yOT8VXyiw8hyUCdk3znDiZjYI6nNEGwOS4-gmMZ6OQRjiBvMGVBlSTAt_selgER_9n2Cp_udAu_Wq_iujjBel9KhYhOw-mA08wINkCtJliIWeJZ44eb-H-jrB_uA9MGr1_3Ao78VJ80ahUV7HBQDIKiHRpEkLt-Pp0xUAJVWS4swWLe9XBclZKEx3wzCQSV7W90rOHigcj9K2JB01t2_u"/>
+<span class="relative z-10 font-headline font-bold text-xl text-primary-dim">Wooden Classics</span>
+</div>
+<div class="bg-surface-container-low p-6 rounded-2xl h-64 flex items-end relative overflow-hidden group">
+<img class="absolute inset-0 object-cover opacity-80 group-hover:scale-110 transition-transform duration-700" data-alt="Retro silver robot toy standing on a minimalist wooden shelf with soft warm studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAimyCDTHBjr5UslgHP6rIVUEhvauNlOXU1PHIomx4Yd0CNrzU8XhOxrW-UOSB5aDcVlBJRGyr6N4uUdtFmKL8DeRx85m49M0SA9o9K69dtWcvopHV9nGno5BBDG2TtQiE01Jz6wfiBlSjq3OuzBfkgo2JGzv8gP3kUZoAHKxdKZaenDb3XMC3jurEKyafZfQe1ibkykFigoVPHQhBIdYmp-1TfLF3qRH8F8S4jc784RJaHD1cWjZ62-iBeWoq4VAn8YE_hf7FBA3y9"/>
+<span class="relative z-10 font-headline font-bold text-xl text-primary-dim">Tech Pals</span>
+</div>
+</div>
+</div>
+<div class="bg-white rounded-xl overflow-hidden shadow-xl aspect-square relative">
+<img class="w-full h-full object-cover" data-alt="Close-up of a handmade artisan teddy bear with soft brown fur and a red ribbon against a creamy neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPboDmEXQFWYHZjYLUYEI8rzqHihAHePIVUMMXF6sF91dWVsy3S_jnV-BwqAFuvc0HwE5OOdmVBfXzTQQEXkls4hkBnHcXrwWbsCrw9cmlBXWsABrPjCLAvHJOEJ2UdY4gfq8bDDhi5d1iAwokN8wxkKM9DL-OhQwy_D69iWTl1LtXQA2KIfMa3a9dQiAFT08jwrxmDCbJ-um0Qx0pGzJ91wQ9dSR8HscyWwMtWqew4_a8BW4aFuceNR5YreN04W7gdwxO5UN-A_kJ"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/40 to-transparent"></div>
+</div>
+</main>
+<!-- Cart Overlay / Drawer Shell -->
+<div class="fixed inset-0 bg-on-surface/20 backdrop-blur-sm z-[60] flex justify-end">
+<!-- Drawer Container -->
+<div class="w-full max-w-md bg-surface h-full shadow-2xl flex flex-col relative overflow-hidden">
+<!-- Drawer Header -->
+<div class="px-8 pt-10 pb-6 flex justify-between items-center bg-white">
+<div>
+<h2 class="font-headline text-3xl font-extrabold text-on-surface tracking-tighter">Your Toybox</h2>
+<p class="font-label text-sm text-on-surface-variant">3 Items selected</p>
+</div>
+<button class="w-12 h-12 flex items-center justify-center bg-surface-container-low rounded-full hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-on-surface">close</span>
+</button>
+</div>
+<!-- Cart Items List (Scrollable Area) -->
+<div class="flex-1 overflow-y-auto px-8 py-6 space-y-6">
+<!-- Cart Item 1 -->
+<div class="flex gap-4 items-center animate-fade-in">
+<div class="w-24 h-24 bg-surface-container-high rounded-xl overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Colorful wooden blocks in focus" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrKt_I9ItDDttE9C5n8mD1dtECQb-wm4N7o4zAV32Ju8fu_FjTcz1VKMk787cCEBj0c2RM7oWbUnQmbyuEqLH9kBNqCcoa0FsZrEs2TiCHq0r_5KEgUsh-oZa0v16XLY6wDZaWmaXpbIER2XZa3y5JHjWpF9L4IALaJsEVP7qdxJRG7v3YJxaAdDb0qlBGeiZ4dZsj_Vkjie9kZU-cVJ1F-G76htFPod5T7zWnvRHQV6IQoR_qu8yVwFc1zPOx8vvkvXTJ1XUnUmuy"/>
+</div>
+<div class="flex-1">
+<h3 class="font-headline font-bold text-on-surface">Alphabet Blocks</h3>
+<p class="text-primary font-bold text-lg">$24.00</p>
+<div class="mt-2 flex items-center gap-3">
+<button class="w-8 h-8 rounded-full border border-outline-variant flex items-center justify-center text-on-surface-variant hover:bg-primary-container hover:border-primary-container hover:text-on-primary-container transition-all">
+<span class="material-symbols-outlined text-sm">remove</span>
+</button>
+<span class="font-bold w-4 text-center">1</span>
+<button class="w-8 h-8 rounded-full border border-outline-variant flex items-center justify-center text-on-surface-variant hover:bg-primary-container hover:border-primary-container hover:text-on-primary-container transition-all">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+</div>
+<button class="text-outline-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+<!-- Cart Item 2 -->
+<div class="flex gap-4 items-center">
+<div class="w-24 h-24 bg-surface-container-high rounded-xl overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Retro silver robot toy" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2Z5lq30dcV8DGXdBbpYNlIFUDH1lAfpOq2ZpfXmW7-h6LOyuYvDdcDNqgnl42FmFGKPbcnCw9aFa4C2epB2UNaN8_SxGlnn36RANizM25b97Hsqm2a7AdciFGVfNhEH1VXl4tUNmKK-n9CKHvmux8Hn1jyzDC7es5YTRv0os7JNwprGGJkSH-L4iXuWpjliOokpLDOgDn8ZWJFFKhjlgNbyLbhwAoBJ-ogGoiOkalrnB2nsCfHYuPzC4L5sB44E08SxAkh8-97q0g"/>
+</div>
+<div class="flex-1">
+<h3 class="font-headline font-bold text-on-surface">Retro Bolt Robot</h3>
+<p class="text-primary font-bold text-lg">$45.00</p>
+<div class="mt-2 flex items-center gap-3">
+<button class="w-8 h-8 rounded-full border border-outline-variant flex items-center justify-center text-on-surface-variant transition-all">
+<span class="material-symbols-outlined text-sm">remove</span>
+</button>
+<span class="font-bold w-4 text-center">1</span>
+<button class="w-8 h-8 rounded-full border border-outline-variant flex items-center justify-center text-on-surface-variant transition-all">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+</div>
+<button class="text-outline-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+<!-- Cart Item 3 -->
+<div class="flex gap-4 items-center">
+<div class="w-24 h-24 bg-surface-container-high rounded-xl overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Classic handmade brown teddy bear" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6HtAqS464WqCMlEN5Jrq__ZVVTq-EQ7OjjLZlFLi2ZKALXWVr6oIyUxMIhwZgYK5gc0YVjl3e48pcWVvFswzgro-HsTyukY3b_NxQ8L5oaV7v9MGMJr4WHT1e0cbHFAPkavw_gW9M1JHTOkmQRKgMd6qkLoCGNUExzzDCBro4CWULaw_WOrXQY53Mrzk9CjEA8MIpvB_Sm8gwLCQoa1d8Rp7AjGg0Zpv_rGuzgT_XIn2GQzXOwdDqz-if5_u1rUn53YoWS_5BBUjb"/>
+</div>
+<div class="flex-1">
+<h3 class="font-headline font-bold text-on-surface">Honey Bear Plush</h3>
+<p class="text-primary font-bold text-lg">$32.00</p>
+<div class="mt-2 flex items-center gap-3">
+<button class="w-8 h-8 rounded-full border border-outline-variant flex items-center justify-center text-on-surface-variant transition-all">
+<span class="material-symbols-outlined text-sm">remove</span>
+</button>
+<span class="font-bold w-4 text-center">1</span>
+<button class="w-8 h-8 rounded-full border border-outline-variant flex items-center justify-center text-on-surface-variant transition-all">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+</div>
+<button class="text-outline-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+<!-- WhatsApp Preview Section -->
+<div class="mt-10 p-5 bg-surface-container-low rounded-2xl border-l-4 border-success/30">
+<div class="flex items-center gap-2 mb-3">
+<span class="material-symbols-outlined text-success" style="font-variation-settings: 'FILL' 1;">forum</span>
+<span class="text-xs font-bold uppercase tracking-wider text-on-surface-variant">WhatsApp Message Preview</span>
+</div>
+<div class="bg-white p-3 rounded-xl text-sm text-on-surface leading-relaxed shadow-sm italic">
+                        "Hello The Toybox! I'd like to order: 1x Alphabet Blocks ($24), 1x Retro Bolt Robot ($45), and 1x Honey Bear Plush ($32). Total: $101.00. Please let me know the next steps!"
+                    </div>
+</div>
+</div>
+<!-- Drawer Footer / Summary -->
+<div class="p-8 bg-white rounded-t-2xl shadow-[0_-20px_40px_rgba(0,0,0,0.03)]">
+<div class="space-y-3 mb-6">
+<div class="flex justify-between text-on-surface-variant">
+<span>Subtotal</span>
+<span>$101.00</span>
+</div>
+<div class="flex justify-between text-on-surface-variant">
+<span>Shipping</span>
+<span class="text-success font-bold">Calculated in Chat</span>
+</div>
+<div class="flex justify-between items-end pt-2">
+<span class="font-headline font-extrabold text-xl">Total</span>
+<span class="font-headline font-extrabold text-3xl text-primary">$101.00</span>
+</div>
+</div>
+<!-- Primary CTA -->
+<button class="w-full bg-success text-white py-5 rounded-full font-headline font-bold text-lg flex items-center justify-center gap-3 shadow-lg hover:brightness-110 active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">chat</span>
+                    Order on WhatsApp
+                </button>
+<p class="text-center text-[10px] text-outline mt-4 uppercase tracking-widest font-bold">Secure Checkout via WhatsApp Pay</p>
+</div>
+</div>
+</div>
+<!-- Responsive Bottom Nav (Active State: Cart) -->
+<nav class="md:hidden fixed bottom-0 w-full h-20 flex justify-around items-center px-6 z-50 bg-white/90 dark:bg-stone-900/90 backdrop-blur-md rounded-t-[3rem] shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
+<div class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="plusJakartaSans text-[10px] font-bold">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+<span class="plusJakartaSans text-[10px] font-bold">Search</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-yellow-400 text-stone-900 rounded-full w-14 h-14 -translate-y-4 shadow-lg">
+<span class="material-symbols-outlined" data-icon="shopping_basket">shopping_basket</span>
+<span class="plusJakartaSans text-[10px] font-bold">Cart</span>
+</div>
+<div class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="plusJakartaSans text-[10px] font-bold">Profile</span>
+</div>
+</nav>
+</body></html>

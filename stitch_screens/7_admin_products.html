@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Toybox Admin - Manage Products</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-dim": "#843a00",
+                        "secondary-dim": "#004e9d",
+                        "surface-container-low": "#eff1f2",
+                        "on-primary-fixed": "#443700",
+                        "error-container": "#f95630",
+                        "primary-container": "#fad538",
+                        "tertiary-fixed": "#ff9655",
+                        "outline-variant": "#abadae",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed-dim": "#ebc729",
+                        "on-secondary-fixed-variant": "#004f9e",
+                        "surface-container": "#e6e8ea",
+                        "surface": "#f5f6f7",
+                        "primary-dim": "#5f4e00",
+                        "primary": "#6d5a00",
+                        "tertiary-fixed-dim": "#f6853b",
+                        "on-secondary": "#eff2ff",
+                        "on-tertiary": "#fff0e9",
+                        "on-error-container": "#520c00",
+                        "error": "#b02500",
+                        "tertiary-container": "#ff9655",
+                        "secondary-fixed": "#bcd2ff",
+                        "secondary": "#005ab2",
+                        "surface-variant": "#dadddf",
+                        "secondary-container": "#bcd2ff",
+                        "inverse-primary": "#fad538",
+                        "secondary-fixed-dim": "#a5c5ff",
+                        "surface-bright": "#f5f6f7",
+                        "on-surface": "#2c2f30",
+                        "on-primary-container": "#5a4a00",
+                        "on-error": "#ffefec",
+                        "inverse-surface": "#0c0f10",
+                        "on-primary-fixed-variant": "#655300",
+                        "on-primary": "#fff2ce",
+                        "surface-container-high": "#e0e3e4",
+                        "on-tertiary-fixed": "#2d0f00",
+                        "inverse-on-surface": "#9b9d9e",
+                        "error-dim": "#b92902",
+                        "tertiary": "#964300",
+                        "on-surface-variant": "#595c5d",
+                        "on-background": "#2c2f30",
+                        "outline": "#757778",
+                        "on-secondary-container": "#00468e",
+                        "on-tertiary-fixed-variant": "#612900",
+                        "surface-tint": "#6d5a00",
+                        "on-tertiary-container": "#532200",
+                        "background": "#f5f6f7",
+                        "surface-container-highest": "#dadddf",
+                        "surface-dim": "#d1d5d7",
+                        "primary-fixed": "#fad538",
+                        "on-secondary-fixed": "#00336b"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "2xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen flex">
+<!-- SideNavBar Component -->
+<aside class="h-screen w-64 fixed left-0 border-r-0 bg-stone-50 dark:bg-stone-950 flex flex-col py-6 z-40">
+<div class="px-8 mb-10">
+<h1 class="text-xl font-bold text-stone-900 dark:text-stone-50">Toybox Admin</h1>
+<p class="text-xs text-stone-500 font-medium">Store Manager</p>
+</div>
+<nav class="flex-1 space-y-1">
+<!-- Active: Inventory (Closest match to Manage Products) -->
+<a class="flex items-center gap-3 px-4 py-3 mx-4 mb-1 text-stone-500 dark:text-stone-400 hover:bg-stone-200 dark:hover:bg-stone-800 rounded-2xl transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="Inter font-medium text-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 rounded-2xl mx-4 mb-1 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="Inter font-medium text-sm">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 mx-4 mb-1 text-stone-500 dark:text-stone-400 hover:bg-stone-200 dark:hover:bg-stone-800 rounded-2xl transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+<span class="Inter font-medium text-sm">Orders</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 mx-4 mb-1 text-stone-500 dark:text-stone-400 hover:bg-stone-200 dark:hover:bg-stone-800 rounded-2xl transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="category">category</span>
+<span class="Inter font-medium text-sm">Categories</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 mx-4 mb-1 text-stone-500 dark:text-stone-400 hover:bg-stone-200 dark:hover:bg-stone-800 rounded-2xl transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="auto_awesome">auto_awesome</span>
+<span class="Inter font-medium text-sm">AI Assistant</span>
+</a>
+</nav>
+<div class="mt-auto px-4 space-y-1">
+<button class="w-full flex items-center gap-3 px-4 py-3 text-stone-500 dark:text-stone-400 hover:bg-stone-200 dark:hover:bg-stone-800 rounded-2xl transition-all duration-200 ease-in-out">
+<span class="material-symbols-outlined" data-icon="support">support</span>
+<span class="Inter font-medium text-sm">Support</span>
+</button>
+<div class="h-px bg-surface-container-high mx-4 my-2"></div>
+<a class="flex items-center gap-3 px-4 py-3 text-stone-500 dark:text-stone-400 hover:bg-stone-200 dark:hover:bg-stone-800 rounded-2xl transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="Inter font-medium text-sm">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-error dark:text-error-dim hover:bg-error/5 rounded-2xl transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="Inter font-medium text-sm">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 flex-1 min-h-screen p-8 lg:p-12">
+<!-- Header Section -->
+<header class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+<div class="space-y-1">
+<h2 class="text-4xl font-extrabold tracking-tighter text-on-surface font-headline">Manage Products</h2>
+<p class="text-on-surface-variant font-medium">Configure and update your curated toy collection.</p>
+</div>
+<button class="bg-primary-container text-on-primary-container px-8 py-4 rounded-full font-bold flex items-center gap-2 shadow-[0_10px_30px_-5px_rgba(109,90,0,0.2)] hover:scale-105 transition-transform active:scale-95">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+                Add Product
+            </button>
+</header>
+<!-- Stats Bento (Secondary visual depth) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+<div class="bg-surface-container-lowest p-6 rounded-2xl shadow-sm flex items-center gap-4">
+<div class="bg-primary-container/20 p-4 rounded-xl text-primary">
+<span class="material-symbols-outlined text-3xl" data-icon="inventory">inventory</span>
+</div>
+<div>
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Total Products</p>
+<p class="text-2xl font-black text-on-surface">1,284</p>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-2xl shadow-sm flex items-center gap-4">
+<div class="bg-secondary-container/20 p-4 rounded-xl text-secondary">
+<span class="material-symbols-outlined text-3xl" data-icon="trending_up">trending_up</span>
+</div>
+<div>
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Active Items</p>
+<p class="text-2xl font-black text-on-surface">942</p>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-2xl shadow-sm flex items-center gap-4">
+<div class="bg-error-container/10 p-4 rounded-xl text-error">
+<span class="material-symbols-outlined text-3xl" data-icon="warning">warning</span>
+</div>
+<div>
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Low Stock</p>
+<p class="text-2xl font-black text-on-surface">12</p>
+</div>
+</div>
+</div>
+<!-- Filter Bar -->
+<div class="flex items-center justify-between mb-6 bg-surface-container-low p-4 rounded-xl">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative flex-1 max-w-md">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline" data-icon="search">search</span>
+<input class="w-full bg-surface-container-lowest border-none rounded-xl pl-12 pr-4 py-3 focus:ring-2 focus:ring-primary text-sm" placeholder="Search by name, category or SKU..." type="text"/>
+</div>
+<button class="bg-surface-container-highest px-4 py-3 rounded-xl flex items-center gap-2 text-sm font-semibold hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="filter_list">filter_list</span>
+                    Filters
+                </button>
+</div>
+<div class="flex items-center gap-2 text-sm text-on-surface-variant font-medium">
+                Showing <span class="text-on-surface font-bold">1-10</span> of 1,284
+            </div>
+</div>
+<!-- Products Table Card -->
+<div class="bg-surface-container-lowest rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.04)] overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low/50">
+<th class="px-8 py-5 text-xs font-bold uppercase tracking-widest text-on-surface-variant">Image</th>
+<th class="px-6 py-5 text-xs font-bold uppercase tracking-widest text-on-surface-variant">Product Name</th>
+<th class="px-6 py-5 text-xs font-bold uppercase tracking-widest text-on-surface-variant">Price</th>
+<th class="px-6 py-5 text-xs font-bold uppercase tracking-widest text-on-surface-variant">Category</th>
+<th class="px-6 py-5 text-xs font-bold uppercase tracking-widest text-on-surface-variant">Status</th>
+<th class="px-8 py-5 text-xs font-bold uppercase tracking-widest text-on-surface-variant text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low/30 transition-colors group">
+<td class="px-8 py-4">
+<div class="w-16 h-16 rounded-xl bg-surface-container-high overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Close-up of a handcrafted wooden toy train on a white background with soft shadows and organic textures" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgBOQoam0fkqqcnDkjJSEf6YYAmJu-Kyjz_DGV_4L5u5fwXMKsZB-PczUpi98EZSphqiwRvqUTvR3TdblxPy-ORWYFIOUYNgruNvZccbc5wvo4NwqSHPQ9pMR0TgwFcKSLNhP-FHtYGiXBbHj5CEM6kkP_FR2uxrfW3R7SyKMgWvvyZFdH3zzEK6QXv1n8o_E2lDer_qFZwrtTCsDYPBjGgq65wvH_xH9zeTrRQs4kQ5VyKcC8IQtOwxyhHB-lZ_QuYBn6pDh-212q"/>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="font-bold text-on-surface font-headline">Artisan Wooden Train</p>
+<p class="text-xs text-on-surface-variant">SKU: TB-WT-001</p>
+</td>
+<td class="px-6 py-4">
+<p class="font-bold text-on-surface">$45.00</p>
+</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 bg-secondary-container/30 text-on-secondary-container text-xs font-bold rounded-full">Wooden Toys</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-green-500"></span>
+<span class="text-sm font-medium text-on-surface">Available</span>
+</div>
+</td>
+<td class="px-8 py-4 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-primary-container/20 rounded-lg text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+<button class="p-2 hover:bg-error-container/10 rounded-lg text-error transition-colors">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low/30 transition-colors group">
+<td class="px-8 py-4">
+<div class="w-16 h-16 rounded-xl bg-surface-container-high overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Vibrant pastel colored stacking rings toy on a minimal surface with clean geometric shapes and soft lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhxoysVo4flYILP2sPnUPH7SCJYQaFEX3EdWfw_ex5tEYtwjutvSWE5MRbInzSFdONC9agR4qeh7nb563FcRQz5y3cDY7IgP7zkWtD60qcAzHr5qqUU8WKbkz42l41w-LZc9IL36D7YSpGFbnmeU6iDO-Z-VT4cud0ZLi-InDthDi6el1GY7U4p8MQgBG0_j1RPzvIiq18IZUWUG1P4IKHDbP1iJlCRJ4Mz0vT_3oaY1kvPgCgjCFo5mEcUHp2WDOFR-y7NASta6YD"/>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="font-bold text-on-surface font-headline">Rainbow Stacker</p>
+<p class="text-xs text-on-surface-variant">SKU: TB-RS-042</p>
+</td>
+<td class="px-6 py-4">
+<p class="font-bold text-on-surface">$28.50</p>
+</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 bg-tertiary-container/20 text-on-tertiary-container text-xs font-bold rounded-full">Educational</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-error"></span>
+<span class="text-sm font-medium text-error">Out of Stock</span>
+</div>
+</td>
+<td class="px-8 py-4 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-primary-container/20 rounded-lg text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+<button class="p-2 hover:bg-error-container/10 rounded-lg text-error transition-colors">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low/30 transition-colors group">
+<td class="px-8 py-4">
+<div class="w-16 h-16 rounded-xl bg-surface-container-high overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Soft plush bear toy sitting in a cozy nursery corner with warm golden hour sunlight filtering through curtains" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBy2Zp5k-58MfD4pjjk52PbUrZqXBm4pEUiRWAq6FMS-ZieYj2lMXIIX1zN5-aPZbi-RC9K_H_NA_JPyQivDhwn8uTkGGvfON24ik0a8xgYoFcquRL1yvFUetf_5GN9lYOYjB6pIf8fxTLiF0KNpX3Fdj2fzgYjF4_JZNSyKvU_9Yo2JCxGdJspejGe9dJ_IENqIJNz18KAjMrmz_7YLl7cnDQ0-bwXbvVIQFSoZ8d9ArYqHeBGQV729UjMYbK0elsuU_8uzB5uA-i6"/>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="font-bold text-on-surface font-headline">Sleepy Bear Plush</p>
+<p class="text-xs text-on-surface-variant">SKU: TB-PB-109</p>
+</td>
+<td class="px-6 py-4">
+<p class="font-bold text-on-surface">$32.00</p>
+</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 bg-primary-container/30 text-on-primary-container text-xs font-bold rounded-full">Plushies</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-green-500"></span>
+<span class="text-sm font-medium text-on-surface">Available</span>
+</div>
+</td>
+<td class="px-8 py-4 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-primary-container/20 rounded-lg text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+<button class="p-2 hover:bg-error-container/10 rounded-lg text-error transition-colors">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-low/30 transition-colors group">
+<td class="px-8 py-4">
+<div class="w-16 h-16 rounded-xl bg-surface-container-high overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Collection of colorful building blocks scattered on a light wood floor in a bright modern playroom" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIyqbJ96rk05Qra4KPzGMHu_dPyeoRPxGumyC8v8k1iGaHC2rtGCt3XJnSuYqSxs9mj5WJbjY08oqMeAm9I6UFLDJOb0FIJ4lXBQpRB3yozvjZF9fwQk99lqb6-H9lXxjtK7XKKeSFw5TnQ4UqSZ5pTn1QQgkOWK5A_VtBrsdXkPHRh4tcALQwoqdwNKFjISm94ZRtCA6vHEjSBKpO3cXGnmZ-651AUnebuDWKWXJmWYY7p1yPbg271ipsk0oCpE-GHoy7Dt3Lymaq"/>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="font-bold text-on-surface font-headline">Infinite Blocks Set</p>
+<p class="text-xs text-on-surface-variant">SKU: TB-IB-552</p>
+</td>
+<td class="px-6 py-4">
+<p class="font-bold text-on-surface">$59.99</p>
+</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 bg-secondary-container/30 text-on-secondary-container text-xs font-bold rounded-full">Creative</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-green-500"></span>
+<span class="text-sm font-medium text-on-surface">Available</span>
+</div>
+</td>
+<td class="px-8 py-4 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-primary-container/20 rounded-lg text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+<button class="p-2 hover:bg-error-container/10 rounded-lg text-error transition-colors">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Pagination -->
+<div class="px-8 py-6 bg-surface-container-low/20 flex items-center justify-between">
+<button class="text-on-surface-variant font-bold text-sm flex items-center gap-1 hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="chevron_left">chevron_left</span>
+                    Previous
+                </button>
+<div class="flex items-center gap-2">
+<button class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container font-black text-sm">1</button>
+<button class="w-10 h-10 rounded-full hover:bg-surface-container text-on-surface font-bold text-sm transition-colors">2</button>
+<button class="w-10 h-10 rounded-full hover:bg-surface-container text-on-surface font-bold text-sm transition-colors">3</button>
+<span class="text-on-surface-variant px-2">...</span>
+<button class="w-10 h-10 rounded-full hover:bg-surface-container text-on-surface font-bold text-sm transition-colors">12</button>
+</div>
+<button class="text-on-surface-variant font-bold text-sm flex items-center gap-1 hover:text-on-surface transition-colors">
+                    Next
+                    <span class="material-symbols-outlined text-lg" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Footer Accent -->
+<footer class="mt-12 text-center text-on-surface-variant/40 text-xs font-bold uppercase tracking-[0.2em]">
+            © 2024 The Toybox Admin Ecosystem • All Rights Reserved
+        </footer>
+</main>
+</body></html>

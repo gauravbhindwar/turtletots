@@ -1,0 +1,66 @@
+{
+  "categories": [
+    { "name": "Plush Toys", "slug": "plush-toys" },
+    { "name": "Action Figures", "slug": "action-figures" },
+    { "name": "LEGO Sets", "slug": "lego-sets" },
+    { "name": "Educational", "slug": "educational" }
+  ],
+  "products": [
+    {
+      "name": "Honey Bear Plush",
+      "slug": "honey-bear-plush",
+      "price": 3999,
+      "category_slug": "plush-toys",
+      "description": "Premium designer teddy bear with soft honey-colored fur.",
+      "image_url": "https://lh3.googleusercontent.com/aida-public/AB6AXuDTvS9-tq3gAIEt0A-KiY8McIlK6Rlau6g8Gg-z8GiAzMhb53PZ6CCTb9tl7VXJ3ZqS2Y3WKJ404jM98PRT2PZwO7FBZ-5LXkB8eqlJqCtnfd6GvdXvA_ds9uactLTjR6n6tBKGj64PUQPbtzI7N_SK7E5GJJaUI5UGzXK41hRvzq5xBXpTlRMTbYBnm6f-iLDLa1s7IffZgyiktLZt8iw7eCtgacnPJ3mmSKgM9XXdTvSVPehZtcNvU1-sS0JInYrTp_urSHQnwrXP",
+      "is_available": true
+    },
+    {
+      "name": "Mech-Warrior X1",
+      "slug": "mech-warrior-x1",
+      "price": 9999,
+      "discount_price": 12499,
+      "category_slug": "action-figures",
+      "description": "A detailed red and white robotic toy with articulated joints.",
+      "image_url": "https://lh3.googleusercontent.com/aida-public/AB6AXuAITyLUk0pWOuJ0ameAsmtkzUG1DiqPejjma4rBn6t96OlOeuNG7iPfs3VsROXJoGwKc3il8gUTxsgAK_4P39EO8zivjVHE6vD5QfmeEmIqtE3GJkver-NW5DSFbTwtRPPiyjBi6LK92QZiCQNaY1OOs1bW0ZqckNtnotHVpGuGD2CKoi1cWo59tlS-WlmCpQz3ttjgO67-zpg14fo-f9uRD_uszYb5prNFQvnlTvGsb2O2Szyip1TnIDpxBaBqdFb2WUrHu_pixg6b",
+      "is_available": true
+    },
+    {
+      "name": "Mega Block Castle",
+      "slug": "mega-block-castle",
+      "price": 6999,
+      "category_slug": "lego-sets",
+      "description": "Colorful plastic interlocking building blocks stacked into a creative tower.",
+      "image_url": "https://lh3.googleusercontent.com/aida-public/AB6AXuB1x4783auAbKsOqk6L61kjrl5dgOdR_GktW3QVvQL5RThnQcmDtFCVgEqpiCyPjOLqdZ9q1V0-u9Q19Y7Hrw5wqqccO_RQbcYBmm6vmmRUz6sGoyiw0VXWWgO720gE6pSh7XUV4RYUqj7JxA9Gb93cT633ONRxlaxV4U9UHgErECYGQpbjWyDdj0-dll0MUQ5cOXMV4v11ui8P4UcAksmjLIpjZtaHRxGShK3x1by9jIJB6SZF1Yt9K5xmvbozttJE_ImFnhgEuxVm",
+      "is_available": true
+    },
+    {
+      "name": "Rainbow Xylophone",
+      "slug": "rainbow-xylophone",
+      "price": 2499,
+      "category_slug": "educational",
+      "description": "Traditional wooden xylophone toy with rainbow-colored bars.",
+      "image_url": "https://lh3.googleusercontent.com/aida-public/AB6AXuAf_pkVB5q06T2ZEtmPo_xpE4P7sDdNSHj-g5fkOUPLTACC6yDW4UxDXFNMKfzrQmpLJPmyXAQYTBoQqu_9moNdO7iCXMKz5Ie1DI30u0Ra9BVDynGE40I1VELHSSKiqfAIZPiJFWNmF3w1oE7V8P6BuQ1j5qylIYXlCVNqjHWXP_DV_iGbrVKxI6lFp2lrLXr-_uSRzDBDkbzd5l9CE1pDEG1p3Hf7AEtTKn9j0Bcpk5iApdMQjQphAKX4bXyoGd-ZSpYFCjq7kXos",
+      "is_available": true
+    },
+    {
+      "name": "Turbo Racer GT",
+      "slug": "turbo-racer-gt",
+      "price": 1499,
+      "category_slug": "action-figures",
+      "description": "Miniature toy racing car, aerodynamic design.",
+      "image_url": "https://lh3.googleusercontent.com/aida-public/AB6AXuC4NqB98IJAfLKstgfN9KBW_39ztdPUbvQZWkP_JHtT90V1RtvgeEhO706N7MKsW0SE8YI7AJbgMV3Pfd3x41NDX6_1GgG6Mpf6-tiURALqOLrECBlcjLMhnaOfIOafvd_jg4j8YxGEpH-aGkhYty1DB8OVzQBcE9oDx6ZhTz4Ft2_OP_UJr1_mVRVFpGPXaN4eR_44hSd61KvNDc-_PIRVIQjzswLN8XbhvsYBNLIG0ZmSLLWDy8Knw1TPlXV7gXA6cQZK865XwrrT",
+      "is_available": true
+    },
+    {
+      "name": "Dino Discovery Pack",
+      "slug": "dino-discovery-pack",
+      "price": 2199,
+      "category_slug": "action-figures",
+      "description": "Collection of miniature dinosaur figures, realistic textures.",
+      "image_url": "https://lh3.googleusercontent.com/aida-public/AB6AXuA2_4q5lG1QOdaj3uGUG6JEpllSvBwmJ4iGzcz8OEmxodUuYA_QhLlPMyEXfUIgcBAHYbWwPoS0aYFejx2DIcHP_VtsNzEimPU-7F28lNbqazXNrKYg10kQAjMTqnBAV5EVfIUGOsAP-eRCKOkX-e4NrwWpqXCYF1H4ZTRj3FfmtbC-_xKWx4I2I_4rvbpluUxwk_MAgmgugeH-ISYE_35gOj4HXbst6ZbyrYjQqtj-J7m0uDrTkNpdZDUfDQ3GgS9ww5yxbCptAAJ0",
+      "is_available": true
+    }
+  ],
+  "hero_image": "https://lh3.googleusercontent.com/aida-public/AB6AXuCfYhv3d-un4C0rNmRWV4E3skjiDojogHJ0rW-C0WLn3ZFlHwhXw3n3SZt107EZYOntu0DaQ7ssVuxLBjpvuWZmmagK1DfVmCv-5N3x3JGNy-YbULyGzXBAjTv03cjdS2a-B8zt6_zkRt_jVnrKg4fxhcBrUS1phex2FRwXAu8cGndcXtxX8Ii550Dp3fhK0bW7mERpX66a3vh4SaXw4tqTPDIRvsCXQ4yIqAGkBex1uBrsm7CH2isvZWjg7ly9PJyjIny1rW8T4L0n"
+}

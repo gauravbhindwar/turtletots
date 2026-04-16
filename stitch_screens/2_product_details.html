@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-dim": "#843a00",
+                    "secondary-dim": "#004e9d",
+                    "surface-container-low": "#eff1f2",
+                    "on-primary-fixed": "#443700",
+                    "error-container": "#f95630",
+                    "primary-container": "#fad538",
+                    "tertiary-fixed": "#ff9655",
+                    "outline-variant": "#abadae",
+                    "surface-container-lowest": "#ffffff",
+                    "primary-fixed-dim": "#ebc729",
+                    "on-secondary-fixed-variant": "#004f9e",
+                    "surface-container": "#e6e8ea",
+                    "surface": "#f5f6f7",
+                    "primary-dim": "#5f4e00",
+                    "primary": "#6d5a00",
+                    "tertiary-fixed-dim": "#f6853b",
+                    "on-secondary": "#eff2ff",
+                    "on-tertiary": "#fff0e9",
+                    "on-error-container": "#520c00",
+                    "error": "#b02500",
+                    "tertiary-container": "#ff9655",
+                    "secondary-fixed": "#bcd2ff",
+                    "secondary": "#005ab2",
+                    "surface-variant": "#dadddf",
+                    "secondary-container": "#bcd2ff",
+                    "inverse-primary": "#fad538",
+                    "secondary-fixed-dim": "#a5c5ff",
+                    "surface-bright": "#f5f6f7",
+                    "on-surface": "#2c2f30",
+                    "on-primary-container": "#5a4a00",
+                    "on-error": "#ffefec",
+                    "inverse-surface": "#0c0f10",
+                    "on-primary-fixed-variant": "#655300",
+                    "on-primary": "#fff2ce",
+                    "surface-container-high": "#e0e3e4",
+                    "on-tertiary-fixed": "#2d0f00",
+                    "inverse-on-surface": "#9b9d9e",
+                    "error-dim": "#b92902",
+                    "tertiary": "#964300",
+                    "on-surface-variant": "#595c5d",
+                    "on-background": "#2c2f30",
+                    "outline": "#757778",
+                    "on-secondary-container": "#00468e",
+                    "on-tertiary-fixed-variant": "#612900",
+                    "surface-tint": "#6d5a00",
+                    "on-tertiary-container": "#532200",
+                    "background": "#f5f6f7",
+                    "surface-container-highest": "#dadddf",
+                    "surface-dim": "#d1d5d7",
+                    "primary-fixed": "#fad538",
+                    "on-secondary-fixed": "#00336b",
+                    "whatsapp": "#25D366"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Plus Jakarta Sans"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .tactile-lift:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface antialiased">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full flex justify-between items-center px-8 h-20 bg-white/80 dark:bg-stone-900/80 backdrop-blur-xl z-50 shadow-[0_40px_60px_-15px_rgba(109,90,0,0.06)]">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-black tracking-tighter text-yellow-700 dark:text-yellow-400">The Toybox</span>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-stone-600 dark:text-stone-400 font-medium hover:scale-105 hover:text-yellow-600 transition-transform" href="#">Shop All</a>
+<a class="text-stone-600 dark:text-stone-400 font-medium hover:scale-105 hover:text-yellow-600 transition-transform" href="#">New Arrivals</a>
+<a class="text-stone-600 dark:text-stone-400 font-medium hover:scale-105 hover:text-yellow-600 transition-transform" href="#">Best Sellers</a>
+<a class="text-stone-600 dark:text-stone-400 font-medium hover:scale-105 hover:text-yellow-600 transition-transform" href="#">Categories</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container rounded-full transition-colors relative">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+<span class="absolute top-0 right-0 w-4 h-4 bg-error text-[10px] text-white flex items-center justify-center rounded-full">2</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</button>
+</div>
+</header>
+<main class="pt-32 pb-24 px-4 md:px-12 lg:px-24 max-w-[1440px] mx-auto">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+<!-- Left: Product Gallery (5 cols) -->
+<div class="lg:col-span-7 grid grid-cols-6 gap-4">
+<!-- Main Image -->
+<div class="col-span-6 bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0_40px_60px_-15px_rgba(109,90,0,0.06)] relative group">
+<img class="w-full h-[600px] object-contain p-12 transition-transform duration-500 group-hover:scale-105" data-alt="close-up of a soft fluffy brown teddy bear with a friendly face sitting in a sunlit nursery playroom" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWtWjm-dBWsJ5a_OYUyHp22TKj8JfmBTf4fS_m45nSZe7hu2PLe3Mv6n2vYkXAmscrPFGPao8w7XX-93Do7mYkj63YK9N2HppcqcC4mY60HH-VInxPvfP_sPmu9KslDdtWyJvzLkgFRBJ5l6DndX3pNT2IfCWr6vJ16uRxQ6zmW-mDc6kDd2uzQPmiwk3npW6vmXiC4jRneZXW6ieX9b2HfjG3TKWhOqc2oRL6okMZu5WHA6ZnTpzxWP73kBXGBM3VLxvugyf4nMvW"/>
+<div class="absolute top-6 left-6">
+<span class="bg-primary-container text-on-primary-container px-4 py-2 rounded-full font-headline font-bold text-sm">Best Seller</span>
+</div>
+</div>
+<!-- Thumbnails -->
+<div class="col-span-1 bg-surface-container-lowest p-2 rounded-lg cursor-pointer ring-2 ring-primary border-transparent">
+<img class="w-full h-20 object-contain" data-alt="side view of a plush brown teddy bear showing its soft texture and stitched details" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_PjxFOqDRKBMAPLhVUCX33gsQdYS2dkCGQv0lx-eM9hePptobllSzIVi9KJoQAJoqaew6A7S2qXjqUDHSionY48EC4Wpz3gjEW-Y8805itWzU6m0UUaLgAnjQjSPsXG7sWoPo1nL3UZYJJGe8cdzK_gebBhdXXF0RQ7Jg-PQpxqYf_Z19aHoAW7TGKTlve8Kh8tzkUewWGplGG039BY1e1W--UEsPxZeqE81m0WhpH1MQlI3uYO5nOGPRUK1dsvH8Szry9zL8kzVm"/>
+</div>
+<div class="col-span-1 bg-surface-container-lowest p-2 rounded-lg cursor-pointer hover:bg-surface-container-low transition-colors">
+<img class="w-full h-20 object-contain" data-alt="different angle of the teddy bear with a focus on its paws and soft fur texture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8b2vi-vU8-7bOKyiVa99wPqJVU1_aEZJUNNh-4OXwOEP55rVM4Q49XLaFghETNdEB2Qb7cJ3Vd0c3EMkJReqTFNUTFYBEGCcpGUUQD60TRcD7pg0Yq4SAn_z0i-TpQGHCTVOKY1mNd9-OIehtYTTRHf_tZe6ollMy2Chq8n_HWTowCIzCjYH9f8eaDYNbeIPUteC9rmd2sJQVv8r3TNhiZZIf9BV3sQ_YwssL83hEXobLxf1O008dq7xi_zFgiVSkTPFEbO2wJYlw"/>
+</div>
+<div class="col-span-1 bg-surface-container-lowest p-2 rounded-lg cursor-pointer hover:bg-surface-container-low transition-colors">
+<img class="w-full h-20 object-contain" data-alt="teddy bear being held by a child, showing its size relative to a human hand" src="https://lh3.googleusercontent.com/aida-public/AB6AXuASpckqMEmYFljAka_O5coFU-6rgY1oUEYrrKRTfxmgO2Exj6u1AfjUcBCwkeNU_eOQWrxTziF_HiBPc3vz12BZN2iCpjUhm3XHiQG_fxGnW8-tzo2guHbip4YeeWV0SVcozqzRbdTBMi0W6BI2c9YkktIxaJTueNBkAAFvgEPpsrcrQqnq6a2DzMSqFViqde_treakQXo9JkpyWTGtTyG8lEN2hFlqxeAXImQuQxDirKmOF9e9v7w_SQTv8WgBobhvh1rurMF0v-kh"/>
+</div>
+</div>
+<!-- Right: Product Info (5 cols) -->
+<div class="lg:col-span-5 flex flex-col gap-8">
+<div>
+<h1 class="font-headline text-5xl font-extrabold tracking-tight text-on-surface mb-2">Cuddly Bear</h1>
+<div class="flex items-center gap-3">
+<div class="flex text-primary">
+<span class="material-symbols-outlined" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" data-icon="star_half" style="font-variation-settings: 'FILL' 1;">star_half</span>
+</div>
+<span class="text-on-surface-variant font-medium">4.8 (124 reviews)</span>
+</div>
+</div>
+<div class="text-4xl font-headline font-black text-secondary">
+                    $24.99
+                </div>
+<p class="text-lg text-on-surface-variant leading-relaxed">
+                    Meet your new best friend! This ultra-soft, cocoa-colored companion is designed for maximum hugs. Hand-stitched with love and eco-friendly materials, it’s the perfect addition to any toybox.
+                </p>
+<!-- Color Selection -->
+<div>
+<span class="block text-sm font-bold text-on-surface mb-4 uppercase tracking-wider">Choose Color</span>
+<div class="flex gap-4">
+<button class="w-12 h-12 rounded-full bg-[#8B5E3C] ring-4 ring-offset-4 ring-primary transition-all"></button>
+<button class="w-12 h-12 rounded-full bg-[#F5DEB3] ring-0 ring-offset-4 ring-transparent hover:ring-surface-variant transition-all"></button>
+<button class="w-12 h-12 rounded-full bg-[#5D4037] ring-0 ring-offset-4 ring-transparent hover:ring-surface-variant transition-all"></button>
+</div>
+</div>
+<!-- Quantity & Actions -->
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-4">
+<div class="flex items-center bg-surface-container rounded-full p-1 h-14 w-36">
+<button class="w-12 h-full flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined" data-icon="remove">remove</span>
+</button>
+<span class="flex-1 text-center font-bold text-lg">1</span>
+<button class="w-12 h-full flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+</div>
+<button class="flex-1 h-14 bg-primary-container text-on-primary-fixed font-headline font-bold rounded-full tactile-lift shadow-[0_4px_12px_rgba(109,90,0,0.15)] flex items-center justify-center gap-2 hover:bg-primary transition-colors hover:text-white">
+<span class="material-symbols-outlined" data-icon="shopping_basket">shopping_basket</span>
+                            Add to Cart
+                        </button>
+</div>
+<!-- WhatsApp Order -->
+<button class="w-full h-14 bg-whatsapp text-white font-headline font-bold rounded-full tactile-lift flex items-center justify-center gap-3 shadow-lg hover:brightness-105 transition-all">
+<span class="material-symbols-outlined" data-icon="chat" style="font-variation-settings: 'FILL' 1;">chat</span>
+                        Order via WhatsApp
+                    </button>
+</div>
+<div class="pt-6 border-t border-surface-variant">
+<div class="flex gap-6">
+<div class="flex items-center gap-2 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-primary" data-icon="local_shipping">local_shipping</span>
+                            Fast Delivery
+                        </div>
+<div class="flex items-center gap-2 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-primary" data-icon="verified_user">verified_user</span>
+                            Safe for Kids
+                        </div>
+</div>
+</div>
+</div>
+</div>
+<!-- Related Products Carousel -->
+<section class="mt-32">
+<div class="flex items-end justify-between mb-12">
+<div>
+<span class="text-secondary font-bold text-sm tracking-widest uppercase block mb-2">More Fun</span>
+<h2 class="font-headline text-4xl font-extrabold text-on-surface">You might also like</h2>
+</div>
+<div class="flex gap-2">
+<button class="w-12 h-12 rounded-full border-2 border-surface-container flex items-center justify-center hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="flex gap-8 overflow-x-auto pb-12 scrollbar-hide snap-x">
+<!-- Related Card 1 -->
+<div class="min-w-[300px] bg-surface-container-lowest rounded-xl p-6 shadow-sm hover:shadow-xl transition-all group snap-start">
+<div class="aspect-square bg-surface-container-low rounded-lg mb-6 overflow-hidden relative">
+<img class="w-full h-full object-contain p-8 group-hover:scale-110 transition-transform" data-alt="wooden toy train with colorful primary colors on a light wooden floor background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCzJ0LF3nSOE9np_9e_tDmKbA3ZvoEvhMUF4qBa7rZbjSQwTo73A0c1swfzsVpES6ul5Z5SC5PkcG0iTWxCPDRWgkTKzKI9FqwkHLRO3HYfIs4lrexhnubT-UP7sE1QcR4JUmq0qrm-NtEzK05wGVkt58ZpXRm7DA19VGMEcPxSyank8kruDcZd9poqsox-V3MBOMJGH6D5jDAqoSuVXX8m039-RIczJYxM67LHvvF7vpHpjPX7YFatR1ujeezplEsZlRsp1iX3oyi"/>
+<button class="absolute top-4 right-4 w-10 h-10 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity shadow-md">
+<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+</button>
+</div>
+<h3 class="font-headline font-bold text-xl text-on-surface mb-2">Wooden Train Set</h3>
+<div class="flex justify-between items-center">
+<span class="text-secondary font-black text-lg">$34.00</span>
+<div class="flex items-center gap-1 text-sm font-medium text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+                            4.9
+                        </div>
+</div>
+</div>
+<!-- Related Card 2 -->
+<div class="min-w-[300px] bg-surface-container-lowest rounded-xl p-6 shadow-sm hover:shadow-xl transition-all group snap-start">
+<div class="aspect-square bg-surface-container-low rounded-lg mb-6 overflow-hidden relative">
+<img class="w-full h-full object-contain p-8 group-hover:scale-110 transition-transform" data-alt="assortment of colorful building blocks stacked in an artistic irregular tower" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLHdXVS3cUXUyqOftKzqqs60fCEzv9wj1leZLNWDphh9sF4Rt4aIVgXGb2zeLrBHMoGQUkcdiH4n9waymx28-b9swUBIKCpCFqG9J6nKkcO4tsBX0PrSKYNndwIYsuqqF3evvdurNvaaY3tYkhiyGOup-OlzySV6M_S3k6lVUv6B_q4wOIj_D8jJELu349juA8D5ynFXW8aQZyOB8I_lprq2Wx6Va5fWan69Ek7DswsaZQZdvrxjCcvffmuLKEZnvfT7z_mYGW5SVD"/>
+<button class="absolute top-4 right-4 w-10 h-10 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity shadow-md">
+<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+</button>
+</div>
+<h3 class="font-headline font-bold text-xl text-on-surface mb-2">Magic Blocks</h3>
+<div class="flex justify-between items-center">
+<span class="text-secondary font-black text-lg">$19.50</span>
+<div class="flex items-center gap-1 text-sm font-medium text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+                            4.7
+                        </div>
+</div>
+</div>
+<!-- Related Card 3 -->
+<div class="min-w-[300px] bg-surface-container-lowest rounded-xl p-6 shadow-sm hover:shadow-xl transition-all group snap-start">
+<div class="aspect-square bg-surface-container-low rounded-lg mb-6 overflow-hidden relative">
+<img class="w-full h-full object-contain p-8 group-hover:scale-110 transition-transform" data-alt="modern colorful educational toys for toddlers scattered on a soft rug" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDC8WhywjkqEFP6-2vOH96mfm8iTSeVfmvmQiUixD5rwCq1CHKPVLTl98QPo0IvqThx4a_iIg37MIMrtTRKS4OO35YPkxXvOWsH-pV-LswA3z07vxF_LWxHMIA18Y0Mfd-G1O7L9nm3zy8Z1VI0hwNfv7PDH9XES5mbkJq4eCQl0KOBAxqEsDccffaDVfwOzUrAOTORVy1XYHhU8U3jSN5lvdSQ56dYAWib4xn9_ZMptphpwjc9XYdNf4rmHb09EDZBwvYZZcbNkoBU"/>
+<button class="absolute top-4 right-4 w-10 h-10 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity shadow-md">
+<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+</button>
+</div>
+<h3 class="font-headline font-bold text-xl text-on-surface mb-2">Puzzle Cube</h3>
+<div class="flex justify-between items-center">
+<span class="text-secondary font-black text-lg">$12.00</span>
+<div class="flex items-center gap-1 text-sm font-medium text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+                            4.5
+                        </div>
+</div>
+</div>
+<!-- Related Card 4 -->
+<div class="min-w-[300px] bg-surface-container-lowest rounded-xl p-6 shadow-sm hover:shadow-xl transition-all group snap-start">
+<div class="aspect-square bg-surface-container-low rounded-lg mb-6 overflow-hidden relative">
+<img class="w-full h-full object-contain p-8 group-hover:scale-110 transition-transform" data-alt="cute stuffed rabbit toy with long ears and a striped sweater" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDUodpMmtMmYRJZnpuXu7penD_RnLn-CDs-oHoy-79lbYSTiEhvacjoeYPysWrbbp9iS7_o_AK73xYSMS5pP4V3Q1-36sWXPsP5T93lCF5o6cjJoGUpOZHJJhJjLYtVVZybRWOD9GUh6yRuo8T-a_4k68Tdg4BnBm1cnDAq0Ibw00O09oM6f8SrHn_KgnoryskFgIYSBuh4kT2mBqs1FL2foovPzeQ7yEJXQdGXVqQ-bjR6Cxb4_iiwIuBiS9aWYHOi4eghKsNbVnrY"/>
+<button class="absolute top-4 right-4 w-10 h-10 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity shadow-md">
+<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+</button>
+</div>
+<h3 class="font-headline font-bold text-xl text-on-surface mb-2">Bouncy Bunny</h3>
+<div class="flex justify-between items-center">
+<span class="text-secondary font-black text-lg">$28.00</span>
+<div class="flex items-center gap-1 text-sm font-medium text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+                            4.8
+                        </div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 w-full h-20 flex justify-around items-center px-6 z-50 bg-white/90 dark:bg-stone-900/90 backdrop-blur-md shadow-[0_-10px_40px_rgba(0,0,0,0.05)] rounded-t-xl">
+<div class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-headline text-[10px] font-bold">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+<span class="font-headline text-[10px] font-bold">Search</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-yellow-400 text-stone-900 rounded-full w-14 h-14 -translate-y-4 shadow-lg active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="shopping_basket">shopping_basket</span>
+<span class="font-headline text-[10px] font-bold">Cart</span>
+</div>
+<div class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-headline text-[10px] font-bold">Profile</span>
+</div>
+</nav>
+</body></html>

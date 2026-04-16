@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Toybox Admin - Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-dim": "#843a00",
+                    "secondary-dim": "#004e9d",
+                    "surface-container-low": "#eff1f2",
+                    "on-primary-fixed": "#443700",
+                    "error-container": "#f95630",
+                    "primary-container": "#fad538",
+                    "tertiary-fixed": "#ff9655",
+                    "outline-variant": "#abadae",
+                    "surface-container-lowest": "#ffffff",
+                    "primary-fixed-dim": "#ebc729",
+                    "on-secondary-fixed-variant": "#004f9e",
+                    "surface-container": "#e6e8ea",
+                    "surface": "#f5f6f7",
+                    "primary-dim": "#5f4e00",
+                    "primary": "#6d5a00",
+                    "tertiary-fixed-dim": "#f6853b",
+                    "on-secondary": "#eff2ff",
+                    "on-tertiary": "#fff0e9",
+                    "on-error-container": "#520c00",
+                    "error": "#b02500",
+                    "tertiary-container": "#ff9655",
+                    "secondary-fixed": "#bcd2ff",
+                    "secondary": "#005ab2",
+                    "surface-variant": "#dadddf",
+                    "secondary-container": "#bcd2ff",
+                    "inverse-primary": "#fad538",
+                    "secondary-fixed-dim": "#a5c5ff",
+                    "surface-bright": "#f5f6f7",
+                    "on-surface": "#2c2f30",
+                    "on-primary-container": "#5a4a00",
+                    "on-error": "#ffefec",
+                    "inverse-surface": "#0c0f10",
+                    "on-primary-fixed-variant": "#655300",
+                    "on-primary": "#fff2ce",
+                    "surface-container-high": "#e0e3e4",
+                    "on-tertiary-fixed": "#2d0f00",
+                    "inverse-on-surface": "#9b9d9e",
+                    "error-dim": "#b92902",
+                    "tertiary": "#964300",
+                    "on-surface-variant": "#595c5d",
+                    "on-background": "#2c2f30",
+                    "outline": "#757778",
+                    "on-secondary-container": "#00468e",
+                    "on-tertiary-fixed-variant": "#612900",
+                    "surface-tint": "#6d5a00",
+                    "on-tertiary-container": "#532200",
+                    "background": "#f5f6f7",
+                    "surface-container-highest": "#dadddf",
+                    "surface-dim": "#d1d5d7",
+                    "primary-fixed": "#fad538",
+                    "on-secondary-fixed": "#00336b"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "spacing": {},
+            "fontFamily": {
+                    "headline": ["Plus Jakarta Sans"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, .font-display { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 border-r-0 bg-stone-50 dark:bg-stone-950 flex flex-col h-full py-6 z-40 transition-all duration-200 ease-in-out">
+<div class="px-8 mb-10 flex items-center gap-3">
+<div class="w-10 h-10 bg-primary-container rounded-xl flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+</div>
+<div>
+<h1 class="text-xl font-bold text-stone-900 dark:text-stone-50 tracking-tight">Toybox Admin</h1>
+<p class="text-xs text-stone-500 font-medium">Store Manager</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<!-- Active State: Dashboard -->
+<a class="flex items-center gap-3 px-4 py-3 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 rounded-2xl mx-4 mb-1 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-medium text-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-stone-500 dark:text-stone-400 mx-4 mb-1 hover:bg-stone-200 dark:hover:bg-stone-800 rounded-2xl transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-medium text-sm">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-stone-500 dark:text-stone-400 mx-4 mb-1 hover:bg-stone-200 dark:hover:bg-stone-800 rounded-2xl transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">shopping_bag</span>
+<span class="font-medium text-sm">Orders</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-stone-500 dark:text-stone-400 mx-4 mb-1 hover:bg-stone-200 dark:hover:bg-stone-800 rounded-2xl transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">category</span>
+<span class="font-medium text-sm">Categories</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-stone-500 dark:text-stone-400 mx-4 mb-1 hover:bg-stone-200 dark:hover:bg-stone-800 rounded-2xl transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">auto_awesome</span>
+<span class="font-medium text-sm">AI Assistant</span>
+</a>
+</nav>
+<div class="mt-auto px-4 space-y-1">
+<div class="px-4 py-4 mb-4 bg-primary-container/20 rounded-2xl">
+<p class="text-[11px] uppercase tracking-wider font-bold text-primary mb-2">Need help?</p>
+<button class="w-full py-2 bg-primary text-on-primary rounded-xl text-xs font-bold hover:scale-102 transition-transform">Support</button>
+</div>
+<a class="flex items-center gap-3 px-4 py-3 text-stone-500 dark:text-stone-400 mx-4 mb-1 hover:bg-stone-200 dark:hover:bg-stone-800 rounded-2xl transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-medium text-sm">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-stone-500 dark:text-stone-400 mx-4 mb-1 hover:bg-stone-200 dark:hover:bg-stone-800 rounded-2xl transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-medium text-sm">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 min-h-screen p-10 bg-surface">
+<!-- Header -->
+<header class="flex justify-between items-center mb-10">
+<div>
+<h2 class="text-3xl font-black text-on-surface tracking-tight">Overview Dashboard</h2>
+<p class="text-on-surface-variant font-medium">Welcome back! Here's what's happening today.</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="pl-10 pr-4 py-3 bg-surface-container-low border-none rounded-xl focus:ring-2 focus:ring-primary w-64 text-sm font-medium" placeholder="Search data..." type="text"/>
+</div>
+<div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden border-2 border-white shadow-sm">
+<img class="w-full h-full object-cover" data-alt="professional headshot of a smiling store manager in a clean studio setting with soft natural light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDUY4nPZsEvTYs-gsLmK9XeVcnnW0ri30Ww7qQ1_qTPz9-BwRxVOgzXcWK4aSHnUFH4p9fnRW-TStElfb8te35PXxGuURXdosQaUUCeE0BCjgBGA-2iFsECtoAdx9EoKz6e8Lb-xxna6Aw1VV6aTM8c6hLRRXGNVwlfalcNuqvXb5xgF7p-cYrIGNc9lxLxtDhEk_mOWa4kyGG35JCl9P4utEe9qND3hKNCQWofaqOx5Yx6uclI1Hc6ZVZBukB-uuUmfeCJWwU9E6wn"/>
+</div>
+</div>
+</header>
+<!-- Bento Stats Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+<!-- Total Products -->
+<div class="bg-surface-container-lowest p-8 rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.03)] flex flex-col justify-between hover:scale-[1.02] transition-transform duration-300">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 bg-secondary-container rounded-2xl flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">inventory</span>
+</div>
+<span class="text-xs font-bold px-2 py-1 bg-green-100 text-green-700 rounded-lg">+4%</span>
+</div>
+<div>
+<p class="text-on-surface-variant text-sm font-bold uppercase tracking-widest mb-1">Total Products</p>
+<h3 class="text-4xl font-black text-on-surface">156</h3>
+</div>
+</div>
+<!-- Categories -->
+<div class="bg-surface-container-lowest p-8 rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.03)] flex flex-col justify-between hover:scale-[1.02] transition-transform duration-300">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 bg-tertiary-container/20 rounded-2xl flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1;">category</span>
+</div>
+<span class="text-xs font-bold px-2 py-1 bg-stone-100 text-stone-500 rounded-lg">Steady</span>
+</div>
+<div>
+<p class="text-on-surface-variant text-sm font-bold uppercase tracking-widest mb-1">Categories</p>
+<h3 class="text-4xl font-black text-on-surface">12</h3>
+</div>
+</div>
+<!-- Total Views -->
+<div class="bg-surface-container-lowest p-8 rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.03)] flex flex-col justify-between hover:scale-[1.02] transition-transform duration-300">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 bg-primary-container rounded-2xl flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">visibility</span>
+</div>
+<span class="text-xs font-bold px-2 py-1 bg-green-100 text-green-700 rounded-lg">+12.4%</span>
+</div>
+<div>
+<p class="text-on-surface-variant text-sm font-bold uppercase tracking-widest mb-1">Total Views</p>
+<h3 class="text-4xl font-black text-on-surface">12.4k</h3>
+</div>
+</div>
+<!-- Low Stock Alerts -->
+<div class="bg-error-container text-on-error-container p-8 rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.03)] flex flex-col justify-between hover:scale-[1.02] transition-transform duration-300">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 bg-white/30 rounded-2xl flex items-center justify-center">
+<span class="material-symbols-outlined text-on-error-container" style="font-variation-settings: 'FILL' 1;">warning</span>
+</div>
+<span class="text-xs font-black px-2 py-1 bg-white/40 text-on-error-container rounded-lg">Action!</span>
+</div>
+<div>
+<p class="text-on-error-container/80 text-sm font-bold uppercase tracking-widest mb-1">Low Stock Alerts</p>
+<h3 class="text-4xl font-black">5</h3>
+</div>
+</div>
+</div>
+<!-- Charts Section -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Line Chart: Product Views -->
+<div class="lg:col-span-2 bg-surface-container-lowest p-10 rounded-xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] relative overflow-hidden">
+<div class="flex justify-between items-end mb-8">
+<div>
+<h4 class="text-xl font-black mb-1">Product Views</h4>
+<p class="text-on-surface-variant text-sm font-medium">Monthly engagement performance</p>
+</div>
+<div class="flex gap-2">
+<button class="px-4 py-2 bg-surface-container text-xs font-bold rounded-full">Week</button>
+<button class="px-4 py-2 bg-primary text-on-primary rounded-full text-xs font-bold">Month</button>
+</div>
+</div>
+<!-- Simulated Line Chart -->
+<div class="h-64 flex items-end justify-between gap-4 relative">
+<!-- Background Grid -->
+<div class="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-10">
+<div class="border-b border-on-surface"></div>
+<div class="border-b border-on-surface"></div>
+<div class="border-b border-on-surface"></div>
+<div class="border-b border-on-surface"></div>
+</div>
+<div class="flex-1 bg-primary-container/20 h-[40%] rounded-t-lg relative group">
+<div class="opacity-0 group-hover:opacity-100 absolute -top-10 left-1/2 -translate-x-1/2 bg-inverse-surface text-surface text-[10px] px-2 py-1 rounded">2.4k</div>
+</div>
+<div class="flex-1 bg-primary-container/40 h-[65%] rounded-t-lg relative group">
+<div class="opacity-0 group-hover:opacity-100 absolute -top-10 left-1/2 -translate-x-1/2 bg-inverse-surface text-surface text-[10px] px-2 py-1 rounded">4.1k</div>
+</div>
+<div class="flex-1 bg-primary-container/60 h-[50%] rounded-t-lg relative group">
+<div class="opacity-0 group-hover:opacity-100 absolute -top-10 left-1/2 -translate-x-1/2 bg-inverse-surface text-surface text-[10px] px-2 py-1 rounded">3.2k</div>
+</div>
+<div class="flex-1 bg-primary h-[85%] rounded-t-lg relative group">
+<div class="opacity-0 group-hover:opacity-100 absolute -top-10 left-1/2 -translate-x-1/2 bg-inverse-surface text-surface text-[10px] px-2 py-1 rounded">6.8k</div>
+</div>
+<div class="flex-1 bg-primary-container/60 h-[55%] rounded-t-lg relative group">
+<div class="opacity-0 group-hover:opacity-100 absolute -top-10 left-1/2 -translate-x-1/2 bg-inverse-surface text-surface text-[10px] px-2 py-1 rounded">3.5k</div>
+</div>
+<div class="flex-1 bg-primary-container/40 h-[75%] rounded-t-lg relative group">
+<div class="opacity-0 group-hover:opacity-100 absolute -top-10 left-1/2 -translate-x-1/2 bg-inverse-surface text-surface text-[10px] px-2 py-1 rounded">5.2k</div>
+</div>
+</div>
+<div class="flex justify-between mt-4 px-2 text-[10px] font-bold text-outline uppercase tracking-wider">
+<span>Jan</span>
+<span>Feb</span>
+<span>Mar</span>
+<span>Apr</span>
+<span>May</span>
+<span>Jun</span>
+</div>
+</div>
+<!-- Pie Chart: Category Distribution -->
+<div class="bg-surface-container-lowest p-10 rounded-xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)]">
+<h4 class="text-xl font-black mb-1">Category Distribution</h4>
+<p class="text-on-surface-variant text-sm font-medium mb-10">Inventory by toy type</p>
+<div class="flex justify-center mb-10">
+<div class="relative w-48 h-48 rounded-full border-[16px] border-surface-container flex items-center justify-center">
+<div class="absolute inset-0 rounded-full border-[16px] border-secondary border-t-transparent border-r-transparent transform rotate-45"></div>
+<div class="absolute inset-0 rounded-full border-[16px] border-primary border-b-transparent border-l-transparent transform -rotate-12"></div>
+<div class="text-center">
+<span class="text-2xl font-black text-on-surface">12</span>
+<p class="text-[10px] uppercase font-bold text-outline">Active</p>
+</div>
+</div>
+</div>
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-3 h-3 rounded-full bg-primary"></div>
+<span class="text-sm font-medium">Educational</span>
+</div>
+<span class="text-sm font-bold">45%</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-3 h-3 rounded-full bg-secondary"></div>
+<span class="text-sm font-medium">Plushies</span>
+</div>
+<span class="text-sm font-bold">30%</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-3 h-3 rounded-full bg-tertiary"></div>
+<span class="text-sm font-medium">Wooden Toys</span>
+</div>
+<span class="text-sm font-bold">15%</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-3 h-3 rounded-full bg-outline-variant"></div>
+<span class="text-sm font-medium">Others</span>
+</div>
+<span class="text-sm font-bold">10%</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Recent Activity Table (Asymmetric Layout) -->
+<div class="mt-10 bg-surface-container-lowest rounded-xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] overflow-hidden">
+<div class="px-10 py-8 border-b border-surface-container flex justify-between items-center">
+<h4 class="text-xl font-black">Recent Inventory Updates</h4>
+<button class="text-secondary text-sm font-bold flex items-center gap-1 hover:underline">
+                    View All <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<table class="w-full text-left">
+<thead>
+<tr class="text-[11px] uppercase tracking-widest text-outline font-black">
+<th class="px-10 py-6">Product</th>
+<th class="px-6 py-6">Category</th>
+<th class="px-6 py-6">Stock Status</th>
+<th class="px-6 py-6 text-right">Last Updated</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container">
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-10 py-5">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-surface-container-high overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="vibrant blue plastic robot toy on a soft grey background, studio product photography" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGMZH6BT9OqojWHxnKd0o5BOLpaGze1tpi1UZ8JKgDrRbFXVTK-1nehLOmlgcAMDeTleWymGI1QAS5TS6FReKDNs2VltJUEG35GQGAkhUoMIOBjDHfyzkw0h_rNdOcobWrumWN8W691kRl88bzTBEYoCzqF9Js1KcehcLnE3zB5qsLrVJ1_O-fnXuYLNBmRZOYMuyJk7R63OtJYBvNqT_tP-rnsNgLHykPUn_I8Pm62XpszH3YoTvnsEN_tF74sEB-CyeAxQJUHROl"/>
+</div>
+<div>
+<p class="font-bold text-sm">Robo-Pal X1</p>
+<p class="text-[10px] text-outline font-medium">SKU: TOY-0092</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full text-[10px] font-bold">STEM</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-green-500"></div>
+<span class="text-sm font-medium">In Stock (42)</span>
+</div>
+</td>
+<td class="px-6 py-5 text-right text-xs font-medium text-on-surface-variant">2 mins ago</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-10 py-5">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-surface-container-high overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="assorted colorful wooden building blocks stacked in a playful geometric tower, warm morning light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfZs1cLEfUCZicJRHZcJED6bO2BGZDgx8EB4F0Kd3oeTfRg8dvEGAOwQVcT5g2kQqmYTA86WJBk-lT3P2nrbHHfMKlfbXv2gYUou6iskFnXYkuoWjIHuzwkLLbxH_-Ydgxn_6685vsdlQhYqzlBpDw98FEwYpXU8Hm7rybt_uWKH5aguMh9D8iANE_auj5HLulnokLdccQYIXgOfi0b3Og8F3nWkQ6jr9fVd6sygHft6vrzCuRWvzvm-h6q-0_cKLFRIKXfLOHhKF4"/>
+</div>
+<div>
+<p class="font-bold text-sm">Classic Block Set</p>
+<p class="text-[10px] text-outline font-medium">SKU: TOY-0421</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 bg-tertiary-container/20 text-tertiary rounded-full text-[10px] font-bold">Wooden</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-error animate-pulse"></div>
+<span class="text-sm font-bold text-error">Low Stock (2)</span>
+</div>
+</td>
+<td class="px-6 py-5 text-right text-xs font-medium text-on-surface-variant">45 mins ago</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-10 py-5">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-surface-container-high overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="soft plush brown teddy bear sitting on a nursery shelf, cozy and gentle mood" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXOGZdz9c8D6FEXVlEW3oqYeShLr1ZHOjoOALBaSuudQH4_VRB442YX-REBIpxY9WuPnRbrwdQaUy_5MppIOFoybEPdlgiTe2vajyygUAXWhQm4wDdMQfJET643K2qLnevYPs3HCap8clAoRlGJ2PsBtli14Zi81Edpeh0-7Wi3SDn8EusLfOal7uLOdiv5KNEF1esYTXe1pBus9YogQ7P0GhYFJDKHxwNIL5lVm5UKpoN076GlN7lCHJGvvnEVhJDD65xfzi4k6-i"/>
+</div>
+<div>
+<p class="font-bold text-sm">Buddy Bear Plush</p>
+<p class="text-[10px] text-outline font-medium">SKU: TOY-0883</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 bg-primary-container text-on-primary-container rounded-full text-[10px] font-bold">Plushies</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-green-500"></div>
+<span class="text-sm font-medium">In Stock (128)</span>
+</div>
+</td>
+<td class="px-6 py-5 text-right text-xs font-medium text-on-surface-variant">3 hours ago</td>
+</tr>
+</tbody>
+</table>
+</div>
+</main>
+<!-- Contextual Floating Action Button -->
+<button class="fixed bottom-8 right-8 w-16 h-16 bg-primary text-on-primary rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+</body></html>

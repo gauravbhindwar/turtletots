@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>The Toybox Admin - Add Product</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-dim": "#843a00",
+                    "secondary-dim": "#004e9d",
+                    "surface-container-low": "#eff1f2",
+                    "on-primary-fixed": "#443700",
+                    "error-container": "#f95630",
+                    "primary-container": "#fad538",
+                    "tertiary-fixed": "#ff9655",
+                    "outline-variant": "#abadae",
+                    "surface-container-lowest": "#ffffff",
+                    "primary-fixed-dim": "#ebc729",
+                    "on-secondary-fixed-variant": "#004f9e",
+                    "surface-container": "#e6e8ea",
+                    "surface": "#f5f6f7",
+                    "primary-dim": "#5f4e00",
+                    "primary": "#6d5a00",
+                    "tertiary-fixed-dim": "#f6853b",
+                    "on-secondary": "#eff2ff",
+                    "on-tertiary": "#fff0e9",
+                    "on-error-container": "#520c00",
+                    "error": "#b02500",
+                    "tertiary-container": "#ff9655",
+                    "secondary-fixed": "#bcd2ff",
+                    "secondary": "#005ab2",
+                    "surface-variant": "#dadddf",
+                    "secondary-container": "#bcd2ff",
+                    "inverse-primary": "#fad538",
+                    "secondary-fixed-dim": "#a5c5ff",
+                    "surface-bright": "#f5f6f7",
+                    "on-surface": "#2c2f30",
+                    "on-primary-container": "#5a4a00",
+                    "on-error": "#ffefec",
+                    "inverse-surface": "#0c0f10",
+                    "on-primary-fixed-variant": "#655300",
+                    "on-primary": "#fff2ce",
+                    "surface-container-high": "#e0e3e4",
+                    "on-tertiary-fixed": "#2d0f00",
+                    "inverse-on-surface": "#9b9d9e",
+                    "error-dim": "#b92902",
+                    "tertiary": "#964300",
+                    "on-surface-variant": "#595c5d",
+                    "on-background": "#2c2f30",
+                    "outline": "#757778",
+                    "on-secondary-container": "#00468e",
+                    "on-tertiary-fixed-variant": "#612900",
+                    "surface-tint": "#6d5a00",
+                    "on-tertiary-container": "#532200",
+                    "background": "#f5f6f7",
+                    "surface-container-highest": "#dadddf",
+                    "surface-dim": "#d1d5d7",
+                    "primary-fixed": "#fad538",
+                    "on-secondary-fixed": "#00336b"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Plus Jakarta Sans"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .plusJakartaSans { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        .tonal-layering-surface-container-low { background-color: #eff1f2; }
+        .tactile-lift:hover { transform: translateY(-2px); }
+    </style>
+</head>
+<body class="bg-surface text-on-surface flex min-h-screen">
+<!-- SideNavBar (The Anchor) -->
+<aside class="hidden md:flex flex-col h-screen w-64 fixed left-0 border-r-0 bg-stone-50 dark:bg-stone-950 transition-all duration-200 ease-in-out">
+<div class="px-6 py-8">
+<h1 class="text-xl font-bold text-stone-900 dark:text-stone-50 tracking-tight">Toybox Admin</h1>
+<p class="text-xs text-stone-500 font-medium">Store Manager</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center px-4 py-3 text-stone-500 dark:text-stone-400 mx-4 mb-1 hover:bg-stone-200 dark:hover:bg-stone-800 rounded-2xl transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-3">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center px-4 py-3 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 rounded-2xl mx-4 mb-1 transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-3">inventory_2</span>
+<span class="text-sm font-medium">Inventory</span>
+</a>
+<a class="flex items-center px-4 py-3 text-stone-500 dark:text-stone-400 mx-4 mb-1 hover:bg-stone-200 dark:hover:bg-stone-800 rounded-2xl transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-3">shopping_bag</span>
+<span class="text-sm font-medium">Orders</span>
+</a>
+<a class="flex items-center px-4 py-3 text-stone-500 dark:text-stone-400 mx-4 mb-1 hover:bg-stone-200 dark:hover:bg-stone-800 rounded-2xl transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-3">category</span>
+<span class="text-sm font-medium">Categories</span>
+</a>
+<a class="flex items-center px-4 py-3 text-stone-500 dark:text-stone-400 mx-4 mb-1 hover:bg-stone-200 dark:hover:bg-stone-800 rounded-2xl transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-3">auto_awesome</span>
+<span class="text-sm font-medium">AI Assistant</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-stone-200/50 dark:border-stone-800 pt-4 space-y-1">
+<a class="flex items-center px-4 py-3 text-stone-500 dark:text-stone-400 mx-4 mb-1 hover:bg-stone-200 dark:hover:bg-stone-800 rounded-2xl transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-3">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+<a class="flex items-center px-4 py-3 text-stone-500 dark:text-stone-400 mx-4 mb-1 hover:bg-stone-200 dark:hover:bg-stone-800 rounded-2xl transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-3">logout</span>
+<span class="text-sm font-medium">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 md:ml-64 p-4 md:p-10 lg:p-16">
+<!-- Header Section -->
+<header class="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div class="space-y-2">
+<span class="text-secondary font-semibold tracking-wider text-xs uppercase">Inventory Management</span>
+<h2 class="plusJakartaSans text-4xl md:text-5xl font-extrabold text-on-surface tracking-tight">Add New Product</h2>
+<p class="text-on-surface-variant max-w-xl">Curate the latest addition to The Toybox. Use our AI assistant to perfect your product descriptions.</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="px-6 py-3 rounded-full bg-surface-container-low text-on-surface-variant font-semibold transition-all hover:bg-surface-container-high active:scale-95">
+                    Cancel
+                </button>
+<button class="px-8 py-3 rounded-full bg-primary-container text-on-primary-container font-bold shadow-lg shadow-primary/10 transition-all hover:scale-105 active:scale-95 flex items-center gap-2">
+<span class="material-symbols-outlined text-xl">save</span>
+                    Save Product
+                </button>
+</div>
+</header>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Left Column: Primary Details -->
+<div class="lg:col-span-8 space-y-8">
+<!-- General Info Card -->
+<section class="bg-surface-container-lowest p-8 rounded-xl shadow-sm space-y-6">
+<div class="space-y-4">
+<label class="block">
+<span class="text-sm font-bold text-on-surface-variant ml-2 mb-2 block">Product Name</span>
+<input class="w-full bg-surface-container-low border-0 rounded-lg py-4 px-6 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all" placeholder="e.g. Handcrafted Wooden Safari Set" type="text"/>
+</label>
+<div class="relative group">
+<label class="block">
+<div class="flex justify-between items-center ml-2 mb-2">
+<span class="text-sm font-bold text-on-surface-variant">Description</span>
+<button class="flex items-center gap-1.5 text-xs font-bold text-secondary-dim bg-secondary-container/50 px-3 py-1.5 rounded-full hover:bg-secondary-container transition-all">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+                                        AI Generate
+                                    </button>
+</div>
+<textarea class="w-full bg-surface-container-low border-0 rounded-lg py-4 px-6 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all" placeholder="Tell the story of this toy..." rows="6"></textarea>
+</label>
+</div>
+</div>
+</section>
+<!-- Media Upload Card -->
+<section class="bg-surface-container-lowest p-8 rounded-xl shadow-sm space-y-6">
+<h3 class="text-lg font-bold plusJakartaSans">Product Images</h3>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<!-- Upload Zone -->
+<div class="aspect-square border-2 border-dashed border-outline-variant/30 rounded-xl flex flex-col items-center justify-center bg-surface-container-low group cursor-pointer hover:border-primary transition-all">
+<span class="material-symbols-outlined text-3xl text-outline-variant group-hover:text-primary mb-2">add_photo_alternate</span>
+<span class="text-[10px] font-bold text-outline-variant group-hover:text-primary uppercase tracking-tighter">Add Photo</span>
+</div>
+<!-- Preview 1 -->
+<div class="relative aspect-square bg-surface-container rounded-xl overflow-hidden group">
+<img alt="wooden toy giraffe" class="w-full h-full object-cover" data-alt="a minimalist wooden giraffe toy handcrafted from light wood with smooth rounded edges on a neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHs1LW_xLANEPJTXwzGkrEvNJIHzTC0TaJ9rrvrlT3GksGuZlnedqjwR6oQV5lSw06Er_-ZUtpz-TpyUzFNeoh0VMRpi0nxZAdTtkUhu0MnU7cy8n2oZnHMRD3zgw6RzSd8adNuem69y4SuoHdbHkYqoKgI7-s5UN0kUenTrHRztzoh18tJaZkWLZu1DPjhuxwWgyZlwcFDRcoFKL7niG4sbyXkRAlU2UQQxTurCYEZTzZyhrLO-asToYI3ZBQBjpxbH3tIQQbM6ha"/>
+<button class="absolute top-2 right-2 bg-error/90 text-white w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">
+<span class="material-symbols-outlined text-sm">close</span>
+</button>
+<div class="absolute bottom-0 left-0 right-0 bg-primary-container py-1 text-center">
+<span class="text-[10px] font-bold text-on-primary-container">MAIN</span>
+</div>
+</div>
+<!-- Preview 2 -->
+<div class="relative aspect-square bg-surface-container rounded-xl overflow-hidden group">
+<img alt="wooden building blocks" class="w-full h-full object-cover" data-alt="colorful stackable wooden building blocks in soft pastel shades arranged artfully on a white surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtTlN_ta37W_buuToQSHSORQFdSnWTWJa1KWQOlkfiUqEFQwb8FAZLm0R9sPx8VJwUv_JoByL7U7u3oVwi-5OLE2650kzcHIoSYps0sLQ8g-I1N2blo0wzOigpWjDH11IrGYQvOxl6B9rJ5ZWnDSmP04f_bMHw7TEnBDyjc3WhX7ZC2LOJLM2YZp-9t142Vh91764kGU4ncih6sJeiFqlTDBEjgbkvcvFV4jKvOfe7PS27LOBzrUc4OOzaAyPK_R0tLmqp2ynAbAd0"/>
+<button class="absolute top-2 right-2 bg-error/90 text-white w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">
+<span class="material-symbols-outlined text-sm">close</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Variations Card -->
+<section class="bg-surface-container-lowest p-8 rounded-xl shadow-sm space-y-6">
+<div class="flex justify-between items-center">
+<h3 class="text-lg font-bold plusJakartaSans">Color Variants</h3>
+<button class="text-primary font-bold text-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-lg">add_circle</span>
+                            Add New
+                        </button>
+</div>
+<div class="flex flex-wrap gap-3">
+<div class="flex items-center gap-2 bg-surface-container-low pl-1 pr-3 py-1.5 rounded-full border border-outline-variant/20">
+<span class="w-6 h-6 rounded-full bg-orange-400"></span>
+<span class="text-sm font-medium">Sunset Amber</span>
+<span class="material-symbols-outlined text-sm cursor-pointer ml-1 text-on-surface-variant">close</span>
+</div>
+<div class="flex items-center gap-2 bg-surface-container-low pl-1 pr-3 py-1.5 rounded-full border border-outline-variant/20">
+<span class="w-6 h-6 rounded-full bg-blue-400"></span>
+<span class="text-sm font-medium">Ocean Mist</span>
+<span class="material-symbols-outlined text-sm cursor-pointer ml-1 text-on-surface-variant">close</span>
+</div>
+<div class="flex items-center gap-2 bg-surface-container-low pl-1 pr-3 py-1.5 rounded-full border border-outline-variant/20">
+<span class="w-6 h-6 rounded-full bg-emerald-400"></span>
+<span class="text-sm font-medium">Forest Moss</span>
+<span class="material-symbols-outlined text-sm cursor-pointer ml-1 text-on-surface-variant">close</span>
+</div>
+<button class="flex items-center gap-1 px-4 py-1.5 rounded-full border-2 border-dashed border-outline-variant/50 text-outline-variant text-sm font-bold hover:border-primary hover:text-primary transition-all">
+<span class="material-symbols-outlined text-sm">palette</span>
+                            Pick Color
+                        </button>
+</div>
+</section>
+</div>
+<!-- Right Column: Controls & Tags -->
+<div class="lg:col-span-4 space-y-8">
+<!-- Pricing Card -->
+<section class="bg-surface-container-lowest p-8 rounded-xl shadow-sm space-y-6">
+<h3 class="text-lg font-bold plusJakartaSans">Pricing &amp; Stock</h3>
+<div class="space-y-4">
+<label class="block">
+<span class="text-xs font-bold text-on-surface-variant uppercase ml-2 mb-2 block tracking-wider">Base Price</span>
+<div class="relative">
+<span class="absolute left-6 top-1/2 -translate-y-1/2 font-bold text-on-surface-variant">$</span>
+<input class="w-full bg-surface-container-low border-0 rounded-lg py-4 pl-10 pr-6 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all" placeholder="0.00" type="number"/>
+</div>
+</label>
+<label class="block">
+<span class="text-xs font-bold text-on-surface-variant uppercase ml-2 mb-2 block tracking-wider">Discount (%)</span>
+<div class="relative">
+<span class="absolute right-6 top-1/2 -translate-y-1/2 font-bold text-on-surface-variant">%</span>
+<input class="w-full bg-surface-container-low border-0 rounded-lg py-4 px-6 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all" placeholder="0" type="number"/>
+</div>
+</label>
+<div class="pt-4 flex items-center justify-between">
+<div>
+<span class="text-sm font-bold text-on-surface block">Available for Sale</span>
+<span class="text-[10px] text-on-surface-variant font-medium">Product will be visible in shop</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-14 h-8 bg-surface-container-high peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary-container"></div>
+</label>
+</div>
+</div>
+</section>
+<!-- Organization Card -->
+<section class="bg-surface-container-lowest p-8 rounded-xl shadow-sm space-y-6">
+<h3 class="text-lg font-bold plusJakartaSans">Organization</h3>
+<div class="space-y-4">
+<label class="block">
+<span class="text-xs font-bold text-on-surface-variant uppercase ml-2 mb-2 block tracking-wider">Category</span>
+<select class="w-full bg-surface-container-low border-0 rounded-lg py-4 px-6 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all appearance-none cursor-pointer">
+<option>Wooden Toys</option>
+<option>Educational</option>
+<option>Puzzles</option>
+<option>Soft Toys</option>
+<option>Outdoor Play</option>
+</select>
+</label>
+<div class="p-6 bg-tertiary-container/10 rounded-2xl border-2 border-tertiary-container/20">
+<div class="flex items-center gap-3 mb-3">
+<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1;">tips_and_updates</span>
+<span class="text-sm font-bold text-tertiary-dim">AI Strategy Tip</span>
+</div>
+<p class="text-xs text-on-tertiary-container leading-relaxed">
+                                Most products in the <b>Wooden Toys</b> category perform better with lifestyle images showing tactile play.
+                            </p>
+</div>
+</div>
+</section>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 w-full h-20 bg-white/90 dark:bg-stone-900/90 backdrop-blur-md flex justify-around items-center px-6 z-50 rounded-t-[3rem] shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="plusJakartaSans text-[10px] font-bold">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500" href="#">
+<span class="material-symbols-outlined">search</span>
+<span class="plusJakartaSans text-[10px] font-bold">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-yellow-400 text-stone-900 rounded-full w-14 h-14 -translate-y-4 shadow-lg" href="#">
+<span class="material-symbols-outlined">add</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="plusJakartaSans text-[10px] font-bold">Profile</span>
+</a>
+</nav>
+</body></html>
