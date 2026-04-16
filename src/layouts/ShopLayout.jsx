@@ -20,9 +20,13 @@ const ShopLayout = () => {
   return (
     <div className="bg-surface text-on-surface selection:bg-primary-container selection:text-on-primary-container min-h-screen">
       {/* TopNavBar */}
-      <nav className="fixed top-0 w-full flex justify-between items-center px-8 h-20 bg-white/80 dark:bg-stone-900/80 backdrop-blur-xl z-50 shadow-[0_40px_60px_-15px_rgba(109,90,0,0.06)]">
+      <nav className="fixed top-0 w-full flex justify-between items-center px-4 sm:px-6 lg:px-8 h-20 bg-white/80 dark:bg-stone-900/80 backdrop-blur-xl z-50 shadow-[0_40px_60px_-15px_rgba(109,90,0,0.06)]">
         <div className="flex items-center gap-12">
-          <Link to="/" className="text-2xl font-black tracking-tighter text-yellow-700 dark:text-yellow-400 plusJakartaSans">TurtleTots</Link>
+          <Link to="/" className="inline-flex items-center" aria-label="TurtleTots Home">
+            <div className="h-12 sm:h-14 w-[130px] sm:w-[170px] md:w-[190px] rounded-md overflow-hidden">
+              <img src="/turtletots.jpeg" alt="TurtleTots" className="w-full h-full object-cover object-top scale-[1.06]" />
+            </div>
+          </Link>
           <div className="hidden md:flex gap-6 items-center">
             <Link className={location.pathname === '/' ? activeClass : inactiveClass} to="/">Shop All</Link>
             <Link className={location.pathname === '/new-arrivals' ? activeClass : inactiveClass} to="/new-arrivals">New Arrivals</Link>
@@ -78,14 +82,14 @@ const ShopLayout = () => {
           to: '/',
           icon: 'home',
           label: 'Home'
-        }, {
-          to: '/best-sellers',
-          icon: 'workspace_premium',
-          label: 'Best'
-        }, {
+        },{
           to: '/new-arrivals',
           icon: 'auto_awesome',
           label: 'New'
+        },{
+          to: '/best-sellers',
+          icon: 'workspace_premium',
+          label: 'Best'
         }].map((item) => {
           const isActive = location.pathname === item.to;
 
