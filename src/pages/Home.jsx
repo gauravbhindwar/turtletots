@@ -87,6 +87,8 @@ const Home = () => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [viewMode, setViewMode] = useState('grid');
   const [showMobileFilters, setShowMobileFilters] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showSearchOverlay, setShowSearchOverlay] = useState(false);
 
   const maxAvailablePrice = useMemo(() => {
     return products.reduce((max, product) => Math.max(max, Number(product.price || 0)), 0);
@@ -131,15 +133,28 @@ const Home = () => {
     }, {});
   }, [categories]);
 
+  const searchResults = useMemo(() => {
+    const searchLower = searchQuery.toLowerCase().trim();
+    if (!searchLower) return [];
+    return products.slice(0, 8).filter((product) => 
+      product.name.toLowerCase().includes(searchLower) ||
+      (product.description && product.description.toLowerCase().includes(searchLower))
+    );
+  }, [products, searchQuery]);
+
   const filteredProducts = useMemo(() => {
+    const searchLower = searchQuery.toLowerCase().trim();
     return products.filter((product) => {
       const isCategoryMatched = selectedCategories.length === 0
         || !product.category_slug
         || selectedCategories.includes(product.category_slug);
       const isPriceMatched = Number(product.price || 0) <= maxPriceFilter;
-      return isCategoryMatched && isPriceMatched;
+      const isSearchMatched = !searchLower || 
+        product.name.toLowerCase().includes(searchLower) ||
+        (product.description && product.description.toLowerCase().includes(searchLower));
+      return isCategoryMatched && isPriceMatched && isSearchMatched;
     });
-  }, [products, selectedCategories, maxPriceFilter]);
+  }, [products, selectedCategories, maxPriceFilter, searchQuery]);
 
   const toggleCategory = (slug) => {
     setSelectedCategories((previous) => {
@@ -166,6 +181,10 @@ const Home = () => {
 
   return (
     <>
+      {/* Backdrop for search overlay */}
+      {showSearchOverlay && (
+        <div className="fixed inset-0 bg-black/20 z-40 lg:hidden" onClick={() => setShowSearchOverlay(false)} />
+      )}
       {/* Hero Section */}
       <section className="px-4 sm:px-6 lg:px-8 mt-1 sm:mt-1">
         <div className="relative overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] border border-[#171a22] bg-[radial-gradient(circle_at_top_left,#262b3a_0%,#0b0d12_45%,#050608_100%)] shadow-[0_28px_75px_-28px_rgba(0,0,0,0.46)]">
@@ -308,13 +327,14 @@ const Home = () => {
 
         {/* Product Grid */}
         <div className="flex-1">
-          <div id="handpicked-treasures" className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 sm:mb-8 gap-3 sm:gap-4 scroll-mt-28">
-            <div className="min-w-0 flex-1">
-              <h2 className="plusJakartaSans text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight leading-tight">Handpicked Treasures</h2>
-              <p className="text-on-surface-variant font-medium text-sm mt-1">Showing {filteredProducts.length} items</p>
-              {error && <p className="text-error text-sm font-semibold mt-2">{error}</p>}
-            </div>
-            <div className="flex gap-2 items-center shrink-0">
+          <div className="flex flex-col gap-4 mb-4 sm:mb-8">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 sm:gap-4">
+              <div className="min-w-0 flex-1">
+                <h2 className="plusJakartaSans text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight leading-tight">Handpicked Treasures</h2>
+                <p className="text-on-surface-variant font-medium text-sm mt-1">Showing {filteredProducts.length} items</p>
+                {error && <p className="text-error text-sm font-semibold mt-2">{error}</p>}
+              </div>
+              <div className="flex gap-2 items-center shrink-0">
               <button
                 type="button"
                 onClick={() => setShowMobileFilters((previous) => !previous)}
@@ -336,7 +356,92 @@ const Home = () => {
                 aria-label="Switch to list view"
               >
                 <span className="material-symbols-outlined text-sm">view_list</span>
-              </button>
+              </button>              </div>
+            </div>
+            <div className="w-full relative">
+              <div className="flex items-center gap-2 bg-surface-container-lowest rounded-xl border border-outline-variant/10 px-3 py-2">
+                <span className="material-symbols-outlined text-on-surface-variant text-lg">search</span>
+                <input
+                  type="text"
+                  placeholder="Search toys by name..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={() => setShowSearchOverlay(true)}
+                  className="flex-1 bg-transparent border-none focus:outline-none focus:ring-0 text-sm font-medium text-on-surface placeholder-on-surface-variant"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery('')}
+                    className="p-1 hover:bg-surface-container rounded transition-colors"
+                    aria-label="Clear search"
+                  >
+                    <span className="material-symbols-outlined text-sm text-on-surface-variant">close</span>
+                  </button>
+                )}
+              </div>
+
+              {/* Search Results Overlay */}
+              {showSearchOverlay && (searchQuery || searchResults.length > 0) && (
+                <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-outline-variant/10 z-50 max-h-[500px] overflow-y-auto">
+                  {searchQuery ? (
+                    searchResults.length > 0 ? (
+                      <div className="divide-y divide-outline-variant/10">
+                        {searchResults.map((product) => {
+                          const favoriteKey = product.id || product.slug;
+                          const productIsFavorite = isFavorite(favoriteKey);
+                          return (
+                            <Link
+                              key={product.slug}
+                              to={`/product/${product.slug}`}
+                              onClick={() => {
+                                setShowSearchOverlay(false);
+                                setSearchQuery('');
+                              }}
+                              className="flex gap-3 p-3 hover:bg-surface-container-lowest transition-colors group"
+                            >
+                              <div className="w-16 h-16 shrink-0 rounded-lg overflow-hidden bg-surface-container-high">
+                                <img alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform" src={product.image_url} />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <p className="text-xs font-bold uppercase tracking-widest text-secondary mb-1">{categoryNameBySlug[product.category_slug] || 'Uncategorized'}</p>
+                                <h4 className="font-bold text-sm leading-snug line-clamp-2 text-on-surface">{product.name}</h4>
+                                <div className="flex items-center gap-2 mt-2">
+                                  <p className="font-black text-primary text-sm">₹{Number(product.price || 0).toFixed(2)}</p>
+                                  {product.is_on_sale && (
+                                    <p className="text-on-surface-variant line-through text-xs">₹{Number(product.discount_price || 0).toFixed(2)}</p>
+                                  )}
+                                </div>
+                              </div>
+                              <button
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  toggleFavorite(product);
+                                }}
+                                className="w-8 h-8 rounded-full bg-error-container/10 text-error hover:scale-110 transition-transform shrink-0 flex items-center justify-center"
+                              >
+                                <span className="material-symbols-outlined text-base" style={{ fontVariationSettings: productIsFavorite ? "'FILL' 1" : "'FILL' 0" }}>favorite</span>
+                              </button>
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <div className="p-8 text-center text-on-surface-variant">
+                        <span className="material-symbols-outlined text-4xl block mb-2 opacity-50">search_off</span>
+                        <p className="font-medium">No toys found for "{searchQuery}"</p>
+                      </div>
+                    )
+                  ) : null}
+                </div>
+              )}
+
+              {/* Close overlay when clicking outside */}
+              {showSearchOverlay && (
+                <div
+                  className="fixed inset-0 z-40"
+                  onClick={() => setShowSearchOverlay(false)}
+                />
+              )}
             </div>
           </div>
 

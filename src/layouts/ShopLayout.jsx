@@ -1,14 +1,92 @@
-import React from 'react';
-import { Outlet, Link, useLocation } from 'react-router-dom';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import useCartStore from '../store/cartStore';
 import useFavoritesStore from '../store/favoritesStore';
 import { useAuthSession } from '../hooks/useAuthSession';
+import { supabase } from '../utils/supabase';
+import { getTotalStockFromVariants, getInventoryState } from '../utils/inventory';
 
 const ShopLayout = () => {
   const { cartItems } = useCartStore();
-  const { favoriteItems } = useFavoritesStore();
+  const { favoriteItems, toggleFavorite, isFavorite } = useFavoritesStore();
   const { isAuthenticated, role } = useAuthSession();
   const location = useLocation();
+  const navigate = useNavigate();
+  
+  // Search state
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showSearchOverlay, setShowSearchOverlay] = useState(false);
+  const [navbarProducts, setNavbarProducts] = useState([]);
+  const [navbarCategories, setNavbarCategories] = useState([]);
+  const [isLoadingSearch, setIsLoadingSearch] = useState(false);
+  
+  // Fetch products for navbar search
+  useEffect(() => {
+    let isMounted = true;
+    
+    const fetchSearchProducts = async () => {
+      try {
+        const [categoriesRes, productsRes] = await Promise.all([
+          supabase.from('categories').select('id, name, slug').order('name', { ascending: true }),
+          supabase.from('products').select('id, slug, name, description, price, discount_price, image_url, is_available, categories(name, slug), product_variants(stock)').eq('is_available', true).order('created_at', { ascending: false })
+        ]);
+        
+        if (!isMounted) return;
+        
+        if (!categoriesRes.error && categoriesRes.data) {
+          setNavbarCategories(categoriesRes.data);
+        }
+        
+        if (!productsRes.error && productsRes.data) {
+          const processedProducts = (productsRes.data || []).map((product, index) => {
+            const productCategory = Array.isArray(product.categories) ? product.categories[0] : product.categories;
+            const totalStock = getTotalStockFromVariants(product.product_variants);
+            const effectiveStock = product.is_available ? totalStock : 0;
+            const sellingPrice = Number(product.price || 0);
+            const originalPrice = Number(product.discount_price || 0);
+            const isOnSale = Number.isFinite(originalPrice) && originalPrice > sellingPrice && sellingPrice > 0;
+            const saleDiscountPercent = isOnSale ? Math.max(1, Math.round(((originalPrice - sellingPrice) / originalPrice) * 100)) : 0;
+            
+            return {
+              ...product,
+              id: product.id || product.slug || `navbar-${index}`,
+              price: sellingPrice,
+              discount_price: isOnSale ? originalPrice : null,
+              category_slug: productCategory?.slug || '',
+              category_name: productCategory?.name || 'Uncategorized',
+              inventory: getInventoryState(effectiveStock),
+              is_on_sale: isOnSale,
+              sale_discount_percent: saleDiscountPercent
+            };
+          });
+          setNavbarProducts(processedProducts);
+        }
+      } catch (error) {
+        console.error('Error fetching search products:', error);
+      }
+    };
+    
+    fetchSearchProducts();
+    return () => { isMounted = false; };
+  }, []);
+  
+  // Compute navbar search results
+  const navbarSearchResults = useMemo(() => {
+    const searchLower = searchQuery.toLowerCase().trim();
+    if (!searchLower) return [];
+    return navbarProducts.slice(0, 6).filter((product) => 
+      product.name.toLowerCase().includes(searchLower) ||
+      (product.description && product.description.toLowerCase().includes(searchLower))
+    );
+  }, [navbarProducts, searchQuery]);
+  
+  const categoryNameBySlug = useMemo(() => {
+    return navbarCategories.reduce((acc, category) => {
+      acc[category.slug] = category.name;
+      return acc;
+    }, {});
+  }, [navbarCategories]);
+
   const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
   const favoritesCount = favoriteItems.length;
   const isPrivileged = role === 'admin' || role === 'manager';
@@ -34,9 +112,87 @@ const ShopLayout = () => {
           </div>
         </div>
         <div className="flex items-center gap-6">
-          <div className="hidden lg:flex items-center bg-surface-container-low px-4 py-2 rounded-full border-none">
-            <span className="material-symbols-outlined text-on-surface-variant mr-2">search</span>
-            <input className="bg-transparent border-none focus:ring-0 text-sm w-48 font-medium" placeholder="Search toys..." type="text" />
+        <div className="hidden lg:flex relative items-center bg-surface-container-low px-4 py-2 rounded-full border-none group">
+          <span className="material-symbols-outlined text-on-surface-variant mr-2">search</span>
+          <input 
+            className="bg-transparent border-none focus:ring-0 text-sm w-48 font-medium outline-none" 
+            placeholder="Search toys..." 
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onFocus={() => setShowSearchOverlay(true)}
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery('')}
+              className="p-1 hover:bg-surface-container rounded transition-colors"
+            >
+              <span className="material-symbols-outlined text-sm text-on-surface-variant">close</span>
+            </button>
+          )}
+          
+          {/* Navbar Search Overlay */}
+          {showSearchOverlay && (searchQuery || navbarSearchResults.length > 0) && (
+            <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-outline-variant/10 z-50 min-w-full max-h-[450px] overflow-y-auto">
+              {searchQuery ? (
+                navbarSearchResults.length > 0 ? (
+                  <div className="divide-y divide-outline-variant/10">
+                    {navbarSearchResults.map((product) => {
+                      const favoriteKey = product.id || product.slug;
+                      const productIsFavorite = isFavorite(favoriteKey);
+                      return (
+                        <button
+                          key={product.slug}
+                          onClick={() => {
+                            navigate(`/product/${product.slug}`);
+                            setShowSearchOverlay(false);
+                            setSearchQuery('');
+                          }}
+                          className="w-full flex gap-3 p-3 hover:bg-surface-container-lowest transition-colors text-left group"
+                        >
+                          <div className="w-14 h-14 shrink-0 rounded-lg overflow-hidden bg-surface-container-high">
+                            <img alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform" src={product.image_url} />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs font-bold uppercase tracking-widest text-secondary mb-0.5">{categoryNameBySlug[product.category_slug] || 'Uncategorized'}</p>
+                            <h4 className="font-bold text-sm leading-snug line-clamp-2 text-on-surface">{product.name}</h4>
+                            <div className="flex items-center gap-2 mt-1">
+                              <p className="font-black text-primary text-xs">₹{Number(product.price || 0).toFixed(2)}</p>
+                              {product.is_on_sale && (
+                                <p className="text-on-surface-variant line-through text-xs">₹{Number(product.discount_price || 0).toFixed(2)}</p>
+                              )}
+                            </div>
+                          </div>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleFavorite(product);
+                            }}
+                            className="w-7 h-7 rounded-full bg-error-container/10 text-error hover:scale-110 transition-transform shrink-0 flex items-center justify-center"
+                          >
+                            <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: productIsFavorite ? "'FILL' 1" : "'FILL' 0" }}>favorite</span>
+                          </button>
+                        </button>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="p-6 text-center text-on-surface-variant">
+                    <span className="material-symbols-outlined text-3xl block mb-2 opacity-50">search_off</span>
+                    <p className="font-medium text-sm">No toys found for "{searchQuery}"</p>
+                  </div>
+                )
+              ) : null}
+            </div>
+          )}
+          
+          {/* Close overlay when clicking outside */}
+          {showSearchOverlay && (
+            <div
+              className="fixed inset-0 z-40"
+              onClick={() => setShowSearchOverlay(false)}
+            />
+          )}
           </div>
           <div className="flex items-center gap-4">
             <Link to="/favorites" className="w-10 h-10 relative flex items-center justify-center rounded-full hover:bg-surface-container transition-colors">
