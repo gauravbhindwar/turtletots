@@ -13,7 +13,7 @@ const ROLE_PRIORITY = {
   user: 1
 };
 
-const LOADING_SAFETY_MS = 10000;
+const LOADING_SAFETY_MS = 4000;
 const PROFILE_CACHE_TTL_MS = 2 * 60 * 1000;
 const PROFILE_CACHE_STORAGE_KEY = 'turtletots-profile-cache';
 const profileCache = new Map();
@@ -263,7 +263,10 @@ export const AuthProvider = ({ children }) => {
 
         if (error) {
           console.error('Unable to read auth session:', error.message);
-          await supabase.auth.signOut({ scope: 'local' });
+          // Only sign out on definitive auth failures, not transient network errors.
+          if (error.status === 401 || /invalid|expired|jwt/i.test(error.message)) {
+            await supabase.auth.signOut({ scope: 'local' });
+          }
         }
 
         if (isMounted) {
@@ -272,7 +275,6 @@ export const AuthProvider = ({ children }) => {
       } catch (error) {
         if (!isMounted) return;
         console.error('Session bootstrap failed:', error.message);
-        await supabase.auth.signOut({ scope: 'local' });
         resetAuthState();
       } finally {
         clearTimeout(safetyTimer);
@@ -300,7 +302,18 @@ export const AuthProvider = ({ children }) => {
         return;
       }
 
-      setLoading(true);
+      if (event === 'INITIAL_SESSION') {
+        // Already handled by bootstrap(); skip to avoid double hydration.
+        return;
+      }
+
+      // Only show the global loading spinner for actual sign-in/sign-out transitions,
+      // not for tab-focus re-checks that Supabase fires.
+      const shouldShowLoader = event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'USER_UPDATED';
+
+      if (shouldShowLoader) {
+        setLoading(true);
+      }
 
       const safetyTimer = setTimeout(() => {
         if (isMounted) {

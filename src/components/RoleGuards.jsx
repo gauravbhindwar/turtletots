@@ -12,7 +12,7 @@ const FullPageLoader = ({ message }) => {
   );
 };
 
-const useLoadingTimeout = (loading, timeoutMs = 8000) => {
+const useLoadingTimeout = (loading, timeoutMs = 4000) => {
   const [timedOut, setTimedOut] = useState(false);
 
   useEffect(() => {

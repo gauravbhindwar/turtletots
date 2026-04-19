@@ -7,8 +7,10 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [showSupportDetails, setShowSupportDetails] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const currentYear = new Date().getFullYear();
 
   const getNextPath = () => {
     const params = new URLSearchParams(location.search);
@@ -86,8 +88,8 @@ const Login = () => {
           
           <div className="bg-surface-container-lowest rounded-2xl p-8 md:p-12 shadow-xl shadow-primary/5 relative z-10 border border-outline-variant/10">
             <div className="flex flex-col items-center text-center mb-10">
-              <div className="w-20 h-20 bg-primary-container rounded-xl flex items-center justify-center mb-6 shadow-inner">
-                <span className="material-symbols-outlined text-on-primary-container text-5xl" style={{fontVariationSettings: "'FILL' 1"}}>smart_toy</span>
+              <div className="h-16 w-[150px] rounded-xl overflow-hidden mb-6">
+                <img src="/turtletots.png" alt="TurtleTots" className="w-full h-full object-contain object-center" />
               </div>
               <h1 className="plusJakartaSans text-3xl font-extrabold text-on-surface tracking-tight leading-tight">
                 Welcome Back
@@ -155,8 +157,36 @@ const Login = () => {
             
             <div className="mt-8 pt-8 border-t border-surface-variant/50 text-center">
               <p className="inter text-sm text-on-surface-variant">
-                Need assistance? <span className="text-tertiary font-bold hover:underline cursor-pointer">Contact Support</span>
+                Need assistance?{' '}
+                <button
+                  type="button"
+                  onClick={() => setShowSupportDetails((prev) => !prev)}
+                  className="text-tertiary font-bold hover:underline"
+                >
+                  Contact Support
+                </button>
               </p>
+              {showSupportDetails && (
+                <p className="inter text-xs sm:text-sm text-on-surface-variant mt-3 leading-relaxed">
+                  Email us on{' '}
+                  <a
+                    href="https://crewsity.com/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-secondary font-bold hover:underline"
+                  >
+                    Crewsity Connect
+                  </a>{' '}
+                  or at{' '}
+                  <a
+                    href="mailto:bhindwargaurav@gmail.com"
+                    className="text-secondary font-bold hover:underline"
+                  >
+                    bhindwargaurav@gmail.com
+                  </a>
+                  .
+                </p>
+              )}
             </div>
           </div>
         </div>
@@ -164,7 +194,20 @@ const Login = () => {
 
       <footer className="absolute bottom-8 w-full flex flex-col items-center gap-2 px-6">
         <p className="inter text-xs font-medium text-slate-500 text-center">
-          © 2024 TurtleTots Management System. All Rights Reserved.
+          &copy; {currentYear} TurtleTots Management System · Powered by{' '}
+          <a
+            href="https://crewsity.com/"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-1 text-secondary font-bold hover:underline"
+          >
+            <img
+              src="/crewsity-logo.png"
+              alt="Crewsity Connect logo"
+              className="h-4 w-4 rounded-sm border border-outline-variant/30 object-cover shrink-0"
+            />
+            <span>Crewsity Connect</span>
+          </a>
         </p>
       </footer>
     </div>

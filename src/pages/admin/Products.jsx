@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { supabase } from '../../utils/supabase';
 
 const PAGE_SIZE = 30;
-const QUERY_LIMIT = 500;
+const QUERY_LIMIT = 200;
 const REQUEST_TIMEOUT_MS = 12000;
 const SEARCH_DEBOUNCE_MS = 300;
 const TAG_LABELS = {
@@ -111,7 +111,8 @@ const Products = () => {
         .abortSignal(controller.signal);
 
       if (debouncedSearchTerm) {
-        const escapedSearch = debouncedSearchTerm.replace(/[%_]/g, '');
+        // Escape PostgREST LIKE special chars so a search for "50%" finds "50%" literally.
+        const escapedSearch = debouncedSearchTerm.replace(/\\/g, '\\\\').replace(/%/g, '\\%').replace(/_/g, '\\_');
         queryPromise = queryPromise.or(`name.ilike.%${escapedSearch}%,slug.ilike.%${escapedSearch}%`);
       }
 

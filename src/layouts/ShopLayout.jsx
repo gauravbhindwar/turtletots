@@ -111,9 +111,9 @@ const ShopLayout = () => {
       {/* TopNavBar */}
       <nav className="fixed top-0 w-full flex justify-between items-center px-4 sm:px-6 lg:px-8 h-20 bg-white/80 dark:bg-stone-900/80 backdrop-blur-xl z-50 shadow-[0_40px_60px_-15px_rgba(109,90,0,0.06)]">
         <div className="flex items-center gap-12">
-          <Link to="/" className="inline-flex items-center" aria-label="TurtleTots Home">
-            <div className="h-12 sm:h-14 w-[130px] sm:w-[170px] md:w-[190px] rounded-md overflow-hidden">
-              <img src="/turtletots.jpeg" alt="TurtleTots" className="w-full h-full object-cover object-top scale-[1.06]" />
+          <Link to="/" className="inline-flex items-center shrink-0" aria-label="TurtleTots Home">
+            <div className="h-14 sm:h-16 w-[108px] sm:w-[128px] md:w-[142px] rounded-xl sm:rounded-2xl overflow-hidden">
+              <img src="/turtletots.png" alt="TurtleTots" className="w-full h-full object-contain object-center" />
             </div>
           </Link>
           <div className="hidden md:flex gap-6 items-center">

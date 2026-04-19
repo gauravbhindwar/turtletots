@@ -148,11 +148,17 @@ const EditProduct = () => {
 
   const fetchProduct = async () => {
     setLoading(true);
-    const { data } = await supabase
+    const { data, error: fetchError } = await supabase
       .from('products')
       .select('id, name, slug, description, price, discount_price, is_available, image_url, category_id, tags')
       .eq('id', id)
       .single();
+
+    if (fetchError) {
+      setFormError(fetchError.message || 'Unable to load product.');
+      setLoading(false);
+      return;
+    }
 
     const { data: variantData } = await supabase
       .from('product_variants')
@@ -350,15 +356,19 @@ const EditProduct = () => {
       }
     }
 
-    for (const updateItem of updates) {
-      const { error: updateError } = await supabase
-        .from('product_variants')
-        .update({ stock: updateItem.stock })
-        .eq('id', updateItem.id);
+    // Run all variant stock updates in parallel (was a sequential N+1 loop).
+    const results = await Promise.all(
+      updates.map((u) =>
+        supabase
+          .from('product_variants')
+          .update({ stock: u.stock })
+          .eq('id', u.id)
+      )
+    );
 
-      if (updateError) {
-        throw new Error(updateError.message || 'Unable to save inventory.');
-      }
+    const firstError = results.find((r) => r.error)?.error;
+    if (firstError) {
+      throw new Error(firstError.message || 'Unable to save inventory.');
     }
   };
 
@@ -403,7 +413,29 @@ const EditProduct = () => {
     }
 
     if (!safeProduct.slug) {
-      safeProduct.slug = safeProduct.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      safeProduct.slug = safeProduct.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    }
+
+    // Ensure slug is unique before inserting/updating.
+    // Escape % and _ so they are treated as literals in the LIKE pattern.
+    const baseSlug = safeProduct.slug;
+    const escapedBaseSlug = baseSlug.replace(/%/g, '\\%').replace(/_/g, '\\_');
+    const { data: existingSlugs } = await supabase
+      .from('products')
+      .select('slug')
+      .like('slug', `${escapedBaseSlug}%`)
+      .neq('id', id !== 'new' ? id : '00000000-0000-0000-0000-000000000000');
+
+    if (existingSlugs && existingSlugs.length > 0) {
+      const takenSlugs = new Set(existingSlugs.map((r) => r.slug));
+      // Only need a suffix if the exact base slug is taken (or in use by another product).
+      if (takenSlugs.has(baseSlug)) {
+        let counter = 1;
+        while (takenSlugs.has(`${baseSlug}-${counter}`)) {
+          counter++;
+        }
+        safeProduct.slug = `${baseSlug}-${counter}`;
+      }
     }
 
     safeProduct.name = safeProduct.name.trim();

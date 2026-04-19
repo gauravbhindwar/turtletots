@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../utils/supabase';
 import { getInventoryState, toSafeStock } from '../../utils/inventory';
@@ -140,7 +140,7 @@ const Dashboard = () => {
     categoryDistribution: DEFAULT_CATEGORY_DISTRIBUTION
   });
 
-  const enrichRecentProductsWithStock = async (rows = []) => {
+  const enrichRecentProductsWithStock = useCallback(async (rows = []) => {
     const productIds = rows.map((row) => row?.id).filter(Boolean);
 
     if (!productIds.length) {
@@ -170,78 +170,81 @@ const Dashboard = () => {
       ...row,
       total_stock: toSafeStock(stockByProduct[row.id] ?? row?.total_stock)
     }));
-  };
+  }, []);
+
+  const fetchDashboardData = useCallback(async () => {
+    setLoading(true);
+
+    try {
+      const { data: snapshotData, error: snapshotError } = await supabase.rpc('get_admin_dashboard_snapshot');
+
+      if (!snapshotError && snapshotData) {
+        const snapshotRow = Array.isArray(snapshotData) ? snapshotData[0] : snapshotData;
+        const snapshot = snapshotRow?.get_admin_dashboard_snapshot || snapshotRow;
+
+        if (snapshot && typeof snapshot === 'object') {
+          const recentProductsWithStock = await enrichRecentProductsWithStock(Array.isArray(snapshot.recentProducts) ? snapshot.recentProducts : []);
+
+          setDashboardData({
+            totalProducts: toSafeNumber(snapshot.totalProducts),
+            totalCategories: toSafeNumber(snapshot.totalCategories),
+            totalViews: toSafeNumber(snapshot.totalViews),
+            lowStockAlerts: toSafeNumber(snapshot.lowStockAlerts),
+            recentProducts: recentProductsWithStock,
+            categoryDistribution: buildCategoryDistribution(snapshot.categoryDistribution)
+          });
+          return;
+        }
+      }
+
+      const [
+        productCountRes,
+        categoryCountRes,
+        viewsRes,
+        recentRes,
+        lowStockRes,
+        categoryDistRes
+      ] = await Promise.all([
+        supabase.from('products').select('id', { count: 'exact', head: true }),
+        supabase.from('categories').select('id', { count: 'exact', head: true }),
+        supabase.from('products').select('views_count'),
+        supabase
+          .from('products')
+          .select('id, name, slug, image_url, is_available, created_at, category_id, categories(name)')
+          .order('created_at', { ascending: false })
+          .limit(5),
+        supabase
+          .from('product_variants')
+          .select('id', { count: 'exact', head: true })
+          .lte('stock', 5),
+        supabase.rpc('list_categories_with_product_counts')
+      ]);
+
+      const totalViews = (viewsRes.data || []).reduce((sum, item) => sum + toSafeNumber(item.views_count), 0);
+
+      const lowStockFromVariants = lowStockRes.count || 0;
+      const lowStockFallback = (recentRes.data || []).filter((item) => !item.is_available).length;
+      const dynamicDistribution = buildCategoryDistribution(categoryDistRes.data);
+      const recentProductsWithStock = await enrichRecentProductsWithStock(recentRes.data || []);
+
+      setDashboardData({
+        totalProducts: productCountRes.count || 0,
+        totalCategories: categoryCountRes.count || 0,
+        totalViews,
+        lowStockAlerts: lowStockFromVariants || lowStockFallback,
+        recentProducts: recentProductsWithStock,
+        categoryDistribution: dynamicDistribution
+      });
+    } catch (_err) {
+      // Unexpected throw — data stays at defaults, loading clears below.
+    } finally {
+      setLoading(false);
+    }
+  }, [enrichRecentProductsWithStock]);
 
   useEffect(() => {
     fetchDashboardData();
-  }, []);
-
-  const fetchDashboardData = async () => {
-    setLoading(true);
-
-    const { data: snapshotData, error: snapshotError } = await supabase.rpc('get_admin_dashboard_snapshot');
-
-    if (!snapshotError && snapshotData) {
-      const snapshotRow = Array.isArray(snapshotData) ? snapshotData[0] : snapshotData;
-      const snapshot = snapshotRow?.get_admin_dashboard_snapshot || snapshotRow;
-
-      if (snapshot && typeof snapshot === 'object') {
-        const recentProductsWithStock = await enrichRecentProductsWithStock(Array.isArray(snapshot.recentProducts) ? snapshot.recentProducts : []);
-
-        setDashboardData({
-          totalProducts: toSafeNumber(snapshot.totalProducts),
-          totalCategories: toSafeNumber(snapshot.totalCategories),
-          totalViews: toSafeNumber(snapshot.totalViews),
-          lowStockAlerts: toSafeNumber(snapshot.lowStockAlerts),
-          recentProducts: recentProductsWithStock,
-          categoryDistribution: buildCategoryDistribution(snapshot.categoryDistribution)
-        });
-        setLoading(false);
-        return;
-      }
-    }
-
-    const [
-      productCountRes,
-      categoryCountRes,
-      viewsRes,
-      recentRes,
-      lowStockRes,
-      categoryDistRes
-    ] = await Promise.all([
-      supabase.from('products').select('id', { count: 'exact', head: true }),
-      supabase.from('categories').select('id', { count: 'exact', head: true }),
-      supabase.from('products').select('views_count'),
-      supabase
-        .from('products')
-        .select('id, name, slug, image_url, is_available, created_at, category_id, categories(name)')
-        .order('created_at', { ascending: false })
-        .limit(5),
-      supabase
-        .from('product_variants')
-        .select('id', { count: 'exact', head: true })
-        .lte('stock', 5),
-      supabase.rpc('list_categories_with_product_counts')
-    ]);
-
-    const totalViews = (viewsRes.data || []).reduce((sum, item) => sum + toSafeNumber(item.views_count), 0);
-
-    const lowStockFromVariants = lowStockRes.count || 0;
-    const lowStockFallback = (recentRes.data || []).filter((item) => !item.is_available).length;
-    const dynamicDistribution = buildCategoryDistribution(categoryDistRes.data);
-    const recentProductsWithStock = await enrichRecentProductsWithStock(recentRes.data || []);
-
-    setDashboardData({
-      totalProducts: productCountRes.count || 0,
-      totalCategories: categoryCountRes.count || 0,
-      totalViews,
-      lowStockAlerts: lowStockFromVariants || lowStockFallback,
-      recentProducts: recentProductsWithStock,
-      categoryDistribution: dynamicDistribution
-    });
-
-    setLoading(false);
-  };
+  }, [fetchDashboardData]);
 
   const chartBars = useMemo(() => {
     const base = [40, 65, 50, 85, 55, 75];

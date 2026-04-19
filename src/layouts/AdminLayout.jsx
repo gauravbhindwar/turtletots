@@ -47,7 +47,9 @@ const AdminLayout = () => {
         >
           <span className="material-symbols-outlined">menu</span>
         </button>
-        <h1 className="text-lg font-black plusJakartaSans">TurtleTots Admin</h1>
+        <Link to="/admin" className="inline-flex items-center justify-center h-11 w-[126px] rounded-xl overflow-hidden" aria-label="TurtleTots Admin">
+          <img src="/turtletots.png" alt="TurtleTots" className="w-full h-full object-contain object-center" />
+        </Link>
         <div className="w-10" aria-hidden="true"></div>
       </header>
 
@@ -69,7 +71,10 @@ const AdminLayout = () => {
         </button>
 
         <div className="px-8 mb-10">
-          <h1 className="text-xl font-bold text-stone-900 dark:text-stone-50 tracking-tight plusJakartaSans">TurtleTots Admin</h1>
+          <Link to="/admin" onClick={() => setSidebarOpen(false)} className="inline-flex items-center justify-center h-14 w-[150px] rounded-xl overflow-hidden mb-2" aria-label="TurtleTots Admin">
+            <img src="/turtletots.png" alt="TurtleTots" className="w-full h-full object-contain object-center" />
+          </Link>
+          <h1 className="text-lg font-bold text-stone-900 dark:text-stone-50 tracking-tight plusJakartaSans">TurtleTots Admin</h1>
           <p className="text-xs text-stone-500 font-medium">Role: {roleLabel}</p>
         </div>
 

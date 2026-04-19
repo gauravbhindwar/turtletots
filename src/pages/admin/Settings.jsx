@@ -34,54 +34,56 @@ const AdminSettings = () => {
     setLoading(true);
     setError('');
 
-    const { data, error: loadError } = await supabase
-      .from('store_settings')
-      .select('store_name, support_email, whatsapp_order_number, store_description')
-      .eq('id', true)
-      .maybeSingle();
+    try {
+      const { data, error: loadError } = await supabase
+        .from('store_settings')
+        .select('store_name, support_email, whatsapp_order_number, store_description')
+        .eq('id', true)
+        .maybeSingle();
 
-    if (loadError) {
-      setError(loadError.message || 'Unable to load store settings.');
-      setLoading(false);
-      return;
-    }
+      if (loadError) {
+        setError(loadError.message || 'Unable to load store settings.');
+        return;
+      }
 
-    if (data) {
+      if (data) {
+        setForm({
+          store_name: data.store_name || DEFAULT_STORE_SETTINGS.store_name,
+          support_email: data.support_email || DEFAULT_STORE_SETTINGS.support_email,
+          whatsapp_order_number: data.whatsapp_order_number || DEFAULT_STORE_SETTINGS.whatsapp_order_number,
+          store_description: data.store_description || DEFAULT_STORE_SETTINGS.store_description
+        });
+        return;
+      }
+
+      const payload = {
+        id: true,
+        ...DEFAULT_STORE_SETTINGS,
+        ...(user?.id ? { updated_by: user.id } : {})
+      };
+
+      const { data: inserted, error: insertError } = await supabase
+        .from('store_settings')
+        .upsert([payload], { onConflict: 'id' })
+        .select('store_name, support_email, whatsapp_order_number, store_description')
+        .single();
+
+      if (insertError) {
+        setError(insertError.message || 'Unable to initialize store settings.');
+        return;
+      }
+
       setForm({
-        store_name: data.store_name || DEFAULT_STORE_SETTINGS.store_name,
-        support_email: data.support_email || DEFAULT_STORE_SETTINGS.support_email,
-        whatsapp_order_number: data.whatsapp_order_number || DEFAULT_STORE_SETTINGS.whatsapp_order_number,
-        store_description: data.store_description || DEFAULT_STORE_SETTINGS.store_description
+        store_name: inserted.store_name || DEFAULT_STORE_SETTINGS.store_name,
+        support_email: inserted.support_email || DEFAULT_STORE_SETTINGS.support_email,
+        whatsapp_order_number: inserted.whatsapp_order_number || DEFAULT_STORE_SETTINGS.whatsapp_order_number,
+        store_description: inserted.store_description || DEFAULT_STORE_SETTINGS.store_description
       });
+    } catch (_err) {
+      setError('Unable to load settings. Please refresh the page.');
+    } finally {
       setLoading(false);
-      return;
     }
-
-    const payload = {
-      id: true,
-      ...DEFAULT_STORE_SETTINGS,
-      ...(user?.id ? { updated_by: user.id } : {})
-    };
-
-    const { data: inserted, error: insertError } = await supabase
-      .from('store_settings')
-      .upsert([payload], { onConflict: 'id' })
-      .select('store_name, support_email, whatsapp_order_number, store_description')
-      .single();
-
-    if (insertError) {
-      setError(insertError.message || 'Unable to initialize store settings.');
-      setLoading(false);
-      return;
-    }
-
-    setForm({
-      store_name: inserted.store_name || DEFAULT_STORE_SETTINGS.store_name,
-      support_email: inserted.support_email || DEFAULT_STORE_SETTINGS.support_email,
-      whatsapp_order_number: inserted.whatsapp_order_number || DEFAULT_STORE_SETTINGS.whatsapp_order_number,
-      store_description: inserted.store_description || DEFAULT_STORE_SETTINGS.store_description
-    });
-    setLoading(false);
   };
 
   useEffect(() => {

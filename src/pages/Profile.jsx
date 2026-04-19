@@ -53,9 +53,11 @@ const Profile = () => {
     setMessage('');
     setError('');
 
+    // Don't include email in the profiles table update — the profiles.email
+    // is a mirror of auth.users.email and should only be changed via auth.updateUser().
+    // Updating it directly here would create a desync between the two tables.
     const payload = {
       full_name: form.full_name.trim(),
-      email: form.email.trim(),
       phone: form.phone.trim(),
       address: form.address.trim()
     };

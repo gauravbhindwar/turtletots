@@ -60,6 +60,9 @@ const ProductDetails = () => {
 
     if (data) {
       setProduct(data);
+      // Fire-and-forget: increment view count without blocking the UI.
+      // Uses a security-definer RPC so it works for anonymous visitors too.
+      supabase.rpc('increment_product_view', { product_id: data.id });
     } else {
       setProduct(null);
       setError('Product not found.');

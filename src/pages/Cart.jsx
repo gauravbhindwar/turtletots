@@ -1,9 +1,11 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import useCartStore from '../store/cartStore';
 import WhatsAppBrandIcon from '../components/WhatsAppBrandIcon';
 import { getStoreSettings } from '../utils/storeSettings';
 
 const Cart = () => {
+  const navigate = useNavigate();
   const { cartItems, updateQuantity, removeFromCart, clearCart } = useCartStore();
   const fallbackWhatsApp = import.meta.env.VITE_WHATSAPP_NUMBER || '+1234567890';
   const [waNumber, setWaNumber] = React.useState(fallbackWhatsApp);
@@ -43,7 +45,7 @@ const Cart = () => {
         <span className="material-symbols-outlined text-6xl text-on-surface-variant mb-4">shopping_cart</span>
         <h2 className="plusJakartaSans text-2xl font-bold">Your cart is empty</h2>
         <p className="text-on-surface-variant mt-2 mb-6">Looks like you haven't added any toys yet.</p>
-        <button onClick={() => window.location.href = '/'} className="bg-primary-container text-on-primary-container px-6 py-3 rounded-full font-bold">
+        <button onClick={() => navigate('/')} className="bg-primary-container text-on-primary-container px-6 py-3 rounded-full font-bold">
           Continue Shopping
         </button>
       </div>

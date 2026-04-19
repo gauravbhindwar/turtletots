@@ -21,7 +21,7 @@ const NewArrivals = () => {
             try {
                 const { data, error: fetchError } = await supabase
                     .from('products')
-                    .select('id, slug, name, description, price, image_url, is_available, product_variants(stock)')
+                    .select('id, slug, name, description, price, discount_price, image_url, is_available, product_variants(stock)')
                     .eq('is_available', true)
                     .contains('tags', ['new_arrival'])
                     .order('created_at', { ascending: false })

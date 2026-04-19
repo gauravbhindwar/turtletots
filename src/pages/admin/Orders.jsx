@@ -31,7 +31,8 @@ const AdminOrders = () => {
 
   useEffect(() => {
     fetchOrders();
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [statusFilter]);
 
   const fetchOrders = async () => {
     setLoading(true);
@@ -41,12 +42,19 @@ const AdminOrders = () => {
     const timeoutId = setTimeout(() => controller.abort(), SEARCH_TIMEOUT_MS);
 
     try {
-      const { data: ordersData, error: ordersError } = await supabase
+      let ordersQuery = supabase
         .from('orders')
         .select('id, order_number, user_id, status, total_amount, created_at, order_items(quantity, unit_price, products(name, slug, image_url))')
         .order('created_at', { ascending: false })
         .limit(250)
         .abortSignal(controller.signal);
+
+      // Apply status filter server-side to avoid fetching irrelevant rows.
+      if (statusFilter !== 'all') {
+        ordersQuery = ordersQuery.eq('status', statusFilter);
+      }
+
+      const { data: ordersData, error: ordersError } = await ordersQuery;
 
       if (ordersError) {
         setError(ordersError.message || 'Unable to load orders right now.');

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import ShopLayout from './layouts/ShopLayout';
 import AdminLayout from './layouts/AdminLayout';
@@ -12,16 +12,19 @@ import Profile from './pages/Profile';
 import NotFound from './pages/NotFound';
 import Favorites from './pages/Favorites';
 
-import Dashboard from './pages/admin/Dashboard';
-import Products from './pages/admin/Products';
-import EditProduct from './pages/admin/EditProduct';
-import Categories from './pages/admin/Categories';
-import Login from './pages/admin/Login';
-import Orders from './pages/admin/Orders';
-import Support from './pages/admin/Support';
-import Settings from './pages/admin/Settings';
-import AiAssistant from './pages/admin/AiAssistant';
-import Users from './pages/admin/Users';
+// Admin pages are lazy-loaded so a parse error in one file cannot break the
+// entire bundle, and so they only mount (and fire their data-fetch effects)
+// when the user actually navigates to that route.
+const Dashboard = lazy(() => import('./pages/admin/Dashboard'));
+const Products = lazy(() => import('./pages/admin/Products'));
+const EditProduct = lazy(() => import('./pages/admin/EditProduct'));
+const Categories = lazy(() => import('./pages/admin/Categories'));
+const Login = lazy(() => import('./pages/admin/Login'));
+const Orders = lazy(() => import('./pages/admin/Orders'));
+const Support = lazy(() => import('./pages/admin/Support'));
+const Settings = lazy(() => import('./pages/admin/Settings'));
+const AiAssistant = lazy(() => import('./pages/admin/AiAssistant'));
+const Users = lazy(() => import('./pages/admin/Users'));
 import { ToastProvider } from './components/ToastProvider';
 
 function App() {
@@ -46,8 +49,8 @@ function App() {
             />
           </Route>
 
-          <Route path="/login" element={<Login />} />
-          <Route path="/admin/login" element={<Login />} />
+          <Route path="/login" element={<Suspense fallback={null}><Login /></Suspense>} />
+          <Route path="/admin/login" element={<Suspense fallback={null}><Login /></Suspense>} />
           <Route path="/404" element={<NotFound />} />
 
           <Route
@@ -58,20 +61,20 @@ function App() {
               </RequireRole>
             )}
           >
-            <Route index element={<Dashboard />} />
-            <Route path="products" element={<Products />} />
-            <Route path="inventory" element={<Products />} />
-            <Route path="product/:id" element={<EditProduct />} />
-            <Route path="categories" element={<Categories />} />
-            <Route path="orders" element={<Orders />} />
-            <Route path="support" element={<Support />} />
-            <Route path="settings" element={<Settings />} />
-            <Route path="ai" element={<AiAssistant />} />
+            <Route index element={<Suspense fallback={null}><Dashboard /></Suspense>} />
+            <Route path="products" element={<Suspense fallback={null}><Products /></Suspense>} />
+            <Route path="inventory" element={<Suspense fallback={null}><Products /></Suspense>} />
+            <Route path="product/:id" element={<Suspense fallback={null}><EditProduct /></Suspense>} />
+            <Route path="categories" element={<Suspense fallback={null}><Categories /></Suspense>} />
+            <Route path="orders" element={<Suspense fallback={null}><Orders /></Suspense>} />
+            <Route path="support" element={<Suspense fallback={null}><Support /></Suspense>} />
+            <Route path="settings" element={<Suspense fallback={null}><Settings /></Suspense>} />
+            <Route path="ai" element={<Suspense fallback={null}><AiAssistant /></Suspense>} />
             <Route
               path="users"
               element={(
                 <RequireRole allowedRoles={['admin']} redirectTo="/404">
-                  <Users />
+                  <Suspense fallback={null}><Users /></Suspense>
                 </RequireRole>
               )}
             />

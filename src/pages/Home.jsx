@@ -33,6 +33,7 @@ const Home = () => {
           .select('id, slug, name, description, price, discount_price, image_url, is_available, categories(name, slug), product_variants(stock)')
           .eq('is_available', true)
           .order('created_at', { ascending: false })
+          .limit(96)
       ]);
 
       if (!isMounted) {
