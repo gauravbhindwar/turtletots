@@ -205,10 +205,10 @@ const Home = () => {
                 <h1 className="plusJakartaSans mt-2 font-extrabold text-[2.3rem] leading-[0.94] sm:text-[2.8rem] lg:text-[3.35rem] text-white tracking-[-0.05em]">
                   TurtleTots
                   <span className="block mt-1 bg-[linear-gradient(180deg,#ffe67f_0%,#ffcc1d_100%)] bg-clip-text text-transparent">
-                    Where Fun
+                    Curated for Your
                   </span>
                   <span className="block bg-[linear-gradient(180deg,#ffe67f_0%,#ffcc1d_100%)] bg-clip-text text-transparent">
-                    Lives!
+                    Daily Needs!
                   </span>
                 </h1>
 
@@ -539,7 +539,7 @@ const Home = () => {
                       </div>
 
                       <div className={`inline-flex px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider mb-5 ${product.inventory.chipClass}`}>
-                        {product.inventory.shortLabel}
+                        {product.inventory.shortLabel.replace(/\s*\(\d+\)/, '')}
                       </div>
 
                       <div className="flex gap-3">
@@ -604,7 +604,7 @@ const Home = () => {
                         </div>
 
                         <div className={`inline-flex px-2.5 sm:px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-wider ${product.inventory.chipClass}`}>
-                          {product.inventory.shortLabel}
+                          {product.inventory.shortLabel.replace(/\s*\(\d+\)/, '')}
                         </div>
 
                         <div className="flex gap-2 w-full">
